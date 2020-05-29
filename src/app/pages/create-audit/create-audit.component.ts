@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuditorService } from 'src/app/services/auditor.service';
 
 @Component({
   selector: 'app-create-audit',
@@ -7,9 +8,26 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateAuditComponent implements OnInit {
 
-  constructor() { }
+  closed = false;
+  auditorsList: any = [];
+
+  constructor(private auditorSrv: AuditorService) { }
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.closed = true;
+    }, 5000);
+
+    // Get auditors list
+    this.GetAuditors();
+  }
+
+  GetAuditors() {
+    this.auditorSrv.GetAuditors().subscribe(res => {
+      this.auditorsList = res;
+    }, err => {
+      console.log(err);
+    });
   }
 
 }

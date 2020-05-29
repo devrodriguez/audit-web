@@ -1,1 +1,36 @@
-<p>create-audit works!</p>
+<p>
+    <ngb-alert [type]="'info'" [dismissible]="false" *ngIf="!closed">
+        <strong>Hello</strong> This is the Audit page!
+    </ngb-alert>
+</p>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form action="">
+                <!-- Auditor -->
+                <div class="form-group">
+                    <label for="auditors">Auditor</label>
+                    <select name="auditors" id="" class="form-control">
+                        <option value="" *ngFor="let auditor of auditorsList">{{auditor.name}}</option>
+                    </select>
+                    <small>Select someone</small>
+                </div>
+                <!-- Enterprise -->
+                <div class="form-group">
+                    <label for="auditors">Enterprise</label>
+                    <select name="auditors" id="" class="form-control">
+                        <option value="" *ngFor="let auditor of auditorsList">{{auditor.name}}</option>
+                    </select>
+                    <small>Select someone</small>
+                </div>
+                <!-- Goals -->
+                <div class="form-group">
+                    <button type="button" class="btn btn-outline-secondary btn-sm">Goals</button>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
