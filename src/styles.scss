@@ -1,0 +1,22 @@
+@import "bootstrap/scss/bootstrap";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+/* Font Face */
+@font-face {
+    font-family: 'Gilroy Regular';
+    src: url('./assets/fonts/Gilroy-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Gilroy Bold';
+    src: url('./assets/fonts/Gilroy-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'Gilroy ExtraBold';
+    src: url('./assets/fonts/Gilroy-ExtraBold.ttf');
+}
+
+*:not(mat-icon) {
+    font-family: 'Gilroy Regular' !important;
+}

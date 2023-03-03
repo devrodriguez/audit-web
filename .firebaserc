@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "auditd3v": {
+      "hosting": {
+        "audit-web": [
+          "auditd3v"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "auditd3v"
+  }
+}

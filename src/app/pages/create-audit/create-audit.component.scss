@@ -1,0 +1,31 @@
+mat-form-field {
+    width: 100%;
+}
+
+@media screen and (max-width: 992px) {
+    .container {
+        max-width: 600px;
+    }    
+}
+
+.container {
+    padding-top: 50px;
+}
+
+.container-scrollable {
+    overflow-y: scroll;
+    height: 300px;
+}
+
+.container-scrollable::-webkit-scrollbar {
+    display: none;
+}
+
+.full-field {
+    width: 100%;
+}
+
+.centered-button {
+    margin: auto;
+}
+

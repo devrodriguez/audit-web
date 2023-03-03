@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { addDoc, collectionData, CollectionReference, DocumentData, Firestore } from '@angular/fire/firestore';
+import { collection } from '@firebase/firestore';
+import { Observable } from 'rxjs';
+import { Auditor } from '../interfaces/auditor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditorService {
 
-  headers = new HttpHeaders().set("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODcwODQxNzcsIm5iZiI6MTU4NzA4MjM3NywiaWF0IjoxNTg3MDgyMzc3fQ.Z4Xc3ogUf5hVKc6bk9QQFDSzxjGQPHbofhUdh57zijI");
+  private auditorColl: CollectionReference<DocumentData>;
 
-  constructor(private http: HttpClient) { }
+  constructor(private firestore: Firestore) {
+    this.auditorColl = collection(firestore, 'auditors');
+  }
 
-  public GetAuditors() {
-    return this.http.get(`http://localhost:3001/api/auth/auditors`, {
-      headers: this.headers
-    });
+  getAuditors() {
+    return collectionData(this.auditorColl, {
+      idField: 'id'
+    }) as Observable<Auditor[]>;
+  }
+
+  createAuditor(auditor: Auditor) {
+    return addDoc(this.auditorColl, auditor);
   }
 }
