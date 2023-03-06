@@ -9,7 +9,7 @@ import { Audit } from '../interfaces/audit';
 export class AuditService {
   private auditColl: CollectionReference<DocumentData>;
   constructor(
-    private readonly firestore: Firestore
+    firestore: Firestore
   ) {
     this.auditColl = collection(firestore, 'audits');
   }

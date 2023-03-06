@@ -3,7 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CreateAuditComponent } from './pages/create-audit/create-audit.component';
+import { CreateAuditComponent } from './pages/audit/create/create-audit.component';
+import { ListAuditComponent } from './pages/audit/list/list-audit.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -27,6 +28,7 @@ import { GoalFormComponent } from './components/goal-form/goal-form.component';
   declarations: [
     AppComponent,
     CreateAuditComponent,
+    ListAuditComponent,
     NavbarComponent,
     DashboardComponent,
     AuditorComponent,

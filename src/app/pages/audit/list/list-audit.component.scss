@@ -1,0 +1,27 @@
+@media screen and (max-width: 992px) {
+  .container {
+      max-width: 600px;
+  }    
+}
+
+.container {
+  padding-top: 50px;
+}
+
+.container-scrollable {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.container-scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+.mat-accordion-container .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-expansion-panel-header:focus {
+  /**/
+}

@@ -5,44 +5,41 @@
                 <mat-form-field appearance="fill" class="full-field">
                     <mat-label>Auditor</mat-label>
                     <mat-select name="auditor" [(ngModel)]="selectedAuditor">
-                        <mat-option *ngFor="let auditor of auditors" [value]="auditor">{{auditor.name}}</mat-option>
+                        <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">{{auditor.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-field">
                     <mat-label>Enterprise</mat-label>
                     <mat-select name="enterprise" [(ngModel)]="selectedEnterp">
-                        <mat-option *ngFor="let enterprise of enterprises" [value]="enterprise">{{enterprise.name}}</mat-option>
+                        <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">{{enterprise.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="full-field">
                     <mat-label>Goals</mat-label>
                     <input type="text" name="goals" matInput [matAutocomplete]="auto" [formControl]="goalsAutoCtl">
                     <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)='selectGoal($event)' [displayWith]="displayGoalName">
-                        <mat-option *ngFor="let goal of $filteredGoals | async" [value]="goal">{{goal.name}}</mat-option>
+                        <mat-option *ngFor="let goal of (filteredGoals$ | async)" [value]="goal">{{goal.name}}</mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
             </section>
-            <section>
+            <section *ngIf="selectedGoals.length > 0">
                 <div class="container-scrollable">
-                    <mat-card *ngFor="let sg of selectedGoals">
-                        <mat-card-header>
-                            <mat-card-title>{{sg.name}}</mat-card-title>
-                            <mat-card-subtitle></mat-card-subtitle>
-                        </mat-card-header>
-                        <mat-card-content>
-                            <p>
+                    <div class="container-scrollable">
+                        <mat-list>
+                            <mat-list-item *ngFor="let sg of selectedGoals" lines="3">
+                                <span matListItemTitle>{{sg.name}}</span>
                                 {{sg.description}}
-                            </p>
-                        </mat-card-content>
-                    </mat-card>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
                 </div>
             </section>
-                <p>
-                    <button mat-raised-button color="primary" (click)="createAudit()">
-                        Save
-                        <mat-icon>save</mat-icon>
-                    </button>
-                </p>
+            <p>
+                <button mat-raised-button color="primary" (click)="createAudit()">
+                    Save
+                    <mat-icon>save</mat-icon>
+                </button>
+            </p>
         </mat-card-content>
     </mat-card>
 </div>

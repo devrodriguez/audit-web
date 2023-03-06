@@ -1,0 +1,39 @@
+<div class="container">
+    <mat-accordion class="mat-accordion-container" multi>
+        <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
+            <mat-expansion-panel-header>
+                <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>
+                <mat-panel-description>
+                    <span>Audited by&nbsp;<strong>{{audit.auditor.name}}</strong></span>
+                    <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
+                    <mat-chip-listbox>
+                        <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                    </mat-chip-listbox>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <section *ngIf="audit.goals.length > 0">
+                <h2>Goals</h2>
+                <div class="container-scrollable">
+                    <mat-list>
+                        <mat-list-item *ngFor="let goal of audit.goals" lines="3">
+                            <span matListItemTitle>{{goal.name}}</span>
+                            {{goal.description}}
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </section>
+            <mat-divider *ngIf="audit.findings?.length > 0"></mat-divider>
+            <section *ngIf="audit.findings?.length > 0">
+                <h2>Finding</h2>
+                <div class="container-scrollable">
+                    <mat-list>
+                        <mat-list-item *ngFor="let finding of audit.findings" lines="3">
+                            <span matListItemTitle>{{finding.shortDescription}</span>
+                            {{finding.description}}
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </section>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
