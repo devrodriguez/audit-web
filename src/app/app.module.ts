@@ -23,6 +23,8 @@ import { provideStorage,getStorage } from '@angular/fire/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { MaterialModule } from './material.module';
 import { GoalFormComponent } from './components/goal-form/goal-form.component';
+import { ExperienceComponent } from './pages/auditor/experience/experience.component';
+import { AuditViewComponent } from './components/audit-view/audit-view.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { GoalFormComponent } from './components/goal-form/goal-form.component';
     NavbarComponent,
     DashboardComponent,
     AuditorComponent,
-    GoalFormComponent
+    GoalFormComponent,
+    ExperienceComponent,
+    AuditViewComponent
   ],
   imports: [
     BrowserModule,

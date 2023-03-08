@@ -1,0 +1,48 @@
+<div class="container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title-group>
+                <mat-card-title>
+                    {{audit?.enterprise?.name}}
+                </mat-card-title>
+                <mat-card-subtitle>
+                    {{audit.createdAt | date: 'dd/MM/yyyy'}}
+                </mat-card-subtitle>
+                <mat-chip-listbox>
+                    <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                </mat-chip-listbox>
+            </mat-card-title-group>
+        </mat-card-header>
+        <mat-card-content>
+            <section>
+                <h2>Goals</h2>
+                <div class="container-scrollable">
+                    <mat-list>
+                        <mat-list-item *ngFor="let goal of audit.goals" lines="3">
+                            <span matListItemTitle>{{goal.name}}</span>
+                            {{goal.description}}
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </section>
+            <section>
+                <h2>Finding</h2>
+                <mat-form-field class="form-field-full">
+                    <textarea matInput rows="2" [(ngModel)]="newFinding.description"></textarea>
+                    <button matSuffix mat-icon-button (click)="addFinding()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button matSuffix mat-icon-button (click)="addFinding()">
+                        <mat-icon>upload</mat-icon>
+                    </button>
+                </mat-form-field>
+                <mat-form-field class="form-field-full" *ngFor="let finding of newFindings">
+                    <textarea matInput rows="2" [value]="finding.description"></textarea>
+                    <button matSuffix mat-icon-button (click)="removeFinding(finding)">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </section>
+        </mat-card-content>
+    </mat-card>
+</div>

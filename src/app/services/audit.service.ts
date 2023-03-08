@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, CollectionReference, DocumentData, addDoc } from '@angular/fire/firestore';
+import { 
+  Firestore, 
+  collection, 
+  collectionData, 
+  CollectionReference, 
+  DocumentData, 
+  addDoc,
+  query, 
+  where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Audit } from '../interfaces/audit';
 
@@ -18,6 +26,13 @@ export class AuditService {
     return collectionData(this.auditColl, {
       idField: 'id'
     }) as Observable<Audit[]>;
+  }
+
+  getAuditsByAuditor(auditorID: string) {
+    const q = query(this.auditColl, where('auditor.id', '==', auditorID))
+    return collectionData(q, {
+      idField: 'id'
+    }) as Observable<Audit[]>
   }
 
   createAudit(audit: Audit) {

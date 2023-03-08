@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="responsive-container" *ngIf="!selAudit.id">
+        <mat-card *ngFor="let audit of auditList$ | async" class="mat-card-container">
+            <mat-card-header>
+                <mat-card-title-group>
+                    <mat-card-title>
+                        {{audit.enterprise.name}}
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        {{audit.createdAt | date: 'dd/MM/yyyy'}}
+                    </mat-card-subtitle>
+                    <mat-chip-listbox>
+                        <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                    </mat-chip-listbox>
+                </mat-card-title-group>
+            </mat-card-header>
+            <mat-card-content>
+                
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="viewAudit(audit)">Full View</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <app-audit-view *ngIf="selAudit.id" [audit]="selAudit"></app-audit-view>
+</div>

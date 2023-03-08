@@ -4,6 +4,7 @@ import { CreateAuditComponent } from './pages/audit/create/create-audit.componen
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuditorComponent } from './pages/auditor/auditor.component';
 import { ListAuditComponent } from './pages/audit/list/list-audit.component';
+import { ExperienceComponent } from './pages/auditor/experience/experience.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'auditor',
     component: AuditorComponent
+  },
+  {
+    path: 'auditor/experience',
+    component: ExperienceComponent
   },
   {
     path: '**',
