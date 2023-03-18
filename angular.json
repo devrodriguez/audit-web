@@ -4,6 +4,12 @@
   "newProjectRoot": "projects",
   "projects": {
     "audit-web": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "es-CO": "src/locale/messages.es.xlf"
+        }
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,6 +23,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "localize": [
+              "es-CO"
+            ],
             "outputPath": "dist/audit-web",
             "index": "src/index.html",
             "main": "src/main.ts",

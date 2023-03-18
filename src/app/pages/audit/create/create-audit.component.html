@@ -1,45 +1,54 @@
 <div class="container">
-    <mat-card>
+    <section>
+        <mat-form-field appearance="fill" class="full-field">
+            <mat-label i18n>Enterprise</mat-label>
+            <mat-select name="enterprise" [(ngModel)]="selectedEnterp">
+                <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">{{enterprise.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button mat-stroked-button (click)="initializeAudit()" *ngIf="!isNewAudit">
+            <mat-icon>add</mat-icon>
+            <span i18n>Initialize Audit</span>
+        </button>
+    </section>
+    <mat-card *ngIf="isNewAudit">
         <mat-card-content>
-            <section>
-                <mat-form-field appearance="fill" class="full-field">
-                    <mat-label>Auditor</mat-label>
-                    <mat-select name="auditor" [(ngModel)]="selectedAuditor">
-                        <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">{{auditor.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="full-field">
-                    <mat-label>Enterprise</mat-label>
-                    <mat-select name="enterprise" [(ngModel)]="selectedEnterp">
-                        <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">{{enterprise.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="fill" class="full-field">
-                    <mat-label>Goals</mat-label>
-                    <input type="text" name="goals" matInput [matAutocomplete]="auto" [formControl]="goalsAutoCtl">
-                    <mat-autocomplete #auto="matAutocomplete" autoActiveFirstOption (optionSelected)='selectGoal($event)' [displayWith]="displayGoalName">
-                        <mat-option *ngFor="let goal of (filteredGoals$ | async)" [value]="goal">{{goal.name}}</mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-            </section>
-            <section *ngIf="selectedGoals.length > 0">
-                <div class="container-scrollable">
-                    <div class="container-scrollable">
+            <div class="container-scrollable">
+                <mat-accordion multi>
+                    <mat-expansion-panel *ngFor="let gitem of goalItems">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>{{gitem.code}} - {{gitem.name}}</mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field appearance="fill" class="full-field">
+                            <mat-label>Auditor</mat-label>
+                            <mat-select name="auditor" [(ngModel)]="gitem.auditor">
+                                <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">{{auditor.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Notes</mat-label>
+                            <textarea matInput name="" rows="3" [(ngModel)]="gitem.description"></textarea>
+                        </mat-form-field>
+                        <mat-divider></mat-divider>
+                        <button mat-button>
+                            <mat-icon>note</mat-icon>
+                            Add file
+                        </button>
                         <mat-list>
-                            <mat-list-item *ngFor="let sg of selectedGoals" lines="3">
-                                <span matListItemTitle>{{sg.name}}</span>
-                                {{sg.description}}
+                            <mat-list-item *ngFor="let file of ['file.pdf', 'file2.pdf']">
+                                <mat-icon matListItemIcon>note</mat-icon>
+                                <div matListItemTitle>{{file}}</div>
                             </mat-list-item>
                         </mat-list>
-                    </div>
-                </div>
-            </section>
-            <p>
-                <button mat-raised-button color="primary" (click)="createAudit()">
-                    Save
-                    <mat-icon>save</mat-icon>
-                </button>
-            </p>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
         </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="saveAudit()">
+                Save
+                <mat-icon>save</mat-icon>
+            </button>
+        </mat-card-actions>
     </mat-card>
 </div>

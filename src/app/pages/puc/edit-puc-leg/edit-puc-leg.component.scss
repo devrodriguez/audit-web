@@ -4,29 +4,31 @@
     }    
 }
 
-mat-form-field {
-    width: 100%;
-}
-
 .container {
-    max-width: 800px;
+    max-width: 600px;
     padding-top: 50px;
 }
 
 .container-scrollable {
     overflow-y: scroll;
-    height: 100%;
+    height: 300px;
 }
 
 .container-scrollable::-webkit-scrollbar {
     display: none;
 }
 
-.full-field {
-    width: 100%;
+mat-card-content {
+    display: flex;
+    flex-direction: column;
 }
 
-.centered-button {
-    margin: auto;
+.data-container {
+    display: flex;
+    flex-direction: row;
 }
 
+.data-container mat-form-field {
+    flex-basis: 50%;
+
+}

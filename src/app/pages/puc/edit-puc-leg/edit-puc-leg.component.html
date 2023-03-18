@@ -1,0 +1,36 @@
+<div class="container">
+    <mat-card>
+        <mat-card-content>
+            <mat-form-field appearance="fill">
+                <mat-label>Type</mat-label>
+                <mat-select (selectionChange)="onTypeChange($event)" #selected>
+                    <mat-option *ngFor="let type of types" [value]="type">{{type.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="data-container">
+                <mat-form-field appearance="fill">
+                    <mat-label>Code</mat-label>
+                    <input type="text" name="code" matInput [maxLength]="selected?.value?.codeSize??0" [(ngModel)]="newGoalItem.code">
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Name</mat-label>
+                    <input type="text" name="name" matInput [(ngModel)]="newGoalItem.name">
+                </mat-form-field>
+            </div>
+            <button mat-raised-button color="primary" (click)="createItem()">
+                <mat-icon>save</mat-icon>
+                Save
+            </button>
+        </mat-card-content>
+    </mat-card>
+    <section>
+        <div class="container-scrollable">
+            <mat-list>
+                <mat-list-item *ngFor="let goalItem of goalItems">
+                    <mat-icon matListItemIcon>folder</mat-icon>
+                    <div matListItemTitle>{{goalItem.code}} - {{goalItem.name}}</div>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </section>
+</div>

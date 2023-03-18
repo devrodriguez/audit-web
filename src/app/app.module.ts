@@ -1,30 +1,32 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { CreateAuditComponent } from './pages/audit/create/create-audit.component';
-import { ListAuditComponent } from './pages/audit/list/list-audit.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 // Bootstrap
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { AuditorComponent } from './pages/auditor/auditor.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { environment } from '../environments/environment';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideFunctions,getFunctions } from '@angular/fire/functions';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+
+import { environment } from '../environments/environment';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { CreateAuditComponent } from './pages/audit/create/create-audit.component';
+import { ListAuditComponent } from './pages/audit/list/list-audit.component';
 import { MaterialModule } from './material.module';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AuditorComponent } from './pages/auditor/create/create-auditor.component';
 import { GoalFormComponent } from './components/goal-form/goal-form.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
 import { AuditViewComponent } from './components/audit-view/audit-view.component';
+import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { AuditViewComponent } from './components/audit-view/audit-view.component
     AuditorComponent,
     GoalFormComponent,
     ExperienceComponent,
-    AuditViewComponent
+    AuditViewComponent,
+    EditPucLegComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,9 @@ import { AuditViewComponent } from './components/audit-view/audit-view.component
     BrowserAnimationsModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [
+    
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

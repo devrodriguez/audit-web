@@ -18,7 +18,7 @@
                 <h2>Goals</h2>
                 <div class="container-scrollable">
                     <mat-list>
-                        <mat-list-item *ngFor="let goal of audit.goals" lines="3">
+                        <mat-list-item *ngFor="let goal of audit.goalItems" lines="3">
                             <span matListItemTitle>{{goal.name}}</span>
                             {{goal.description}}
                         </mat-list-item>

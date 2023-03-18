@@ -1,11 +1,11 @@
+import { Auditor } from "./auditor"
+
 export interface Goal {
     id: string
-    name: string
-    description: string
-    law: Law
-}
-
-export interface Law {
-    articleCode: string
-    description: string
+    code?: string
+    shortDescription: string,
+    type?: string
+    description?: string
+    auditor: Auditor
+    children?: Goal[]
 }

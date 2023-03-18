@@ -1,0 +1,85 @@
+[
+    {
+        "id": "77876dfds87",
+        "code": "generic",
+        "type": "",
+        "description": "",
+        "childrends": [
+            {
+                "id": "77876dfdsdfsdf",
+                "code": "1",
+                "type": "clase",
+                "shortDescription": "activo",
+                "description": "",
+                "childrens": [
+                    {
+                        "id": "77876dfdsdfsdf",
+                        "code": "11",
+                        "type": "grupo",
+                        "shortDescription": "disponible",
+                        "description": "",
+                        "childrens": [
+                            {
+                                "id": "77876dfdsdfsdf",
+                                "code": "1105",
+                                "type": "cuenta",
+                                "shortDescription": "caja",
+                                "description": "",
+                                "childrens": [
+                                    {
+                                        "id": "77876dfdsdfsdf",
+                                        "code": "110505",
+                                        "type": "subcuenta",
+                                        "shortDescription": "caja general",
+                                        "description": ""                
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "77876dfdsdfsdf",
+                "code": "2",
+                "type": "clase",
+                "shortDescription": "pasivo",
+                "description": "",
+                "childrens": [
+                    {
+                        "id": "77876dfdsdfsdf",
+                        "code": "21",
+                        "type": "grupo",
+                        "shortDescription": "obligaciones financieras",
+                        "description": "",
+                        "childrens": [
+                            {
+                                "id": "77876dfdsdfsdf",
+                                "code": "2105",
+                                "type": "cuenta",
+                                "shortDescription": "bancos nacionales",
+                                "description": "",
+                                "childrens": [
+                                    {
+                                        "id": "77876dfdsdfsdf",
+                                        "code": "210505",
+                                        "type": "subcuenta",
+                                        "shortDescription": "sobregiros",
+                                        "description": ""                
+                                    },
+                                    {
+                                        "id": "77876dsdfsdf",
+                                        "code": "210510",
+                                        "type": "subcuenta",
+                                        "shortDescription": "pagares",
+                                        "description": ""                
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

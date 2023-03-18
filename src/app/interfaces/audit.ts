@@ -1,15 +1,13 @@
-import { Auditor } from "./auditor";
 import { Enterprise } from "./enterprise";
 import { Finding } from "./finding";
-import { Goal } from "./goal";
+import { GoalItem } from "./goal-item";
 
 export interface Audit {
     id: string
     description: string
     status: string
     createdAt: string
-    auditor: Auditor
-    enterprise: Enterprise
-    goals: Goal[]
+    enterprise?: Enterprise
+    goalItems: GoalItem[]
     findings?: Finding[]
 }

@@ -12,6 +12,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
+import { MatTreeModule } from '@angular/material/tree';
+
 
 @NgModule({
     imports: [
@@ -26,7 +28,8 @@ import { MatListModule } from '@angular/material/list';
         MatChipsModule,
         MatExpansionModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        MatTreeModule,
     ],
     exports: [
         MatSelectModule,
@@ -40,7 +43,8 @@ import { MatListModule } from '@angular/material/list';
         MatChipsModule,
         MatExpansionModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        MatTreeModule
     ]
 })
 export class MaterialModule { }

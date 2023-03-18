@@ -8,10 +8,16 @@ import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { Enterprise } from 'src/app/interfaces/enterprise';
 import { Goal } from 'src/app/interfaces/goal';
+import { GoalItem } from 'src/app/interfaces/goal-item';
 import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
 import { GoalsService } from 'src/app/services/goals.service';
+
+const TYPE_CLASS = 'class'
+const TYPE_GROUP = 'group'
+const TYPE_ACCOUNT = 'account'
+const TYPE_SUB_ACCOUNT = 'sub_account'
 
 @Component({
   selector: 'app-create-audit',
@@ -19,16 +25,15 @@ import { GoalsService } from 'src/app/services/goals.service';
   styleUrls: ['./create-audit.component.scss']
 })
 export class CreateAuditComponent implements OnInit {
+  public isNewAudit: boolean = false
   public auditors: Auditor[] = []
   public enterprises: Enterprise[] = []
-  public audit: Audit
-  public goals: Goal[] = []
-  public auditGoals: Goal[] = []
-  public selectedGoals: Goal[] = []
-  public selectedAuditor: Auditor = {} as Auditor
+  public newAudit: Audit = {} as Audit
+  public goalItems: GoalItem[] = []
+  public selectedGoalItems: GoalItem[] = []
   public selectedEnterp: Enterprise = {} as Enterprise
   
-  public filteredGoals$: Observable<Goal[]>
+  // public filteredGoalItems$: Observable<GoalItem[]>
   public auditorsList$: Observable<Auditor[]>
   public enterprisesList$: Observable<Auditor[]>
   goalsAutoCtl = new FormControl('')
@@ -43,65 +48,52 @@ export class CreateAuditComponent implements OnInit {
   ngOnInit(): void {
     this.auditorsList$ = this.auditorSrv.getAuditors()
     this.enterprisesList$ = this.enterpriseSrv.getEnterprises()
-    this.getGoals()
+    this.getAccounts()
   }
 
-  getGoals() {
-    this.goalSrv
-    .getGoals()
-    .subscribe(res => {
-      this.goals = res
-
-      this.filteredGoals$ = this.goalsAutoCtl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value || ''))
-      )
-    }, err => {
-      console.error(err)
+  getAccounts() {
+    this.goalSrv.getGoalItemsByType(TYPE_ACCOUNT).subscribe(gi => {
+      this.goalItems = gi
     })
   }
 
-  createAudit() {
-    let newAudit = {
-      auditor: this.selectedAuditor,
-      enterprise: this.selectedEnterp,
-      goals: this.auditGoals,
-      status: 'pending',
-      createdAt: new Date().toISOString()
-    } as Audit
+  initializeAudit() {
+    if(!this.selectedEnterp.id) {
+      this.presentSnackBar('Enterprise is required!')
+      return
+    }
 
-    this.auditSrv.createAudit(newAudit).then(res => {
+    this.isNewAudit = true
+    this.addAudit()
+  }
+
+  addAudit() {
+    this.newAudit.enterprise = this.selectedEnterp
+    this.newAudit.createdAt = new Date().toISOString()
+    this.newAudit.status = 'pending'
+    this.newAudit.goalItems = this.goalItems
+
+    this.auditSrv
+    .createAudit(this.newAudit)
+    .then(docRef => {
+      this.newAudit.id = docRef.id
       this.presentSnackBar('Auditoria creada correctamente')
     })
     .catch(err => {
       console.error(err);
       this.presentSnackBar('Error al crear auditoria')
     })
-
   }
 
-  /** Functions */
-  private _filter(value: string): Goal[] {
-    const filterValue = value.toLowerCase();
-
-    return this.goals.filter(goal => goal.name.toLowerCase().includes(filterValue));
-  }
-
-  displayGoalName(goal: Goal) {
-      return goal && goal.name ? goal.name : '';
-  }
-
-  /** Events */
-  selectGoal(evt: MatAutocompleteSelectedEvent) {
-    const selGoal = evt.option.value as Goal;
-
-    if (this.auditGoals.find(item => item.id == selGoal.id)) return
-    this.selectedGoals.unshift(selGoal);
-    this.auditGoals.unshift({
-      id: selGoal.id,
-      name: selGoal.name,
-      description: selGoal.description
-    } as Goal);
+  saveAudit() {
+    this.auditSrv
+    .updateAudit(this.newAudit)
+    .then(res => {
+      this.presentSnackBar('Audit saved!')
+    })
+    .catch(err => {
+      console.error(err)
+    })
   }
 
   /** Event Components */

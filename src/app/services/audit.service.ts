@@ -7,7 +7,9 @@ import {
   DocumentData, 
   addDoc,
   query, 
-  where } from '@angular/fire/firestore';
+  where, 
+  updateDoc,
+  doc} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Audit } from '../interfaces/audit';
 
@@ -17,7 +19,7 @@ import { Audit } from '../interfaces/audit';
 export class AuditService {
   private auditColl: CollectionReference<DocumentData>;
   constructor(
-    firestore: Firestore
+    private firestore: Firestore
   ) {
     this.auditColl = collection(firestore, 'audits');
   }
@@ -37,5 +39,9 @@ export class AuditService {
 
   createAudit(audit: Audit) {
     return addDoc(this.auditColl, audit);
+  }
+
+  updateAudit(audit: Audit) {
+    return updateDoc(doc(this.firestore, "audits", audit.id), { ...audit })
   }
 }
