@@ -2,16 +2,16 @@
     <section>
         <mat-form-field appearance="fill" class="full-field">
             <mat-label i18n>Enterprise</mat-label>
-            <mat-select name="enterprise" [(ngModel)]="selectedEnterp">
+            <mat-select #matEntpRef name="enterprise" [(ngModel)]="newAudit.enterprise" [compareWith]="compareEnterprise">
                 <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">{{enterprise.name}}</mat-option>
             </mat-select>
         </mat-form-field>
-        <button mat-stroked-button (click)="initializeAudit()" *ngIf="!isNewAudit">
+        <button mat-raised-button (click)="initializeAudit()" *ngIf="!isEditState">
             <mat-icon>add</mat-icon>
-            <span i18n>Initialize Audit</span>
+            <span i18n>New Audit</span>
         </button>
     </section>
-    <mat-card *ngIf="isNewAudit">
+    <mat-card *ngIf="isEditState">
         <mat-card-content>
             <div class="container-scrollable">
                 <mat-accordion multi>
@@ -21,7 +21,7 @@
                         </mat-expansion-panel-header>
                         <mat-form-field appearance="fill" class="full-field">
                             <mat-label>Auditor</mat-label>
-                            <mat-select name="auditor" [(ngModel)]="gitem.auditor">
+                            <mat-select name="auditor" [(ngModel)]="gitem.auditor" [(value)]="defaultAuditor" [compareWith]="compareAuditor">
                                 <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">{{auditor.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -29,8 +29,7 @@
                             <mat-label>Notes</mat-label>
                             <textarea matInput name="" rows="3" [(ngModel)]="gitem.description"></textarea>
                         </mat-form-field>
-                        <mat-divider></mat-divider>
-                        <button mat-button>
+                        <button mat-raised-button>
                             <mat-icon>note</mat-icon>
                             Add file
                         </button>
@@ -49,6 +48,53 @@
                 Save
                 <mat-icon>save</mat-icon>
             </button>
+            <button mat-raised-button (click)="closeEdition()">
+                Close
+                <mat-icon>close</mat-icon>
+            </button>
         </mat-card-actions>
     </mat-card>
+    <br>
+    <!-- List audits -->
+    <section *ngIf="!isEditState">
+        <mat-accordion class="mat-accordion-container" multi>
+            <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>
+                    <mat-panel-description>
+                        <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
+                        <mat-chip-listbox>
+                            <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                        </mat-chip-listbox>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <section *ngIf="audit.goalItems.length > 0">
+                    <h2>Goals</h2>
+                    <div class="container-scrollable">
+                        <mat-list>
+                            <mat-list-item *ngFor="let goal of audit.goalItems">
+                                <span matListItemTitle>{{goal.code}} - {{goal.name}}</span>
+                                Audited by {{goal?.auditor?.name}}
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </section>
+                <button mat-mini-fab matTooltip="Edit audit" class="fab-button-edit" (click)="editAudit(audit)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <mat-divider *ngIf="audit.findings?.length > 0"></mat-divider>
+                <!-- <section *ngIf="audit.findings?.length > 0">
+                    <h2>Finding</h2>
+                    <div class="container-scrollable">
+                        <mat-list>
+                            <mat-list-item *ngFor="let finding of audit.findings">
+                                <span matListItemTitle>{{finding.shortDescription}</span>
+                                {{finding.description}}
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </section> -->
+            </mat-expansion-panel>
+        </mat-accordion>
+    </section>
 </div>

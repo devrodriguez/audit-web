@@ -22,11 +22,22 @@ mat-form-field {
     display: none;
 }
 
+.mat-accordion-container .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+}
+
 .full-field {
     width: 100%;
 }
 
 .centered-button {
     margin: auto;
+}
+
+.fab-button-edit {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 }
 

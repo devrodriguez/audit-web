@@ -13,6 +13,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 
 @NgModule({
@@ -30,6 +32,7 @@ import { MatTreeModule } from '@angular/material/tree';
         MatDividerModule,
         MatListModule,
         MatTreeModule,
+        MatTooltipModule
     ],
     exports: [
         MatSelectModule,
@@ -44,7 +47,8 @@ import { MatTreeModule } from '@angular/material/tree';
         MatExpansionModule,
         MatDividerModule,
         MatListModule,
-        MatTreeModule
+        MatTreeModule,
+        MatTooltipModule
     ]
 })
 export class MaterialModule { }

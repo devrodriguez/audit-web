@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { Enterprise } from 'src/app/interfaces/enterprise';
-import { Goal } from 'src/app/interfaces/goal';
 import { GoalItem } from 'src/app/interfaces/goal-item';
 import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
@@ -18,6 +17,7 @@ const TYPE_CLASS = 'class'
 const TYPE_GROUP = 'group'
 const TYPE_ACCOUNT = 'account'
 const TYPE_SUB_ACCOUNT = 'sub_account'
+const AUDIT_STATUS_PENDING = 'pending'
 
 @Component({
   selector: 'app-create-audit',
@@ -25,17 +25,22 @@ const TYPE_SUB_ACCOUNT = 'sub_account'
   styleUrls: ['./create-audit.component.scss']
 })
 export class CreateAuditComponent implements OnInit {
-  public isNewAudit: boolean = false
+  public isEditState: boolean = false
+  public audits: Audit[] = []
   public auditors: Auditor[] = []
   public enterprises: Enterprise[] = []
-  public newAudit: Audit = {} as Audit
   public goalItems: GoalItem[] = []
   public selectedGoalItems: GoalItem[] = []
+  public newAudit: Audit = {} as Audit
   public selectedEnterp: Enterprise = {} as Enterprise
+  public defaultAuditor: Auditor = {} as Auditor
+
+  @ViewChild('matEntpRef') matEntpRef: MatSelect;
   
   // public filteredGoalItems$: Observable<GoalItem[]>
   public auditorsList$: Observable<Auditor[]>
   public enterprisesList$: Observable<Auditor[]>
+  public auditsList$: Observable<Audit[]>;
   goalsAutoCtl = new FormControl('')
 
   constructor(
@@ -49,6 +54,7 @@ export class CreateAuditComponent implements OnInit {
     this.auditorsList$ = this.auditorSrv.getAuditors()
     this.enterprisesList$ = this.enterpriseSrv.getEnterprises()
     this.getAccounts()
+    this.loadAudits()
   }
 
   getAccounts() {
@@ -58,17 +64,29 @@ export class CreateAuditComponent implements OnInit {
   }
 
   initializeAudit() {
-    if(!this.selectedEnterp.id) {
+    if(!this.newAudit.enterprise.id) {
       this.presentSnackBar('Enterprise is required!')
       return
     }
 
-    this.isNewAudit = true
+    if(this.audits.find(audit => audit.enterprise.id == this.newAudit.enterprise.id && audit.status === AUDIT_STATUS_PENDING)) {
+      this.presentSnackBar('Audit for enterprise already exist!')
+      return
+    }
+
+    this.isEditState = true
     this.addAudit()
   }
 
+  loadAudits() {
+    this.auditsList$ = this.auditSrv.getAudits()
+    this.auditSrv.getAudits().subscribe(audits => {
+      this.audits = audits
+    })
+  }
+
   addAudit() {
-    this.newAudit.enterprise = this.selectedEnterp
+    //this.newAudit.enterprise = this.selectedEnterp
     this.newAudit.createdAt = new Date().toISOString()
     this.newAudit.status = 'pending'
     this.newAudit.goalItems = this.goalItems
@@ -85,15 +103,35 @@ export class CreateAuditComponent implements OnInit {
     })
   }
 
+  editAudit(audit: Audit) {
+    this.isEditState = true
+    this.newAudit = audit
+  }
+
   saveAudit() {
     this.auditSrv
     .updateAudit(this.newAudit)
     .then(res => {
+      this.isEditState = false
       this.presentSnackBar('Audit saved!')
     })
     .catch(err => {
       console.error(err)
     })
+  }
+
+  closeEdition() {
+    this.isEditState = false
+    this.matEntpRef.options.forEach((data: MatOption) => data.deselect());
+  }
+
+  /** Utils */
+  compareEnterprise(x: Enterprise, y: Enterprise): boolean {
+    return x && y ? x.id === y.id : x === y;
+  }
+
+  compareAuditor(x: Auditor, y: Auditor): boolean {
+    return x && y ? x.id === y.id : x === y;
   }
 
   /** Event Components */
