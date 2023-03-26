@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { 
-  Firestore, 
+  Firestore,
   collection, 
   collectionData, 
   CollectionReference, 
@@ -10,8 +10,10 @@ import {
   where, 
   updateDoc,
   doc} from '@angular/fire/firestore';
+import { Storage, ref, uploadBytes, UploadResult } from '@angular/fire/storage'
 import { Observable } from 'rxjs';
 import { Audit } from '../interfaces/audit';
+import { GoalFile } from '../interfaces/goal-file';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,8 @@ import { Audit } from '../interfaces/audit';
 export class AuditService {
   private auditColl: CollectionReference<DocumentData>;
   constructor(
-    private firestore: Firestore
+    private firestore: Firestore,
+    private fireStorage: Storage
   ) {
     this.auditColl = collection(firestore, 'audits');
   }
@@ -31,7 +34,7 @@ export class AuditService {
   }
 
   getAuditsByAuditor(auditorID: string) {
-    const q = query(this.auditColl, where('auditor.id', '==', auditorID))
+    const q = query(this.auditColl, where('goalItems', 'array-contains', { auditor: { id: auditorID } }))
     return collectionData(q, {
       idField: 'id'
     }) as Observable<Audit[]>

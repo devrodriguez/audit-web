@@ -27,8 +27,15 @@
         <div class="container-scrollable">
             <mat-list>
                 <mat-list-item *ngFor="let goalItem of goalItems">
-                    <mat-icon matListItemIcon>folder</mat-icon>
                     <div matListItemTitle>{{goalItem.code}} - {{goalItem.name}}</div>
+                    <div matListItemMeta>
+                        <button mat-icon-button>
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button>
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
                 </mat-list-item>
             </mat-list>
         </div>

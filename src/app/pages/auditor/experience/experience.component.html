@@ -1,6 +1,6 @@
 <div class="container">
     <div class="responsive-container" *ngIf="!selAudit.id">
-        <mat-card *ngFor="let audit of auditList$ | async" class="mat-card-container">
+        <mat-card *ngFor="let audit of auditList" class="mat-card-container">
             <mat-card-header>
                 <mat-card-title-group>
                     <mat-card-title>
@@ -22,5 +22,16 @@
             </mat-card-actions>
         </mat-card>
     </div>
-    <app-audit-view *ngIf="selAudit.id" [audit]="selAudit"></app-audit-view>
+    <section *ngIf="selAudit.id">
+        <app-edit-audit 
+        [isAuditorDisabled]="true"
+        [audit]="selAudit"
+        [auditorsList$]="auditorList$"
+        ></app-edit-audit>
+        <br>
+        <button mat-raised-button (click)="closeEdition()">
+            Close
+            <mat-icon>close</mat-icon>
+        </button>
+    </section>
 </div>

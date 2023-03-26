@@ -27,6 +27,7 @@ import { GoalFormComponent } from './components/goal-form/goal-form.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
 import { AuditViewComponent } from './components/audit-view/audit-view.component';
 import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
+import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.compo
     GoalFormComponent,
     ExperienceComponent,
     AuditViewComponent,
-    EditPucLegComponent
+    EditPucLegComponent,
+    EditAuditComponent
   ],
   imports: [
     BrowserModule,

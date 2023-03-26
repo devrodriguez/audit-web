@@ -1,4 +1,6 @@
 export interface Auditor {
-    id: string;
-    name: string;
+    id: string
+    name: string
+    lastName: string
+    age: number
 }

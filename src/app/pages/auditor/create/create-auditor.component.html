@@ -4,20 +4,20 @@
             <form action="">
                 <mat-form-field class="full-field">
                     <mat-label>Name</mat-label>
-                    <input type="text" matInput>
+                    <input type="text" name="auditorName" matInput [(ngModel)]="newAuditor.name">
                 </mat-form-field>
                 <mat-form-field class="full-field">
                     <mat-label>Last Name</mat-label>
-                    <input type="text" matInput>
+                    <input type="text" name="auditorLastName" matInput [(ngModel)]="newAuditor.lastName">
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Age</mat-label>
-                    <input type="number" matInput>
+                    <input type="number" name="auditorAge" matInput [(ngModel)]="newAuditor.age">
                 </mat-form-field>
                 <p>
-                    <button mat-raised-button color="primary">
-                        Save
+                    <button mat-raised-button color="primary" (click)="addAuditor()">
                         <mat-icon>save</mat-icon>
+                        Save
                     </button>
                 </p>
             </form>

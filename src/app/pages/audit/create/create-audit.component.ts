@@ -3,7 +3,9 @@ import { FormControl } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UploadResult } from '@angular/fire/storage'
 import { Observable } from 'rxjs';
+
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { Enterprise } from 'src/app/interfaces/enterprise';
@@ -12,6 +14,8 @@ import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
 import { GoalsService } from 'src/app/services/goals.service';
+import { GoalFile } from 'src/app/interfaces/goal-file';
+import { FileService } from 'src/app/services/file.service';
 
 const TYPE_CLASS = 'class'
 const TYPE_GROUP = 'group'
@@ -39,7 +43,7 @@ export class CreateAuditComponent implements OnInit {
   
   // public filteredGoalItems$: Observable<GoalItem[]>
   public auditorsList$: Observable<Auditor[]>
-  public enterprisesList$: Observable<Auditor[]>
+  public enterprisesList$: Observable<Enterprise[]>
   public auditsList$: Observable<Audit[]>;
   goalsAutoCtl = new FormControl('')
 
@@ -48,7 +52,8 @@ export class CreateAuditComponent implements OnInit {
     private auditSrv: AuditService,
     private auditorSrv: AuditorService,
     private enterpriseSrv: EnterpriseService,
-    private goalSrv: GoalsService) { }
+    private goalSrv: GoalsService,
+    private fileSrv: FileService) { }
 
   ngOnInit(): void {
     this.auditorsList$ = this.auditorSrv.getAuditors()
@@ -64,13 +69,13 @@ export class CreateAuditComponent implements OnInit {
   }
 
   initializeAudit() {
-    if(!this.newAudit.enterprise.id) {
+    if(!this.newAudit?.enterprise?.id) {
       this.presentSnackBar('Enterprise is required!')
       return
     }
 
     if(this.audits.find(audit => audit.enterprise.id == this.newAudit.enterprise.id && audit.status === AUDIT_STATUS_PENDING)) {
-      this.presentSnackBar('Audit for enterprise already exist!')
+      this.presentSnackBar(`Audit for enterprise ${this.newAudit.enterprise.name} already exist!`)
       return
     }
 
@@ -112,7 +117,6 @@ export class CreateAuditComponent implements OnInit {
     this.auditSrv
     .updateAudit(this.newAudit)
     .then(res => {
-      this.isEditState = false
       this.presentSnackBar('Audit saved!')
     })
     .catch(err => {
@@ -139,5 +143,44 @@ export class CreateAuditComponent implements OnInit {
     this.matSnackBar.open(message, undefined, {
       duration: 3000
     });
+  }
+
+  onFileSelected({$event, gitem }) {
+    const file = $event.target.files[0]
+    this.fileSrv.uploadFile(file)
+    .then((res: UploadResult) => {
+      gitem.files = gitem.files ? [...gitem.files, { name: res.ref.name, fullPath: res.ref.fullPath }] : [{ name: res.ref.name, fullPath: res.ref.fullPath }]
+    })
+    .catch(err => {
+      console.error(err)
+    })
+  }
+
+  async onDeleteFile({ file, gitem }) {
+    try {
+      const resDelete = await this.fileSrv.deleteFile(file)
+      const fileIdx = gitem.files.findIndex(item => item.name == file.name)
+      gitem.files.splice(fileIdx, 1)
+      const resUpdt = await this.auditSrv.updateAudit(this.newAudit) 
+      this.presentSnackBar('File deleted!')
+    } catch (err) {
+      this.presentSnackBar('Could not delete file!')
+      console.error(err)
+    }
+
+    /* this.fileSrv.deleteFile(file)
+    .then(res => {
+      const fileIdx = gitem.files.findIndex(item => item.name == file.name)
+      gitem.files.splice(fileIdx, 1)
+      this.presentSnackBar('File deleted!')
+    })
+    .catch(err => {
+      this.presentSnackBar('Could not delete file!')
+      console.error(err)
+    }) */
+  }
+
+  onItemAuditorChange($event: any) {
+    this.saveAudit()
   }
 }

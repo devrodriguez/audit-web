@@ -11,49 +11,20 @@
             <span i18n>New Audit</span>
         </button>
     </section>
-    <mat-card *ngIf="isEditState">
-        <mat-card-content>
-            <div class="container-scrollable">
-                <mat-accordion multi>
-                    <mat-expansion-panel *ngFor="let gitem of goalItems">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{gitem.code}} - {{gitem.name}}</mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <mat-form-field appearance="fill" class="full-field">
-                            <mat-label>Auditor</mat-label>
-                            <mat-select name="auditor" [(ngModel)]="gitem.auditor" [(value)]="defaultAuditor" [compareWith]="compareAuditor">
-                                <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">{{auditor.name}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <mat-form-field appearance="fill">
-                            <mat-label>Notes</mat-label>
-                            <textarea matInput name="" rows="3" [(ngModel)]="gitem.description"></textarea>
-                        </mat-form-field>
-                        <button mat-raised-button>
-                            <mat-icon>note</mat-icon>
-                            Add file
-                        </button>
-                        <mat-list>
-                            <mat-list-item *ngFor="let file of ['file.pdf', 'file2.pdf']">
-                                <mat-icon matListItemIcon>note</mat-icon>
-                                <div matListItemTitle>{{file}}</div>
-                            </mat-list-item>
-                        </mat-list>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-        </mat-card-content>
-        <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="saveAudit()">
-                Save
-                <mat-icon>save</mat-icon>
-            </button>
-            <button mat-raised-button (click)="closeEdition()">
-                Close
-                <mat-icon>close</mat-icon>
-            </button>
-        </mat-card-actions>
-    </mat-card>
+    <section *ngIf="isEditState">
+        <app-edit-audit 
+        [audit]="newAudit"
+        [auditorsList$]="auditorsList$"
+        (onFileSelected)="onFileSelected($event)"
+        (onDeleteFile)="onDeleteFile($event)"
+        (onItemAuditorChange)="onItemAuditorChange($event)"
+        ></app-edit-audit>
+        <br>
+        <button mat-raised-button (click)="closeEdition()">
+            Close
+            <mat-icon>close</mat-icon>
+        </button>
+    </section>
     <br>
     <!-- List audits -->
     <section *ngIf="!isEditState">
@@ -83,17 +54,6 @@
                     <mat-icon>edit</mat-icon>
                 </button>
                 <mat-divider *ngIf="audit.findings?.length > 0"></mat-divider>
-                <!-- <section *ngIf="audit.findings?.length > 0">
-                    <h2>Finding</h2>
-                    <div class="container-scrollable">
-                        <mat-list>
-                            <mat-list-item *ngFor="let finding of audit.findings">
-                                <span matListItemTitle>{{finding.shortDescription}</span>
-                                {{finding.description}}
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
-                </section> -->
             </mat-expansion-panel>
         </mat-accordion>
     </section>
