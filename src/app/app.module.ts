@@ -28,6 +28,7 @@ import { ExperienceComponent } from './pages/auditor/experience/experience.compo
 import { AuditViewComponent } from './components/audit-view/audit-view.component';
 import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { EditAuditComponent } from './components/edit-audit/edit-audit.component
     ExperienceComponent,
     AuditViewComponent,
     EditPucLegComponent,
-    EditAuditComponent
+    EditAuditComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

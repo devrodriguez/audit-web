@@ -6,27 +6,39 @@ import { AuditorComponent } from './pages/auditor/create/create-auditor.componen
 import { ListAuditComponent } from './pages/audit/list/list-audit.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
 import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
+import { LoginComponent } from './pages/login/login.component';
+
+import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 
 const routes: Routes = [
   {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
     path: 'audit',
-    component: CreateAuditComponent
+    component: CreateAuditComponent,
+    ...canActivate(() => redirectUnauthorizedTo(['/login']))
   },
   {
     path: 'audits',
-    component: ListAuditComponent
+    component: ListAuditComponent,
+    ...canActivate(() => redirectUnauthorizedTo(['/login']))
   },
   {
     path: 'auditor',
-    component: AuditorComponent
+    component: AuditorComponent,
+    ...canActivate(() => redirectUnauthorizedTo(['/login']))
   },
   {
     path: 'auditor/experience',
-    component: ExperienceComponent
+    component: ExperienceComponent,
+    ...canActivate(() => redirectUnauthorizedTo(['/login']))
   },
   {
     path: 'puc/edit',
-    component: EditPucLegComponent
+    component: EditPucLegComponent,
+    ...canActivate(() => redirectUnauthorizedTo(['/login']))
   },
   {
     path: '**',

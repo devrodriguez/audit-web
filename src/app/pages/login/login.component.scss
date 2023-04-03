@@ -1,0 +1,24 @@
+@media screen and (min-width: 992px) {
+    .container {
+        max-width: 380px;
+    }    
+}
+
+:host {
+    display: flex;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.login-button {
+    display: flex;
+    justify-content: center;
+}
+
+.login-button button {
+    width: 100%;
+}
