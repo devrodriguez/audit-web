@@ -1,31 +1,14 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <!-- Menu hamburguesa -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <!-- Opciones de Menu -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/audit">Audit</a>
-        </li>
-        <!-- <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/audits">Audits</a>
-        </li> -->
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/auditor">Auditor</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/auditor/experience">Auditor Experience</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/puc/edit">PUC</a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="button" (click)="logOut()">Sign Out</button>
-      </form>
+<mat-toolbar color="primary" *ngIf="isLoggedIn$ | async">
+  <mat-toolbar-row>
+    <div>
+      <a mat-button routerLink="/audit">Audit</a>
+      <a mat-button routerLink="/auditor">Auditor</a>
+      <a mat-button routerLink="/auditor/experience">Auditor Experience</a>
+      <a mat-button routerLink="/puc/edit">PUC</a>
+      <a mat-button (click)="logOut()">
+        <mat-icon>close</mat-icon>
+        Sign Out
+      </a>
     </div>
-  </nav>
+  </mat-toolbar-row>
+</mat-toolbar>

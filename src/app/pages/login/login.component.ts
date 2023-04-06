@@ -27,6 +27,7 @@ export class LoginComponent {
       this.authSrv.signIn(this.formLogin.value)
       .then(res => {
         console.log(res)
+        this.authSrv.loggedIn = true
         this.router.navigate(['/audit'], { replaceUrl: true })
       })
       .catch(err => {

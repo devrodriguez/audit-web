@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -9,11 +11,21 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class NavbarComponent implements OnInit {
 
+  isLoggedIn$: Observable<boolean>;
+  currentUser$: Observable<User>;
+  isLoggedIn: boolean = false
+
   constructor(
     private readonly authSrv: AuthService,
     private readonly router: Router) { }
 
   ngOnInit(): void {
+    this.isLoggedIn$ = this.authSrv.isLoggedIn
+    this.currentUser$ = this.authSrv.currentUser
+  }
+
+  ngOnDestroy(): void {
+    
   }
 
   logOut() {
