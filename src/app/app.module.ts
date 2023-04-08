@@ -1,6 +1,5 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -13,6 +12,8 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideFunctions,getFunctions } from '@angular/fire/functions';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+
+import { QuillModule } from 'ngx-quill'
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,6 +30,8 @@ import { AuditViewComponent } from './components/audit-view/audit-view.component
 import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
 import { LoginComponent } from './pages/login/login.component';
+import { EditorComponent } from './components/editor/editor.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,8 @@ import { LoginComponent } from './pages/login/login.component';
     AuditViewComponent,
     EditPucLegComponent,
     EditAuditComponent,
-    LoginComponent
+    LoginComponent, 
+    EditorComponent
   ],
   imports: [
     BrowserModule,
@@ -52,13 +56,20 @@ import { LoginComponent } from './pages/login/login.component';
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
+    BrowserAnimationsModule,
+    MaterialModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideFunctions(() => getFunctions()),
     provideStorage(() => getStorage()),
-    BrowserAnimationsModule,
-    MaterialModule
+    QuillModule.forRoot(),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     

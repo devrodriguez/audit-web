@@ -9,22 +9,28 @@ import {
   query, 
   where, 
   updateDoc,
-  doc} from '@angular/fire/firestore';
+  doc,
+  getDocs
+} from '@angular/fire/firestore';
 import { Storage, ref, uploadBytes, UploadResult } from '@angular/fire/storage'
 import { Observable } from 'rxjs';
 import { Audit } from '../interfaces/audit';
 import { GoalFile } from '../interfaces/goal-file';
+import { GoalItem } from '../interfaces/goal-item';
+import { ItemReport } from '../interfaces/item-report';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditService {
   private auditColl: CollectionReference<DocumentData>;
+  private itemRepoColl: CollectionReference<DocumentData>;
+
   constructor(
-    private firestore: Firestore,
-    private fireStorage: Storage
+    private firestore: Firestore
   ) {
     this.auditColl = collection(firestore, 'audits');
+    this.itemRepoColl = collection(firestore, 'itemReports');
   }
 
   getAudits() {
@@ -46,5 +52,27 @@ export class AuditService {
 
   updateAudit(audit: Audit) {
     return updateDoc(doc(this.firestore, "audits", audit.id), { ...audit })
+  }
+
+  saveItemReport(itemReport: ItemReport) {
+    return addDoc(this.itemRepoColl, itemReport)
+  }
+
+  getItemReport(auditID: string, goalItemID: string) {
+    return collectionData(
+      query(
+        this.itemRepoColl,
+        where('auditID', '==', auditID),
+        where('goalItemID', '==', goalItemID)
+      ), {
+        idField: 'id'
+      }) as Observable<ItemReport[]>
+  }
+
+  updateItemReport(itemReport: ItemReport) {   
+    if(itemReport.id) {
+      return updateDoc(doc(this.firestore, "itemReports", itemReport.id), { itemContent: itemReport.itemContent })
+    }
+    return this.saveItemReport(itemReport)
   }
 }

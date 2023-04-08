@@ -5,6 +5,7 @@ import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UploadResult } from '@angular/fire/storage'
 import { Observable } from 'rxjs';
+import { jsPDF } from "jspdf";
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
@@ -16,6 +17,8 @@ import { EnterpriseService } from 'src/app/services/enterprise.service';
 import { GoalsService } from 'src/app/services/goals.service';
 import { GoalFile } from 'src/app/interfaces/goal-file';
 import { FileService } from 'src/app/services/file.service';
+import { QuillEditorComponent } from 'ngx-quill';
+import Quill from 'quill';
 
 const TYPE_CLASS = 'class'
 const TYPE_GROUP = 'group'
@@ -29,6 +32,7 @@ const AUDIT_STATUS_PENDING = 'pending'
   styleUrls: ['./create-audit.component.scss']
 })
 export class CreateAuditComponent implements OnInit {
+  public htmlData: string
   public isEditState: boolean = false
   public audits: Audit[] = []
   public auditors: Auditor[] = []
@@ -40,7 +44,8 @@ export class CreateAuditComponent implements OnInit {
   public defaultAuditor: Auditor = {} as Auditor
 
   @ViewChild('matEntpRef') matEntpRef: MatSelect;
-  
+  @ViewChild('editor') editor: QuillEditorComponent;
+
   // public filteredGoalItems$: Observable<GoalItem[]>
   public auditorsList$: Observable<Auditor[]>
   public enterprisesList$: Observable<Enterprise[]>
@@ -53,7 +58,22 @@ export class CreateAuditComponent implements OnInit {
     private auditorSrv: AuditorService,
     private enterpriseSrv: EnterpriseService,
     private goalSrv: GoalsService,
-    private fileSrv: FileService) { }
+    private fileSrv: FileService) {
+    
+    const alignClass = Quill.import('attributors/style/align');
+    const backgroundClass = Quill.import('attributors/style/background');
+    const colorClass = Quill.import('attributors/style/color');
+    const directionClass = Quill.import('attributors/style/direction');
+    const fontClass = Quill.import('attributors/style/font');
+    const sizeClass = Quill.import('attributors/style/size')
+
+    Quill.register(alignClass, true)
+    Quill.register(backgroundClass, true);
+    Quill.register(colorClass, true);
+    Quill.register(directionClass, true);
+    Quill.register(fontClass, true);
+    Quill.register(sizeClass, true);
+  }
 
   ngOnInit(): void {
     this.auditorsList$ = this.auditorSrv.getAuditors()
@@ -69,12 +89,12 @@ export class CreateAuditComponent implements OnInit {
   }
 
   initializeAudit() {
-    if(!this.newAudit?.enterprise?.id) {
+    if (!this.newAudit?.enterprise?.id) {
       this.presentSnackBar('Enterprise is required!')
       return
     }
 
-    if(this.audits.find(audit => audit.enterprise.id == this.newAudit.enterprise.id && audit.status === AUDIT_STATUS_PENDING)) {
+    if (this.audits.find(audit => audit.enterprise.id == this.newAudit.enterprise.id && audit.status === AUDIT_STATUS_PENDING)) {
       this.presentSnackBar(`Audit for enterprise ${this.newAudit.enterprise.name} already exist!`)
       return
     }
@@ -97,15 +117,15 @@ export class CreateAuditComponent implements OnInit {
     this.newAudit.goalItems = this.goalItems
 
     this.auditSrv
-    .createAudit(this.newAudit)
-    .then(docRef => {
-      this.newAudit.id = docRef.id
-      this.presentSnackBar('Auditoria creada correctamente')
-    })
-    .catch(err => {
-      console.error(err);
-      this.presentSnackBar('Error al crear auditoria')
-    })
+      .createAudit(this.newAudit)
+      .then(docRef => {
+        this.newAudit.id = docRef.id
+        this.presentSnackBar('Auditoria creada correctamente')
+      })
+      .catch(err => {
+        console.error(err);
+        this.presentSnackBar('Error al crear auditoria')
+      })
   }
 
   editAudit(audit: Audit) {
@@ -115,13 +135,13 @@ export class CreateAuditComponent implements OnInit {
 
   saveAudit() {
     this.auditSrv
-    .updateAudit(this.newAudit)
-    .then(res => {
-      this.presentSnackBar('Audit saved!')
-    })
-    .catch(err => {
-      console.error(err)
-    })
+      .updateAudit(this.newAudit)
+      .then(res => {
+        this.presentSnackBar('Audit saved!')
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   closeEdition() {
@@ -145,15 +165,15 @@ export class CreateAuditComponent implements OnInit {
     });
   }
 
-  onFileSelected({$event, gitem }) {
+  onFileSelected({ $event, gitem }) {
     const file = $event.target.files[0]
     this.fileSrv.uploadFile(file)
-    .then((res: UploadResult) => {
-      gitem.files = gitem.files ? [...gitem.files, { name: res.ref.name, fullPath: res.ref.fullPath }] : [{ name: res.ref.name, fullPath: res.ref.fullPath }]
-    })
-    .catch(err => {
-      console.error(err)
-    })
+      .then((res: UploadResult) => {
+        gitem.files = gitem.files ? [...gitem.files, { name: res.ref.name, fullPath: res.ref.fullPath }] : [{ name: res.ref.name, fullPath: res.ref.fullPath }]
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 
   async onDeleteFile({ file, gitem }) {
@@ -161,7 +181,7 @@ export class CreateAuditComponent implements OnInit {
       const resDelete = await this.fileSrv.deleteFile(file)
       const fileIdx = gitem.files.findIndex(item => item.name == file.name)
       gitem.files.splice(fileIdx, 1)
-      const resUpdt = await this.auditSrv.updateAudit(this.newAudit) 
+      const resUpdt = await this.auditSrv.updateAudit(this.newAudit)
       this.presentSnackBar('File deleted!')
     } catch (err) {
       this.presentSnackBar('Could not delete file!')
@@ -182,5 +202,31 @@ export class CreateAuditComponent implements OnInit {
 
   onItemAuditorChange($event: any) {
     this.saveAudit()
+  }
+
+  exportPDF() {
+    const content = this.editor.quillEditor.root.innerHTML;
+    console.log(content)
+    const doc = new jsPDF({
+      orientation: 'p',
+      unit: 'px',
+      format: 'a4'
+    });
+
+    doc.html(content, {
+      callback: (doc: jsPDF) => {
+        doc.save('document.pdf');
+      },
+      margin: [20, 20, 20, 20],
+      autoPaging: 'text',
+      x: 0,
+      y: 0,
+      width: 190,
+      windowWidth: 675
+    });
+  }
+
+  viewData() {
+    console.log(this.htmlData)
   }
 }
