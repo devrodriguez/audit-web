@@ -15,6 +15,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 
 @NgModule({
     imports: [
@@ -32,7 +34,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         MatListModule,
         MatTreeModule,
         MatTooltipModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatToolbarModule
     ],
     exports: [
         MatSelectModule,
@@ -49,7 +52,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
         MatListModule,
         MatTreeModule,
         MatTooltipModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatToolbarModule
     ]
 })
 export class MaterialModule { }
