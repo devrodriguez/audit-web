@@ -1,44 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from '@angular/fire/auth';
-import { BehaviorSubject } from 'rxjs';
+import { 
+  Auth,
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  User, 
+  browserSessionPersistence
+} from '@angular/fire/auth';
+import { Observable } from 'rxjs';
+import { LoginData } from '../interfaces/login-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private _loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
-  private _user: BehaviorSubject<User> = new BehaviorSubject<User>(null)
+  public user$: Observable<User>
+  userData: User
 
-  constructor(private readonly auth: Auth) {
-    onAuthStateChanged(this.auth, (user: User) => {
-      if(user) {
-        this._user.next(user)
-        this._loggedIn.next(true)
-      } else {
-        this._user.next(null)
-        this._loggedIn.next(false)
-      }
+  constructor(private readonly auth: Auth) { 
+    onAuthStateChanged(auth, (user) => {
+      this.userData = user
     })
   }
 
-  get isLoggedIn() {
-    return this._loggedIn.asObservable()
-  }
-
-  set loggedIn(status: boolean) {
-    this._loggedIn.next(status)
-  }
-
-  get currentUser() {
-    return this._user.asObservable()
-  }
-
-  register({ email, password }: any) {
+  register({ email, password }: LoginData) {
     return createUserWithEmailAndPassword(this.auth, email, password)
   }
 
-  signIn({ email, password }: any) {
-    return signInWithEmailAndPassword(this.auth, email, password)
+  async signIn({ email, password }: LoginData) {
+    return this.auth.setPersistence(browserSessionPersistence)
+    .then(() => signInWithEmailAndPassword(this.auth, email, password))
+    
   }
 
   signOut() {

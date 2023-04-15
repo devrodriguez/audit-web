@@ -1,10 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'audit-web';
+export class AppComponent implements OnInit {
+  constructor(public authSrv: AuthService) {
+    console.log('on app component: ', authSrv.userData)
+  }
+
+  ngOnInit(): void {
+    console.log('on app component init: ', this.authSrv.userData)
+  }
 }
