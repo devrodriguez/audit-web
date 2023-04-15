@@ -9,6 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "deploy-fire": "firebase deploy",
     "ng-i18n": "ng extract-i18n --output-path=src/locale"
   },
   "private": true,
