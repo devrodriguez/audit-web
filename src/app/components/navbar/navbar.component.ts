@@ -20,8 +20,7 @@ export class NavbarComponent implements OnInit {
     private readonly router: Router) { }
 
   ngOnInit(): void {
-    this.isLoggedIn$ = this.authSrv.isLoggedIn
-    this.currentUser$ = this.authSrv.currentUser
+
   }
 
   ngOnDestroy(): void {
