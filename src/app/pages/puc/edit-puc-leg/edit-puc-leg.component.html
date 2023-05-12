@@ -29,12 +29,17 @@
                 <mat-list-item *ngFor="let goalItem of goalItems">
                     <div matListItemTitle>{{goalItem.code}} - {{goalItem.name}}</div>
                     <div matListItemMeta>
-                        <button mat-icon-button>
-                            <mat-icon>edit</mat-icon>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Show menu options">
+                            <mat-icon>more_vert</mat-icon>
                         </button>
-                        <button mat-icon-button>
-                            <mat-icon>delete</mat-icon>
-                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
                     </div>
                 </mat-list-item>
             </mat-list>

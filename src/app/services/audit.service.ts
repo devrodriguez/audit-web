@@ -69,6 +69,17 @@ export class AuditService {
       }) as Observable<ItemReport[]>
   }
 
+  getAuditItemsReport(auditID: string) {
+    return collectionData(
+      query(
+        this.itemRepoColl,
+        where('auditID', '==', auditID)
+      ), {
+        idField: 'id'
+      }
+    ) as Observable<ItemReport[]>
+  }
+
   updateItemReport(itemReport: ItemReport) {   
     if(itemReport.id) {
       return updateDoc(doc(this.firestore, "itemReports", itemReport.id), { itemContent: itemReport.itemContent })

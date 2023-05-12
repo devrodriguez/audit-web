@@ -165,23 +165,25 @@ export class CreateAuditComponent implements OnInit {
     });
   }
 
-  onFileSelected({ $event, gitem }) {
+  async onFileSelected({ $event, gitem }) {
     const file = $event.target.files[0]
-    this.fileSrv.uploadFile(file)
-      .then((res: UploadResult) => {
-        gitem.files = gitem.files ? [...gitem.files, { name: res.ref.name, fullPath: res.ref.fullPath }] : [{ name: res.ref.name, fullPath: res.ref.fullPath }]
-      })
-      .catch(err => {
-        console.error(err)
-      })
+
+    try {
+      const upRes = await this.fileSrv.uploadFile(file)
+      const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
+      gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
+      this.auditSrv.updateAudit(this.newAudit)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async onDeleteFile({ file, gitem }) {
     try {
-      const resDelete = await this.fileSrv.deleteFile(file)
+      await this.fileSrv.deleteFile(file)
       const fileIdx = gitem.files.findIndex(item => item.name == file.name)
       gitem.files.splice(fileIdx, 1)
-      const resUpdt = await this.auditSrv.updateAudit(this.newAudit)
+      await this.auditSrv.updateAudit(this.newAudit)
       this.presentSnackBar('File deleted!')
     } catch (err) {
       this.presentSnackBar('Could not delete file!')

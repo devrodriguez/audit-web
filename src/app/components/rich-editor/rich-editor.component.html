@@ -1,0 +1,13 @@
+<section class="editor-container">
+    <div mat-dialog-content class="editor-content">
+        <quill-editor #editor [(ngModel)]="itemReport.itemContent" *ngIf="isEditable"></quill-editor>
+        <quill-view [content]="itemReport.itemContent" *ngIf="!isEditable"></quill-view>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-raised-button (click)="saveData()" *ngIf="isEditable">Save</button>
+        <button mat-raised-button (click)="isEditable = false" *ngIf="isEditable">View</button>
+        <button mat-raised-button (click)="isEditable = true" *ngIf="!isEditable">Edit</button>
+        <button mat-raised-button (click)="exportPDF()">PDF</button>
+        <button mat-raised-button mat-dialog-close>Close</button>
+    </div>
+</section>

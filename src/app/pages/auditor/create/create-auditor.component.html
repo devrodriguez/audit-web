@@ -23,4 +23,26 @@
             </form>
         </mat-card-content>
     </mat-card>
+    <section>
+        <div class="container-scrollable">
+            <mat-list>
+                <mat-list-item *ngFor="let auditor of auditors$ | async">
+                    <div matListItemTitle>{{auditor.name}} {{auditor.lastName}}</div>
+                    <div matListItemMeta>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Show menu options">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </section>
 </div>
