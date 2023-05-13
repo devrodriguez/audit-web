@@ -28,7 +28,7 @@
     <br>
     <!-- List audits -->
     <section *ngIf="!isEditState">
-        <mat-accordion class="mat-accordion-container" multi>
+        <mat-accordion class="mat-accordion-container">
             <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
                 <mat-expansion-panel-header>
                     <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>

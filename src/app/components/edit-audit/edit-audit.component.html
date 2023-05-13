@@ -6,7 +6,7 @@
         </mat-card-header>
     </mat-card>
     <div class="container-scrollable">
-        <mat-accordion multi>
+        <mat-accordion>
             <mat-expansion-panel *ngFor="let gitem of audit.goalItems">
                 <mat-expansion-panel-header>
                     <mat-panel-title>{{gitem.code}} - {{gitem.name}}</mat-panel-title>
@@ -20,19 +20,19 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <button mat-raised-button (click)="showEditor(gitem)">
+                <button mat-raised-button class="button-proximity" (click)="showEditor(gitem)">
                     Show Editor
                     <mat-icon>edit</mat-icon>
                 </button>
-                <input hidden type="file" id="file" #fileInput (change)="fileSelected($event, gitem)">
+                <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, gitem)">
                 <button mat-raised-button (click)="fileInput.click()">
-                    <mat-icon>note</mat-icon>
+                    <mat-icon>attach_file</mat-icon>
                     Add file
                 </button>
                 <mat-list>
                     <mat-list-item *ngFor="let file of gitem.files">
-                        <mat-icon matListItemIcon>note</mat-icon>
-                        <div matListItemTitle>{{file.name}}</div>
+                        <mat-icon matListItemIcon>description</mat-icon>
+                        <div matListItemTitle><a [href]="file.fullPath">{{file.name}}</a></div>
                         <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file">
                             <mat-icon class>delete</mat-icon>
                         </button>

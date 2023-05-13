@@ -1,11 +1,13 @@
 import { Component, ViewChild, EventEmitter, Output, Inject, OnInit, Input } from '@angular/core'
-import { QuillEditorComponent } from 'ngx-quill'
+import { QuillEditorComponent, QuillModules } from 'ngx-quill'
+import Quill from 'quill';
 import { jsPDF } from 'jspdf'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog'
+import { MatSnackBar } from '@angular/material/snack-bar'
+
 import { AuditService } from 'src/app/services/audit.service'
 import { ItemReport } from 'src/app/interfaces/item-report'
-import { take } from 'rxjs'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { sansSerif } from 'src/app/constants/fonts'
 
 @Component({
   selector: 'app-rich-editor',
@@ -16,6 +18,7 @@ export class RichEditorComponent implements OnInit {
   public htmlData: string
   public isEditable: boolean
   public itemReport: ItemReport = {} as ItemReport
+  public modules: QuillModules
 
   @ViewChild('editor') editor: QuillEditorComponent
   @Output() onUpdate = new EventEmitter()
@@ -24,7 +27,23 @@ export class RichEditorComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public inputData: any,
     private readonly snack: MatSnackBar,
     private readonly auditSrv: AuditService
-  ) {}
+  ) {
+    const alignClass = Quill.import('attributors/style/align');
+    const backgroundClass = Quill.import('attributors/style/background');
+    const colorClass = Quill.import('attributors/style/color');
+    const directionClass = Quill.import('attributors/style/direction');
+    const fontClass = Quill.import('attributors/style/font');
+    const sizeClass = Quill.import('attributors/style/size')
+    const FontAttributor = Quill.import('attributors/class/font');
+    FontAttributor.whitelist = ['impact', 'courier', 'comic'];
+    Quill.register(FontAttributor, true);
+    Quill.register(alignClass, true)
+    Quill.register(backgroundClass, true);
+    Quill.register(colorClass, true);
+    Quill.register(directionClass, true);
+    Quill.register(fontClass, true);
+    Quill.register(sizeClass, true);
+  }
 
   ngOnInit(): void {
     const { itemReport, isEditable } = this.inputData
@@ -49,19 +68,19 @@ export class RichEditorComponent implements OnInit {
     const doc = new jsPDF({
       orientation: 'p',
       unit: 'px',
-      format: 'a4'
+      format: 'letter'
     });
 
     doc.html(content, {
       callback: (doc: jsPDF) => {
         doc.save('document.pdf');
       },
-      margin: [20, 20, 20, 20],
+      margin: [35, 35, 35, 35],
       autoPaging: 'text',
       x: 0,
       y: 0,
-      width: 380,
-      windowWidth: 1350
+      width: 816,
+      windowWidth: 816,
     });
   }
 
