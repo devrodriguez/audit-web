@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="responsive-container" *ngIf="!selAudit.id">
+    <div class="responsive-container" *ngIf="!selectedAudit.id">
         <mat-card *ngFor="let audit of auditList" class="mat-card-container">
             <mat-card-header>
                 <mat-card-title-group>
@@ -18,20 +18,29 @@
                 
             </mat-card-content>
             <mat-card-actions>
-                <button mat-button (click)="viewAudit(audit)">Full View</button>
+                <button mat-button color="primary" (click)="viewAudit(audit)">
+                    <mat-icon>visibility</mat-icon>
+                    Full View
+                </button>
             </mat-card-actions>
         </mat-card>
     </div>
-    <section *ngIf="selAudit.id">
+    <section *ngIf="selectedAudit.id">
         <app-edit-audit 
         [isAuditorDisabled]="true"
-        [audit]="selAudit"
+        [audit]="selectedAudit"
         [auditorsList$]="auditorList$"
+        (onFileSelected)="onFileSelected($event)"
+        (onDeleteFile)="onDeleteFile($event)"
         ></app-edit-audit>
         <br>
-        <button mat-raised-button (click)="closeEdition()">
+        <button mat-raised-button class="button-proximity" (click)="closeEdition()">
             Close
             <mat-icon>close</mat-icon>
+        </button>
+        <button mat-raised-button class="button-proximity" (click)="previewReport()">
+            View Full Report
+            <mat-icon>article</mat-icon>
         </button>
     </section>
 </div>

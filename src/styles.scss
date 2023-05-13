@@ -21,4 +21,8 @@
     font-family: 'Gilroy Regular' !important;
 }
 
-@import '~quill/dist/quill.snow.css'
+@import '~quill/dist/quill.snow.css';
+
+.button-proximity {
+    margin-right: 5px;
+}

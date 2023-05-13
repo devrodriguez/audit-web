@@ -24,13 +24,11 @@ import { MaterialModule } from './material.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuditorComponent } from './pages/auditor/create/create-auditor.component';
-import { GoalFormComponent } from './components/goal-form/goal-form.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
-import { AuditViewComponent } from './components/audit-view/audit-view.component';
 import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
 import { LoginComponent } from './pages/login/login.component';
-import { EditorComponent } from './components/editor/editor.component';
+import { RichEditorComponent } from './components/rich-editor/rich-editor.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
@@ -41,13 +39,11 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     NavbarComponent,
     DashboardComponent,
     AuditorComponent,
-    GoalFormComponent,
     ExperienceComponent,
-    AuditViewComponent,
     EditPucLegComponent,
     EditAuditComponent,
     LoginComponent, 
-    EditorComponent
+    RichEditorComponent
   ],
   imports: [
     BrowserModule,

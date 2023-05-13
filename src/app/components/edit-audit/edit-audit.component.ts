@@ -2,13 +2,15 @@ import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core
 import { MatDialog } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import { QuillEditorComponent } from 'ngx-quill';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { GoalFile } from 'src/app/interfaces/goal-file';
 import { GoalItem } from 'src/app/interfaces/goal-item';
-import { EditorComponent } from '../editor/editor.component';
+import { ItemReport } from 'src/app/interfaces/item-report';
+import { AuditService } from 'src/app/services/audit.service';
+import { RichEditorComponent } from '../rich-editor/rich-editor.component';
 
 @Component({
   selector: 'app-edit-audit',
@@ -25,8 +27,33 @@ export class EditAuditComponent {
 
   @ViewChild('editor') editor: QuillEditorComponent;
 
-  constructor(private readonly matDialog: MatDialog) {
+  constructor(
+    private readonly matDialog: MatDialog,
+    private readonly auditSrv: AuditService) {}
 
+  loadItemReport(auditID: string, goalItemID: string) {
+    this.auditSrv.getItemReport(auditID, goalItemID)
+    .pipe(
+      take(1)
+    ).subscribe(itemReports => {
+      let itemReport: ItemReport = {
+        auditID,
+        goalItemID
+      } as ItemReport
+
+      if(itemReports.length) {
+        itemReport = itemReports[0]
+      }
+
+      this.matDialog.open(RichEditorComponent, {
+        data: {
+          itemReport,
+          isEditable: true
+        }
+      })
+    }, err => {
+      console.error(err)
+    })
   }
 
   compareAuditor(x: Auditor, y: Auditor): boolean {
@@ -56,11 +83,6 @@ export class EditAuditComponent {
   }
 
   showEditor(goalItem: GoalItem) {
-    this.matDialog.open(EditorComponent, {
-      data: {
-        auditID: this.audit.id,
-        goalItemID: goalItem.id
-      }
-    })
+    this.loadItemReport(this.audit.id, goalItem.id)
   }
 }

@@ -1,6 +1,6 @@
 <div class="container">
     <section>
-        <mat-form-field appearance="fill" class="full-field">
+        <mat-form-field appearance="fill" class="full-field" *ngIf="!isEditState">
             <mat-label i18n>Enterprise</mat-label>
             <mat-select #matEntpRef name="enterprise" [(ngModel)]="newAudit.enterprise" [compareWith]="compareEnterprise">
                 <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">{{enterprise.name}}</mat-option>
@@ -28,7 +28,7 @@
     <br>
     <!-- List audits -->
     <section *ngIf="!isEditState">
-        <mat-accordion class="mat-accordion-container" multi>
+        <mat-accordion class="mat-accordion-container">
             <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
                 <mat-expansion-panel-header>
                     <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>

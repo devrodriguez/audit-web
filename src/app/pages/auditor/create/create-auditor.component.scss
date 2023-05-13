@@ -6,3 +6,17 @@
 .full-field {
     width: 100%;
 }
+
+.container-scrollable {
+    overflow-y: scroll;
+    height: 300px;
+}
+
+.container-scrollable::-webkit-scrollbar {
+    display: none;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+}

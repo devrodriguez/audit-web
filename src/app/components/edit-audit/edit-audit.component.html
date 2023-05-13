@@ -1,40 +1,44 @@
-<div class="container-scrollable">
-    <mat-accordion multi>
-        <mat-expansion-panel *ngFor="let gitem of audit.goalItems">
-            <mat-expansion-panel-header>
-                <mat-panel-title>{{gitem.code}} - {{gitem.name}}</mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-form-field appearance="fill" class="full-field">
-                <mat-label>Auditor</mat-label>
-                <mat-select name="auditor" [(ngModel)]="gitem.auditor" [compareWith]="compareAuditor" [disabled]="isAuditorDisabled"
-                    (selectionChange)="itemAuditorChange($event)">
-                    <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
-                        {{auditor.name}} {{auditor.lastName}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <!-- <mat-form-field appearance="fill">
-                <mat-label>Notes</mat-label>
-                <textarea matInput name="" rows="3" [(ngModel)]="gitem.description"></textarea>
-            </mat-form-field> -->
-            <button mat-raised-button (click)="showEditor(gitem)">
-                Show Editor
-                <mat-icon>edit</mat-icon>
-            </button>
-            <input hidden type="file" id="file" #fileInput (change)="fileSelected($event, gitem)">
-            <button mat-raised-button (click)="fileInput.click()">
-                <mat-icon>note</mat-icon>
-                Add file
-            </button>
-            <mat-list>
-                <mat-list-item *ngFor="let file of gitem.files">
-                    <mat-icon matListItemIcon>note</mat-icon>
-                    <div matListItemTitle>{{file.name}}</div>
-                    <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file">
-                        <mat-icon class>delete</mat-icon>
-                    </button>
-                </mat-list-item>
-            </mat-list>
-        </mat-expansion-panel>
-    </mat-accordion>
+<div>
+    <mat-card class="audit-information-card">
+        <mat-card-header>
+            <mat-card-title>Audit for <strong>{{audit.enterprise.name}}</strong></mat-card-title>
+            <mat-card-subtitle>Created at {{audit.createdAt | date: 'dd/MM/yyyy'}}</mat-card-subtitle>
+        </mat-card-header>
+    </mat-card>
+    <div class="container-scrollable">
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let gitem of audit.goalItems">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>{{gitem.code}} - {{gitem.name}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-form-field appearance="fill" class="full-field">
+                    <mat-label>Auditor</mat-label>
+                    <mat-select name="auditor" [(ngModel)]="gitem.auditor" [compareWith]="compareAuditor" [disabled]="isAuditorDisabled"
+                        (selectionChange)="itemAuditorChange($event)">
+                        <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
+                            {{auditor.name}} {{auditor.lastName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button class="button-proximity" (click)="showEditor(gitem)">
+                    Show Editor
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, gitem)">
+                <button mat-raised-button (click)="fileInput.click()">
+                    <mat-icon>attach_file</mat-icon>
+                    Add file
+                </button>
+                <mat-list>
+                    <mat-list-item *ngFor="let file of gitem.files">
+                        <mat-icon matListItemIcon>description</mat-icon>
+                        <div matListItemTitle><a [href]="file.fullPath">{{file.name}}</a></div>
+                        <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file">
+                            <mat-icon class>delete</mat-icon>
+                        </button>
+                    </mat-list-item>
+                </mat-list>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 </div>

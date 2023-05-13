@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { AuditorService } from 'src/app/services/auditor.service';
 
@@ -10,6 +11,7 @@ import { AuditorService } from 'src/app/services/auditor.service';
 })
 export class AuditorComponent implements OnInit {
   public newAuditor: Auditor = {} as Auditor
+  public auditors$: Observable<Auditor[]>
 
   constructor(
     private readonly matSnackBar: MatSnackBar,
@@ -17,6 +19,7 @@ export class AuditorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadAuditors()
   }
 
   addAuditor() {
@@ -30,6 +33,10 @@ export class AuditorComponent implements OnInit {
         this.presentSnackBar('Could not create auditor!')
         console.error(err)
       })
+  }
+
+  loadAuditors() {
+    this.auditors$ = this.auditorSrv.getAuditors()
   }
 
   /** Event Components */

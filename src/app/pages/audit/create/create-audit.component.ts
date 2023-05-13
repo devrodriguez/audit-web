@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UploadResult } from '@angular/fire/storage'
 import { Observable } from 'rxjs';
 import { jsPDF } from "jspdf";
 
@@ -15,10 +14,8 @@ import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
 import { GoalsService } from 'src/app/services/goals.service';
-import { GoalFile } from 'src/app/interfaces/goal-file';
 import { FileService } from 'src/app/services/file.service';
 import { QuillEditorComponent } from 'ngx-quill';
-import Quill from 'quill';
 
 const TYPE_CLASS = 'class'
 const TYPE_GROUP = 'group'
@@ -58,22 +55,7 @@ export class CreateAuditComponent implements OnInit {
     private auditorSrv: AuditorService,
     private enterpriseSrv: EnterpriseService,
     private goalSrv: GoalsService,
-    private fileSrv: FileService) {
-    
-    const alignClass = Quill.import('attributors/style/align');
-    const backgroundClass = Quill.import('attributors/style/background');
-    const colorClass = Quill.import('attributors/style/color');
-    const directionClass = Quill.import('attributors/style/direction');
-    const fontClass = Quill.import('attributors/style/font');
-    const sizeClass = Quill.import('attributors/style/size')
-
-    Quill.register(alignClass, true)
-    Quill.register(backgroundClass, true);
-    Quill.register(colorClass, true);
-    Quill.register(directionClass, true);
-    Quill.register(fontClass, true);
-    Quill.register(sizeClass, true);
-  }
+    private fileSrv: FileService) {}
 
   ngOnInit(): void {
     this.auditorsList$ = this.auditorSrv.getAuditors()
@@ -165,23 +147,25 @@ export class CreateAuditComponent implements OnInit {
     });
   }
 
-  onFileSelected({ $event, gitem }) {
+  async onFileSelected({ $event, gitem }) {
     const file = $event.target.files[0]
-    this.fileSrv.uploadFile(file)
-      .then((res: UploadResult) => {
-        gitem.files = gitem.files ? [...gitem.files, { name: res.ref.name, fullPath: res.ref.fullPath }] : [{ name: res.ref.name, fullPath: res.ref.fullPath }]
-      })
-      .catch(err => {
-        console.error(err)
-      })
+
+    try {
+      const upRes = await this.fileSrv.uploadFile(file)
+      const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
+      gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
+      this.auditSrv.updateAudit(this.newAudit)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async onDeleteFile({ file, gitem }) {
     try {
-      const resDelete = await this.fileSrv.deleteFile(file)
+      await this.fileSrv.deleteFile(file)
       const fileIdx = gitem.files.findIndex(item => item.name == file.name)
       gitem.files.splice(fileIdx, 1)
-      const resUpdt = await this.auditSrv.updateAudit(this.newAudit)
+      await this.auditSrv.updateAudit(this.newAudit)
       this.presentSnackBar('File deleted!')
     } catch (err) {
       this.presentSnackBar('Could not delete file!')
