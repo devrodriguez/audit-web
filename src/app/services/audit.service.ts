@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { 
+import {
   Firestore,
-  collection, 
-  collectionData, 
-  CollectionReference, 
-  DocumentData, 
+  collection,
+  collectionData,
+  CollectionReference,
+  DocumentData,
   addDoc,
-  query, 
-  where, 
+  query,
+  where,
   updateDoc,
   doc,
   getDocs
@@ -65,8 +65,8 @@ export class AuditService {
         where('auditID', '==', auditID),
         where('goalItemID', '==', goalItemID)
       ), {
-        idField: 'id'
-      }) as Observable<ItemReport[]>
+      idField: 'id'
+    }) as Observable<ItemReport[]>
   }
 
   getAuditItemsReport(auditID: string) {
@@ -75,15 +75,25 @@ export class AuditService {
         this.itemRepoColl,
         where('auditID', '==', auditID)
       ), {
-        idField: 'id'
-      }
+      idField: 'id'
+    }
     ) as Observable<ItemReport[]>
   }
 
-  updateItemReport(itemReport: ItemReport) {   
-    if(itemReport.id) {
-      return updateDoc(doc(this.firestore, "itemReports", itemReport.id), { itemContent: itemReport.itemContent })
+  updateItemReport(itemReport: ItemReport) {
+    const now = new Date().toISOString()
+
+    if (itemReport.id) {
+      return updateDoc(
+        doc(this.firestore, "itemReports", itemReport.id),
+        {
+          itemContent: itemReport.itemContent,
+          updatedAt: now
+        }
+      )
     }
+
+    itemReport.createdAt = now
     return this.saveItemReport(itemReport)
   }
 }

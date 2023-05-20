@@ -12,6 +12,7 @@ import { ItemReport } from 'src/app/interfaces/item-report';
 import { FileService } from 'src/app/services/file.service';
 import { UploadResult } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CkeditorComponent } from 'src/app/components/ckeditor/ckeditor.component';
 
 @Component({
   selector: 'app-experience',
@@ -82,17 +83,6 @@ export class ExperienceComponent implements OnInit {
       this.presentSnackBar('Could not delete file!')
       console.error(err)
     }
-
-    /* this.fileSrv.deleteFile(file)
-    .then(res => {
-      const fileIdx = gitem.files.findIndex(item => item.name == file.name)
-      gitem.files.splice(fileIdx, 1)
-      this.presentSnackBar('File deleted!')
-    })
-    .catch(err => {
-      this.presentSnackBar('Could not delete file!')
-      console.error(err)
-    }) */
   }
 
   previewReport() {
@@ -109,7 +99,8 @@ export class ExperienceComponent implements OnInit {
           itemContent: reportContent
         }
 
-        this.matDialog.open(RichEditorComponent, {
+        this.matDialog.open(CkeditorComponent, {
+          height: '900px',
           data: {
             itemReport,
             isEditable: false

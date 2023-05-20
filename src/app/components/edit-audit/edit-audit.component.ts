@@ -10,6 +10,7 @@ import { GoalFile } from 'src/app/interfaces/goal-file';
 import { GoalItem } from 'src/app/interfaces/goal-item';
 import { ItemReport } from 'src/app/interfaces/item-report';
 import { AuditService } from 'src/app/services/audit.service';
+import { CkeditorComponent } from '../ckeditor/ckeditor.component';
 import { RichEditorComponent } from '../rich-editor/rich-editor.component';
 
 @Component({
@@ -45,7 +46,10 @@ export class EditAuditComponent {
         itemReport = itemReports[0]
       }
 
-      this.matDialog.open(RichEditorComponent, {
+      this.matDialog.open(CkeditorComponent, {
+        width: '100%',
+        minHeight: 'calc(100vh - 90px)',
+        height : 'auto',
         data: {
           itemReport,
           isEditable: true

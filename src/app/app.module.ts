@@ -12,8 +12,10 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { provideFunctions,getFunctions } from '@angular/fire/functions';
 import { provideStorage,getStorage } from '@angular/fire/storage';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { QuillModule } from 'ngx-quill'
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -29,7 +31,7 @@ import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.compo
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RichEditorComponent } from './components/rich-editor/rich-editor.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { CkeditorComponent } from './components/ckeditor/ckeditor.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     EditPucLegComponent,
     EditAuditComponent,
     LoginComponent, 
-    RichEditorComponent
+    RichEditorComponent,
+    CkeditorComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +69,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    CKEditorModule
   ],
   providers: [
     
