@@ -2,5 +2,6 @@ export interface Auditor {
     id: string
     name: string
     lastName: string
-    age: number
+    age?: number
+    email?: string
 }

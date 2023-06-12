@@ -10,13 +10,9 @@ import {
   where,
   updateDoc,
   doc,
-  getDocs
 } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, UploadResult } from '@angular/fire/storage'
 import { Observable } from 'rxjs';
 import { Audit } from '../interfaces/audit';
-import { GoalFile } from '../interfaces/goal-file';
-import { GoalItem } from '../interfaces/goal-item';
 import { ItemReport } from '../interfaces/item-report';
 
 @Injectable({

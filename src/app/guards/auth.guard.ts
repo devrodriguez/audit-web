@@ -2,33 +2,45 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { getAuth, onAuthStateChanged } from '@firebase/auth';
 import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+
+import { AppUser } from '../interfaces/app-user';
+import { UserService } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
+  appUser: AppUser = {} as AppUser
+  pathIgnore: string[] = ['dashboard']
+
   constructor(
     private router: Router,
-    private authSrv: AuthService
-  ) {
-
-  }
+    private userSrv: UserService
+  ) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean {
-      return new Promise((resolve, reject) => {
-        const auth = getAuth()
+    return new Promise((resolve, reject) => {
+      const auth = getAuth()
 
-        onAuthStateChanged(auth, (user) => {
-          if(user) {
-            resolve(true)
-          } else {
-            this.router.navigateByUrl('login', { replaceUrl: true })
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.userSrv.getUserByEmail(user.email)
+            .then(appUser => {
+              this.appUser = appUser
+              const { roles } = route.data;
+
+              if(roles && !roles.includes(appUser.role) && !this.pathIgnore.includes(route.routeConfig.path)) {
+                this.router.navigateByUrl('dashboard', { replaceUrl: true })
+              }
+              resolve(true)
+            })
+        } else {
+          this.router.navigateByUrl('login', { replaceUrl: true })
           resolve(false)
-          }
-        })
+        }
       })
+    })
   }
-  
+
 }

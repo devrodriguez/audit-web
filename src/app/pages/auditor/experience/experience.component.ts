@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { jsPDF } from 'jspdf'
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RichEditorComponent } from 'src/app/components/rich-editor/rich-editor.component';
 import { ItemReport } from 'src/app/interfaces/item-report';
 import { FileService } from 'src/app/services/file.service';
-import { UploadResult } from '@angular/fire/storage';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CkeditorComponent } from 'src/app/components/ckeditor/ckeditor.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-experience',
@@ -29,24 +27,26 @@ export class ExperienceComponent implements OnInit {
     private readonly matSnackBar: MatSnackBar,
     private readonly auditSrv: AuditService,
     private readonly auditorSrv: AuditorService,
+    private readonly authSrv: AuthService,
     private readonly fileSrv: FileService
   ) { }
 
   ngOnInit() {
-    this.getAudits()
-    this.getAuditors()
+    this.loadAudits()
+    this.loadAuditors()
   }
 
-  getAudits() {
+  loadAudits() {
+    const userData = this.authSrv.userData
     this.auditSrv.getAudits()
       .subscribe(res => {
-        this.auditList = res.filter(item => item.goalItems.find(gi => gi.auditor && gi.auditor.id === 'Q7VmUH28xDWttKWNjNqk'))
+        this.auditList = res.filter(item => item.goalItems.find(gi => gi.auditor && gi.auditor.email === userData.email))
       }, err => {
         console.error(err)
       })
   }
 
-  getAuditors() {
+  loadAuditors() {
     this.auditorList$ = this.auditorSrv.getAuditors()
   }
 
