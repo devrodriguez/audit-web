@@ -3,4 +3,6 @@ export interface ItemReport {
     goalItemID?: string
     auditID?: string
     itemContent: string
+    createdAt?: string
+    updatedAt?: string
 }

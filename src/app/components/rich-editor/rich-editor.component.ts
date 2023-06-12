@@ -7,7 +7,6 @@ import { MatSnackBar } from '@angular/material/snack-bar'
 
 import { AuditService } from 'src/app/services/audit.service'
 import { ItemReport } from 'src/app/interfaces/item-report'
-import { sansSerif } from 'src/app/constants/fonts'
 
 @Component({
   selector: 'app-rich-editor',

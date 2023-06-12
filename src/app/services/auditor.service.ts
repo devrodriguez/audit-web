@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, CollectionReference, DocumentData, Firestore } from '@angular/fire/firestore';
+import { addDoc, collectionData, CollectionReference, deleteDoc, doc, DocumentData, Firestore, getDoc } from '@angular/fire/firestore';
 import { collection } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { Auditor } from '../interfaces/auditor';
@@ -24,4 +24,9 @@ export class AuditorService {
   createAuditor(auditor: Auditor) {
     return addDoc(this.auditorColl, auditor);
   }
+
+  removeAuditor(auditorID: string) {
+    return deleteDoc(doc(this.firestore, 'auditors', auditorID))
+  }
+
 }

@@ -17,29 +17,40 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN', 'AUDITOR'] }
+  },
+  {
     path: 'audit',
     component: CreateAuditComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'audits',
     component: ListAuditComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: 'auditor',
     component: AuditorComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
-    path: 'auditor/experience',
+    path: 'auditor-experience',
     component: ExperienceComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN', 'AUDITOR'] }
   },
   {
-    path: 'puc/edit',
+    path: 'audit-items',
     component: EditPucLegComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
   },
   {
     path: '**', 

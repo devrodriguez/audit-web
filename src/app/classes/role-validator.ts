@@ -1,11 +1,11 @@
-import { User } from "../interfaces/user";
+import { AppUser } from "../interfaces/app-user";
 
 export class RoleValidator {
-    isAdmin(user: User): boolean {
+    isAdmin(user: AppUser): boolean {
         return user.role === 'ADMIN'
     }
 
-    isEditor(user: User): boolean {
-        return user.role === 'EDITOR'
+    isEditor(user: AppUser): boolean {
+        return user.role === 'AUDITOR'
     } 
 }
