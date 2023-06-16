@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
 import { Auditor } from 'src/app/interfaces/auditor';
@@ -11,26 +12,39 @@ import { AuditorService } from 'src/app/services/auditor.service';
   styleUrls: ['./create-auditor.component.scss']
 })
 export class AuditorComponent implements OnInit {
+  @ViewChild('af') auditorFormDr: NgForm;
+  @ViewChild(FormGroupDirective) myForm
+
   public newAuditor: Auditor = {} as Auditor
   public auditors$: Observable<Auditor[]>
-
-  @ViewChild('auditorForm', {static: false}) auditorForm: NgForm;
+  public auditorForm: FormGroup
 
   constructor(
     private readonly matSnackBar: MatSnackBar,
-    private readonly auditorSrv: AuditorService
+    private readonly auditorSrv: AuditorService,
+    private readonly formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
+    this.auditorForm = this.formBuilder.group({
+      name: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.pattern("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")]),
+      age: new FormControl('', [])
+    })
+
     this.loadAuditors()
   }
 
-  addAuditor() {
+  auditorFormSubmit() {
+    this.newAuditor = this.auditorForm.value
+
     this.auditorSrv
       .createAuditor(this.newAuditor)
       .then(res => {
         this.presentSnackBar('Auditor created!')
-        this.auditorForm.resetForm()
+        this.auditorForm.reset()
+        this.auditorFormDr.resetForm()
       })
       .catch(err => {
         this.presentSnackBar('Could not create auditor!')
