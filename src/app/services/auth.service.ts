@@ -8,17 +8,15 @@ import {
   User, 
   browserSessionPersistence
 } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
 import { LoginData } from '../interfaces/login-data';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public user$: Observable<User>
   userData: User
 
-  constructor(private readonly auth: Auth) { 
+  constructor(private readonly auth: Auth) {    
     onAuthStateChanged(auth, (user) => {
       this.userData = user
     })
