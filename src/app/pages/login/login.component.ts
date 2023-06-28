@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       try {
         await this.authSrv.signIn(this.loginForm.value)
-        this.loginForm.reset()
         this.router.navigateByUrl('dashboard', { replaceUrl: true })
       } catch (err) {
         this.presentSnackBar('Email or password incorrect')
