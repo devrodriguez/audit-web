@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
@@ -99,12 +99,17 @@ export class ExperienceComponent implements OnInit {
           itemContent: reportContent
         }
 
-        this.matDialog.open(CkeditorComponent, {
+        const dialogRef = this.matDialog.open(CkeditorComponent, {
           height: '900px',
           data: {
             itemReport,
             isEditable: false
           }
+        })
+        dialogRef.afterClosed()
+        .pipe(take(1))
+        .subscribe(res => {
+          console.log('Dialos was closed')
         })
       })
   }

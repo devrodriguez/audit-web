@@ -14,7 +14,7 @@ export class CkeditorComponent implements OnInit {
   public itemReport: ItemReport = {} as ItemReport
   public isEditable: boolean
   public ckEditorConfig = {
-    licenseKey: 'kEdRQrbtzMN9TgGX/tPgpl/Qetea7NpJGllnVH76rkuBOzB7xwmVZCQNpm8=',
+    licenseKey: '9oHwOulL1xTNGTO6c33LzadOOzzGbPMpyTq1',
     exportPdf: {
       converterOptions: {
         format: 'Letter',
