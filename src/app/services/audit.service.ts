@@ -46,7 +46,7 @@ export class AuditService {
     return addDoc(this.auditColl, audit);
   }
 
-  updateAudit(audit: Audit) {
+  upsertAudit(audit: Audit) {
     return updateDoc(doc(this.firestore, "audits", audit.id), { ...audit })
   }
 

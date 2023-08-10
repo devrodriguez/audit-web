@@ -3,8 +3,10 @@
     <section>
         <mat-form-field appearance="fill" class="full-field" *ngIf="!isEditState">
             <mat-label i18n>Enterprise</mat-label>
-            <mat-select #matEntpRef name="enterprise" [(ngModel)]="newAudit.enterprise" [compareWith]="compareEnterprise">
-                <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">{{enterprise.name}}</mat-option>
+            <mat-select #matEntpRef name="enterprise" [(ngModel)]="newAudit.enterprise"
+                [compareWith]="compareEnterprise">
+                <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">
+                    {{enterprise.name}}</mat-option>
             </mat-select>
         </mat-form-field>
         <button mat-raised-button (click)="initializeAudit()" *ngIf="!isEditState">
@@ -12,14 +14,15 @@
             <span i18n>New Audit</span>
         </button>
     </section>
+    <!--Editable state-->
     <section *ngIf="isEditState">
         <app-edit-audit 
-        [audit]="newAudit"
-        [auditorsList$]="auditorsList$"
+        [audit]="newAudit" 
+        [auditorsList$]="auditorsList$" 
         (onFileSelected)="onFileSelected($event)"
-        (onDeleteFile)="onDeleteFile($event)"
-        (onItemAuditorChange)="onItemAuditorChange($event)"
-        ></app-edit-audit>
+        (onDeleteFile)="onDeleteFile($event)" 
+        (onItemAuditorChange)="onItemAuditorChange($event)">
+        </app-edit-audit>
         <br>
         <button mat-raised-button (click)="closeEdition()">
             Close
@@ -27,35 +30,29 @@
         </button>
     </section>
     <br>
-    <!-- List audits -->
+    <!--List audits-->
     <section *ngIf="!isEditState">
-        <mat-accordion class="mat-accordion-container">
-            <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>
-                    <mat-panel-description>
-                        <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
-                        <mat-chip-listbox>
-                            <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
-                        </mat-chip-listbox>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <section *ngIf="audit.goalItems.length > 0">
-                    <h2>Goals</h2>
-                    <div class="container-scrollable">
-                        <mat-list>
-                            <mat-list-item *ngFor="let goal of audit.goalItems">
-                                <span matListItemTitle>{{goal.code}} - {{goal.name}}</span>
-                                Audited by {{goal?.auditor?.name}}
-                            </mat-list-item>
-                        </mat-list>
-                    </div>
-                </section>
-                <button mat-mini-fab matTooltip="Edit audit" class="fab-button-edit" (click)="editAudit(audit)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <mat-divider *ngIf="audit.findings?.length > 0"></mat-divider>
-            </mat-expansion-panel>
-        </mat-accordion>
+        <mat-card *ngFor="let audit of auditsList$ | async" class="audit-card">
+            <mat-card-content>
+                <div class="audit-card-content">
+                    <span style="width: 130px;"><strong>{{audit.enterprise.name}}</strong></span>
+                    <span>Created at {{audit.createdAt | date: 'dd/MM/yyyy'}}</span>
+                    <span>Status {{audit.status}}</span>
+                    <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="audit.status === 'completed'">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="editAudit(audit)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        <button mat-menu-item (click)="completeAudit(audit)">
+                            <mat-icon>check</mat-icon>
+                            <span>Complete</span>
+                        </button>
+                    </mat-menu>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </section>
 </div>

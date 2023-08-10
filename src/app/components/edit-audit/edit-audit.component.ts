@@ -30,34 +30,40 @@ export class EditAuditComponent {
 
   constructor(
     private readonly matDialog: MatDialog,
-    private readonly auditSrv: AuditService) {}
+    private readonly auditSrv: AuditService) { }
 
   loadItemReport(auditID: string, goalItemID: string) {
     this.auditSrv.getItemReport(auditID, goalItemID)
-    .pipe(
-      take(1)
-    ).subscribe(itemReports => {
-      let itemReport: ItemReport = {
-        auditID,
-        goalItemID
-      } as ItemReport
+      .pipe(
+        take(1)
+      ).subscribe(itemReports => {
+        let itemReport: ItemReport = {
+          auditID,
+          goalItemID
+        } as ItemReport
 
-      if(itemReports.length) {
-        itemReport = itemReports[0]
-      }
-
-      this.matDialog.open(CkeditorComponent, {
-        width: '100%',
-        minHeight: 'calc(100vh - 90px)',
-        height : 'auto',
-        data: {
-          itemReport,
-          isEditable: true
+        if (itemReports.length) {
+          itemReport = itemReports[0]
         }
+
+        const dialogRef = this.matDialog.open(CkeditorComponent, {
+          width: '100%',
+          minHeight: 'calc(100vh - 90px)',
+          height: 'auto',
+          data: {
+            itemReport,
+            isEditable: true
+          }
+        })
+
+        dialogRef.afterClosed()
+          .pipe(take(1))
+          .subscribe(res => {
+            console.log('Dialos was closed')
+          })
+      }, err => {
+        console.error(err)
       })
-    }, err => {
-      console.error(err)
-    })
   }
 
   compareAuditor(x: Auditor, y: Auditor): boolean {
@@ -65,11 +71,11 @@ export class EditAuditComponent {
   }
 
   fileSelected($event: any, gitem: GoalItem) {
-    this.onFileSelected.emit({$event, gitem})
+    this.onFileSelected.emit({ $event, gitem })
   }
 
   deleteFile(file: GoalFile, gitem: GoalItem) {
-    this.onDeleteFile.emit({file, gitem})
+    this.onDeleteFile.emit({ file, gitem })
   }
 
   itemAuditorChange(evt) {
