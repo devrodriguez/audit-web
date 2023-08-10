@@ -115,9 +115,24 @@ export class CreateAuditComponent implements OnInit {
     this.newAudit = audit
   }
 
+  completeAudit(audit: Audit) {
+    if (!confirm(`Estas seguro de completar la auditoría ${audit?.enterprise?.name}`)) return
+
+    audit.status = 'completed'
+
+    this.auditSrv
+      .upsertAudit(audit)
+      .then(res => {
+        this.presentSnackBar('Audit completed!')
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }
+
   saveAudit() {
     this.auditSrv
-      .updateAudit(this.newAudit)
+      .upsertAudit(this.newAudit)
       .then(res => {
         this.presentSnackBar('Audit saved!')
       })
@@ -154,7 +169,7 @@ export class CreateAuditComponent implements OnInit {
       const upRes = await this.fileSrv.uploadFile(file)
       const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
       gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
-      this.auditSrv.updateAudit(this.newAudit)
+      this.auditSrv.upsertAudit(this.newAudit)
     } catch (err) {
       console.error(err)
     }
@@ -165,7 +180,7 @@ export class CreateAuditComponent implements OnInit {
       await this.fileSrv.deleteFile(file)
       const fileIdx = gitem.files.findIndex(item => item.name == file.name)
       gitem.files.splice(fileIdx, 1)
-      await this.auditSrv.updateAudit(this.newAudit)
+      await this.auditSrv.upsertAudit(this.newAudit)
       this.presentSnackBar('File deleted!')
     } catch (err) {
       this.presentSnackBar('Could not delete file!')

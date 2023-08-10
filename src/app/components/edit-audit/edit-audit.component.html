@@ -1,8 +1,10 @@
 <div>
     <mat-card class="audit-information-card">
         <mat-card-header>
-            <mat-card-title>Audit for <strong>{{audit.enterprise.name}}</strong></mat-card-title>
-            <mat-card-subtitle>Created at {{audit.createdAt | date: 'dd/MM/yyyy'}}</mat-card-subtitle>
+            <mat-card-title-group>
+                <mat-card-title>Audit for <strong>{{audit.enterprise.name}}</strong></mat-card-title>
+                <mat-card-subtitle>Created at {{audit.createdAt | date: 'dd/MM/yyyy'}}</mat-card-subtitle>
+            </mat-card-title-group>
         </mat-card-header>
     </mat-card>
     <div class="container-scrollable">

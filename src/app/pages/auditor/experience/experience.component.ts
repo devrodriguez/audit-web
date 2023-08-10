@@ -66,7 +66,7 @@ export class ExperienceComponent implements OnInit {
       const upRes = await this.fileSrv.uploadFile(file)
       const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
       gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
-      this.auditSrv.updateAudit(this.selectedAudit)
+      this.auditSrv.upsertAudit(this.selectedAudit)
     } catch (err) {
       console.error(err)
     }
@@ -77,7 +77,7 @@ export class ExperienceComponent implements OnInit {
       await this.fileSrv.deleteFile(file)
       const fileIdx = gitem.files.findIndex(item => item.name == file.name)
       gitem.files.splice(fileIdx, 1)
-      await this.auditSrv.updateAudit(this.selectedAudit)
+      await this.auditSrv.upsertAudit(this.selectedAudit)
       this.presentSnackBar('File deleted!')
     } catch (err) {
       this.presentSnackBar('Could not delete file!')
