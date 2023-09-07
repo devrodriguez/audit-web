@@ -7,3 +7,9 @@
     min-height: 845px;
     overflow-y: hidden !important;
 }
+
+/* This selector targets the editable element (excluding comments). */
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 845px;
+    overflow-y: auto;
+}

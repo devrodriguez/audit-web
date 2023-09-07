@@ -9,7 +9,7 @@
                 </mat-select>
             </mat-form-field>
             <div class="data-container">
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" class="m-r-10">
                     <mat-label>Code</mat-label>
                     <input type="text" name="code" matInput [maxLength]="selected?.value?.codeSize??0" [(ngModel)]="newGoalItem.code">
                 </mat-form-field>
@@ -18,10 +18,12 @@
                     <input type="text" name="name" matInput [(ngModel)]="newGoalItem.name">
                 </mat-form-field>
             </div>
-            <button mat-raised-button color="primary" (click)="createItem()">
-                <mat-icon>save</mat-icon>
-                Save
-            </button>
+            <p>
+                <button mat-raised-button color="primary" (click)="createItem()">
+                    <mat-icon>save</mat-icon>
+                    Save
+                </button>
+            </p>
         </mat-card-content>
     </mat-card>
     <section>

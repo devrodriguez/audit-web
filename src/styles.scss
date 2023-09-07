@@ -31,11 +31,22 @@
     margin-right: 10px;
 }
 
-.ck-editor__editable {
-    max-width: 816.37px;
-    max-height: 1054.48px;
+.ck-editor__editable_inline:not(.ck-comment__input *) {
+    width: 816.37px;
+    height: 1054.48px;
     margin: 0 auto;
-    border: 1px hsl( 0,0%,82.7% ) solid !important;
-    box-shadow: 0 0 5px hsla( 0,0%,0%,.1 );
+    border: 1px hsl(0, 0%, 82.7%) solid !important;
+    box-shadow: 0 0 5px hsla(0, 0%, 0%, .1);
     padding: 71.8px !important;
+    margin-top: 20px;
+}
+
+.chip-completed {
+    background-color: rgb(49, 158, 49) !important;
+    --mdc-chip-label-text-color: #fff;
+}
+
+.chip-pending {
+    background-color: rgb(241, 186, 6) !important;
+    --mdc-chip-label-text-color: #fff;
 }

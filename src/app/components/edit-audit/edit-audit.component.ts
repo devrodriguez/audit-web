@@ -22,6 +22,7 @@ export class EditAuditComponent {
   @Input() audit: Audit
   @Input() auditorsList$: Observable<Auditor[]>
   @Input() isAuditorDisabled: boolean
+  @Input() isEditable: boolean = true
   @Output() onFileSelected = new EventEmitter()
   @Output() onDeleteFile = new EventEmitter()
   @Output() onItemAuditorChange = new EventEmitter()

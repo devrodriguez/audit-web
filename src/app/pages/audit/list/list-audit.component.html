@@ -7,7 +7,7 @@
                 <mat-panel-description>
                     <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                        <mat-chip [ngClass]="(audit.status === 'completed') ? 'chip-completed' : 'chip-pending'">{{audit.status}}</mat-chip>
                     </mat-chip-listbox>
                 </mat-panel-description>
             </mat-expansion-panel-header>

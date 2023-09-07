@@ -40,7 +40,13 @@ export class ExperienceComponent implements OnInit {
     const userData = this.authSrv.userData
     this.auditSrv.getAudits()
       .subscribe(res => {
-        this.auditList = res.filter(item => item.goalItems.find(gi => gi.auditor && gi.auditor.email === userData.email))
+        //this.auditList = res
+        this.auditList = res.filter(item => {
+          console.log('Item: ', item)
+          return item.goalItems.find(gi => gi.auditor && gi.auditor.email === userData.email)
+        })
+        console.log(this.auditList)
+        console.log('User data: ', userData)
       }, err => {
         console.error(err)
       })
@@ -67,7 +73,9 @@ export class ExperienceComponent implements OnInit {
       const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
       gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
       this.auditSrv.upsertAudit(this.selectedAudit)
+      this.presentSnackBar('File saved!')
     } catch (err) {
+      this.presentSnackBar('Could not save file!')
       console.error(err)
     }
   }
@@ -109,7 +117,7 @@ export class ExperienceComponent implements OnInit {
         dialogRef.afterClosed()
         .pipe(take(1))
         .subscribe(res => {
-          console.log('Dialos was closed')
+          console.log('Dialog was closed')
         })
       })
   }

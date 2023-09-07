@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditPucLegComponent } from './edit-puc-leg.component';
+import { EditAuditItemsComponent } from './edit-audit-items.component';
 
 describe('EditPucLegComponent', () => {
-  let component: EditPucLegComponent;
-  let fixture: ComponentFixture<EditPucLegComponent>;
+  let component: EditAuditItemsComponent;
+  let fixture: ComponentFixture<EditAuditItemsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditPucLegComponent ]
+      declarations: [ EditAuditItemsComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditPucLegComponent);
+    fixture = TestBed.createComponent(EditAuditItemsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

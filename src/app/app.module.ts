@@ -27,7 +27,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuditorComponent } from './pages/auditor/create/create-auditor.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
-import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
+import { EditAuditItemsComponent } from './pages/puc/edit-audit-items/edit-audit-items.component';
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RichEditorComponent } from './components/rich-editor/rich-editor.component';
@@ -42,7 +42,7 @@ import { CkeditorComponent } from './components/ckeditor/ckeditor.component';
     DashboardComponent,
     AuditorComponent,
     ExperienceComponent,
-    EditPucLegComponent,
+    EditAuditItemsComponent,
     EditAuditComponent,
     LoginComponent, 
     RichEditorComponent,

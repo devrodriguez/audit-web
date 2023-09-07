@@ -156,11 +156,6 @@ export class CreateAuditComponent implements OnInit {
   }
 
   /** Event Components */
-  presentSnackBar(message: string) {
-    this.matSnackBar.open(message, undefined, {
-      duration: 3000
-    });
-  }
 
   async onFileSelected({ $event, gitem }) {
     const file = $event.target.files[0]
@@ -170,7 +165,9 @@ export class CreateAuditComponent implements OnInit {
       const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
       gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
       this.auditSrv.upsertAudit(this.newAudit)
+      this.presentSnackBar('File saved!')
     } catch (err) {
+      this.presentSnackBar('Could not save file!')
       console.error(err)
     }
   }
@@ -186,46 +183,15 @@ export class CreateAuditComponent implements OnInit {
       this.presentSnackBar('Could not delete file!')
       console.error(err)
     }
-
-    /* this.fileSrv.deleteFile(file)
-    .then(res => {
-      const fileIdx = gitem.files.findIndex(item => item.name == file.name)
-      gitem.files.splice(fileIdx, 1)
-      this.presentSnackBar('File deleted!')
-    })
-    .catch(err => {
-      this.presentSnackBar('Could not delete file!')
-      console.error(err)
-    }) */
   }
 
   onItemAuditorChange($event: any) {
     this.saveAudit()
   }
 
-  exportPDF() {
-    const content = this.editor.quillEditor.root.innerHTML;
-    console.log(content)
-    const doc = new jsPDF({
-      orientation: 'p',
-      unit: 'px',
-      format: 'a4'
+  presentSnackBar(message: string) {
+    this.matSnackBar.open(message, undefined, {
+      duration: 3000
     });
-
-    doc.html(content, {
-      callback: (doc: jsPDF) => {
-        doc.save('document.pdf');
-      },
-      margin: [20, 20, 20, 20],
-      autoPaging: 'text',
-      x: 0,
-      y: 0,
-      width: 190,
-      windowWidth: 675
-    });
-  }
-
-  viewData() {
-    console.log(this.htmlData)
   }
 }

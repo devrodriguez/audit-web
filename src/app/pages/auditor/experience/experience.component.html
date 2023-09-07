@@ -11,7 +11,7 @@
                         {{audit.createdAt | date: 'dd/MM/yyyy'}}
                     </mat-card-subtitle>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                        <mat-chip [ngClass]="(audit.status === 'completed') ? 'chip-completed' : 'chip-pending'">{{audit.status}}</mat-chip>
                     </mat-chip-listbox>
                 </mat-card-title-group>
             </mat-card-header>
@@ -29,6 +29,7 @@
     <section *ngIf="selectedAudit.id">
         <app-edit-audit 
         [isAuditorDisabled]="true"
+        [isEditable]="selectedAudit.status !== 'completed' ?? true"
         [audit]="selectedAudit"
         [auditorsList$]="auditorList$"
         (onFileSelected)="onFileSelected($event)"

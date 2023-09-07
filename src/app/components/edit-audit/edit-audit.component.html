@@ -22,12 +22,12 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <button mat-raised-button class="button-proximity" (click)="showEditor(gitem)">
+                <button mat-raised-button class="button-proximity" (click)="showEditor(gitem)" [disabled]="!isEditable">
                     Show Editor
                     <mat-icon>edit</mat-icon>
                 </button>
                 <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, gitem)">
-                <button mat-raised-button (click)="fileInput.click()">
+                <button mat-raised-button (click)="fileInput.click()" [disabled]="!isEditable">
                     <mat-icon>attach_file</mat-icon>
                     Add file
                 </button>

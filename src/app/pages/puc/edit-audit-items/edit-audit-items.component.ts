@@ -1,16 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Goal } from 'src/app/interfaces/goal';
 import { GoalItem, ItemType } from 'src/app/interfaces/goal-item';
 import { GoalsService } from 'src/app/services/goals.service';
 
 @Component({
-  selector: 'app-edit-puc-leg',
-  templateUrl: './edit-puc-leg.component.html',
-  styleUrls: ['./edit-puc-leg.component.scss']
+  selector: 'app-edit-audit-items',
+  templateUrl: './edit-audit-items.component.html',
+  styleUrls: ['./edit-audit-items.component.scss']
 })
-export class EditPucLegComponent implements OnInit {
+export class EditAuditItemsComponent implements OnInit {
   types: ItemType[] = [
     {
       name: 'class',
