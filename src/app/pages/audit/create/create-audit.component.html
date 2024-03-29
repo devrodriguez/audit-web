@@ -3,13 +3,13 @@
     <section>
         <mat-form-field appearance="fill" class="full-field" *ngIf="!isEditState">
             <mat-label i18n>Enterprise</mat-label>
-            <mat-select #matEntpRef name="enterprise" [(ngModel)]="newAudit.enterprise"
+            <mat-select #matEntpRef name="enterprise" [(ngModel)]="auditCandidate.enterprise"
                 [compareWith]="compareEnterprise">
                 <mat-option *ngFor="let enterprise of (enterprisesList$ | async)" [value]="enterprise">
                     {{enterprise.name}}</mat-option>
             </mat-select>
         </mat-form-field>
-        <button mat-raised-button (click)="initializeAudit()" *ngIf="!isEditState">
+        <button mat-raised-button (click)="onInitializeAudit()" *ngIf="!isEditState">
             <mat-icon>add</mat-icon>
             <span i18n>New Audit</span>
         </button>
@@ -17,14 +17,14 @@
     <!--Editable state-->
     <section *ngIf="isEditState">
         <app-edit-audit 
-        [audit]="newAudit" 
+        [audit]="auditCandidate" 
         [auditorsList$]="auditorsList$" 
         (onFileSelected)="onFileSelected($event)"
         (onDeleteFile)="onDeleteFile($event)" 
         (onItemAuditorChange)="onItemAuditorChange($event)">
         </app-edit-audit>
         <br>
-        <button mat-raised-button (click)="closeEdition()">
+        <button mat-raised-button (click)="onCloseEdition()">
             Close
             <mat-icon>close</mat-icon>
         </button>
@@ -32,7 +32,7 @@
     <br>
     <!--List audits-->
     <section *ngIf="!isEditState">
-        <mat-card *ngFor="let audit of auditsList$ | async" class="audit-card">
+        <mat-card *ngFor="let audit of audits" class="audit-card">
             <mat-card-content>
                 <div class="audit-card-content">
                     <span style="width: 130px;"><strong>{{audit.enterprise.name}}</strong></span>
@@ -42,11 +42,11 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="editAudit(audit)">
+                        <button mat-menu-item (click)="onEditAudit(audit)">
                             <mat-icon>edit</mat-icon>
                             <span>Edit</span>
                         </button>
-                        <button mat-menu-item (click)="completeAudit(audit)">
+                        <button mat-menu-item (click)="onCompleteAudit(audit)">
                             <mat-icon>check</mat-icon>
                             <span>Complete</span>
                         </button>

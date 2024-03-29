@@ -22,20 +22,22 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <button mat-raised-button class="button-proximity" (click)="showEditor(gitem)">
+                <button mat-raised-button class="button-proximity" (click)="onShowEditor(gitem)">
                     Show Editor
                     <mat-icon>edit</mat-icon>
                 </button>
                 <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, gitem)">
-                <button mat-raised-button (click)="fileInput.click()">
+                <button mat-raised-button (click)="fileInput.click()" [disabled]="isFileDisabled">
                     <mat-icon>attach_file</mat-icon>
                     Add file
                 </button>
                 <mat-list>
                     <mat-list-item *ngFor="let file of gitem.files">
                         <mat-icon matListItemIcon>description</mat-icon>
-                        <div matListItemTitle><a [href]="file.fullPath">{{file.name}}</a></div>
-                        <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file">
+                        <div matListItemTitle>
+                            <a href="#" (click)="onDownloadFile($event, file)">{{file.name}}</a>
+                        </div>
+                        <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file" *ngIf="!isFileDisabled">
                             <mat-icon class>delete</mat-icon>
                         </button>
                     </mat-list-item>

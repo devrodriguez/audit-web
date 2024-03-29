@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, take } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, take, takeLast, takeUntil } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
@@ -17,10 +17,12 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './experience.component.html',
   styleUrls: ['./experience.component.scss']
 })
-export class ExperienceComponent implements OnInit {
+export class ExperienceComponent implements OnInit, OnDestroy {
   public auditList: Audit[]
   public auditorList$: Observable<Auditor[]>
   public selectedAudit: Audit = {} as Audit
+
+  destroyer$: Subject<void> = new Subject()
 
   constructor(
     private readonly matDialog: MatDialog,
@@ -36,13 +38,25 @@ export class ExperienceComponent implements OnInit {
     this.loadAuditors()
   }
 
+  ngOnDestroy() {
+    this.destroyer$.next()
+    this.destroyer$.complete()
+  }
+
   loadAudits() {
     const userData = this.authSrv.userData
     this.auditSrv.getAudits()
-      .subscribe(res => {
-        this.auditList = res.filter(item => item.goalItems.find(gi => gi.auditor && gi.auditor.email === userData.email))
-      }, err => {
-        console.error(err)
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (res) => {
+          this.auditList = res.filter(item => item.goalItems.find(gi => gi.auditor && gi.auditor.email === userData.email))
+          this.auditList.forEach((audit) => {
+            audit.goalItems = audit.goalItems.filter(gi => gi.auditor && gi.auditor.email === userData.email)
+          })
+        },
+        error: (err) => {
+          console.error(err)
+        }
       })
   }
 
@@ -87,30 +101,36 @@ export class ExperienceComponent implements OnInit {
 
   previewReport() {
     this.auditSrv.getAuditItemsReport(this.selectedAudit.id)
-      .subscribe(items => {
-        let reportContent = ''
+      .pipe(take(1))
+      .subscribe({
+        next: (items) => {
+          let reportContent = ''
 
-        items.forEach(item => {
-          reportContent += `<p>${item.itemContent}</p>`
-        })
+          items.forEach(item => {
+            reportContent += `<p>${item.itemContent}</p>`
+          })
 
-        console.log('report content: ', reportContent)
-        const itemReport: ItemReport = {
-          itemContent: reportContent
-        }
-
-        const dialogRef = this.matDialog.open(CkeditorComponent, {
-          height: '900px',
-          data: {
-            itemReport,
-            isEditable: false
+          console.log('report content: ', reportContent)
+          const itemReport: ItemReport = {
+            itemContent: reportContent
           }
-        })
-        dialogRef.afterClosed()
-        .pipe(take(1))
-        .subscribe(res => {
-          console.log('Dialos was closed')
-        })
+
+          const dialogRef = this.matDialog.open(CkeditorComponent, {
+            height: '900px',
+            data: {
+              itemReport,
+              isEditable: false
+            }
+          })
+          dialogRef.afterClosed()
+            .pipe(take(1))
+            .subscribe(res => {
+              console.log('dialog was closed')
+            })
+        },
+        error: (err) => {
+          console.error(err)
+        }
       })
   }
 
