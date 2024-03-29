@@ -12,12 +12,19 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <section *ngIf="audit.goalItems.length > 0">
-                <h2>Goals</h2>
                 <div class="container-scrollable">
                     <mat-list>
                         <mat-list-item *ngFor="let goal of audit.goalItems">
                             <span matListItemTitle>{{goal.code}} - {{goal.name}}</span>
                             Audited by {{goal?.auditor?.name}}
+                            <mat-list>
+                                <mat-list-item *ngFor="let file of goal.files">
+                                    <mat-icon matListItemIcon>description</mat-icon>
+                                    <div matListItemTitle>
+                                        <a href="#">{{file.name}}</a>
+                                    </div>
+                                </mat-list-item>
+                            </mat-list>
                         </mat-list-item>
                     </mat-list>
                 </div>
