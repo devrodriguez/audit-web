@@ -7,7 +7,7 @@ import { Observable, take } from 'rxjs';
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { GoalFile } from 'src/app/interfaces/goal-file';
-import { GoalItem } from 'src/app/interfaces/goal-item';
+import { AuditItemType } from 'src/app/interfaces/goal-item';
 import { ItemReport } from 'src/app/interfaces/item-report';
 import { AuditService } from 'src/app/services/audit.service';
 import { CkeditorComponent } from '../ckeditor/ckeditor.component';
@@ -38,13 +38,13 @@ export class EditAuditComponent {
     return x && y ? x.id === y.id : x === y;
   }
 
-  fileSelected($event: any, gitem: GoalItem) {
+  fileSelected($event: any, gitem: AuditItemType) {
     if(this.isFileDisabled) return
 
     this.onFileSelected.emit({ $event, gitem })
   }
 
-  deleteFile(file: GoalFile, gitem: GoalItem) {
+  deleteFile(file: GoalFile, gitem: AuditItemType) {
     if(this.isFileDisabled) return
 
     this.onDeleteFile.emit({ file, gitem })
@@ -66,7 +66,7 @@ export class EditAuditComponent {
     });
   }
 
-  onShowEditor(goalItem: GoalItem) {
+  onShowEditor(goalItem: AuditItemType) {
     this.auditSrv.getItemReport(this.audit.id, goalItem.id)
       .pipe(
         take(1)
@@ -84,7 +84,7 @@ export class EditAuditComponent {
           this.matDialog.open(CkeditorComponent, {
             width: '100%',
             minHeight: 'calc(100vh - 90px)',
-            height: 'auto',
+            height: '600px',
             data: {
               itemReport,
               isEditable: true

@@ -1,0 +1,35 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <app-page-description
+        title="Reporte de auditoria"
+        subtitle="Consulte, filtre y ordene los registros de auditoria"
+    ></app-page-description>
+    <mat-form-field>
+        <input placeholder="Filter" matInput (keyup)="applyFilter($event.target.value)" />
+    </mat-form-field>
+    <table mat-table matSort [dataSource]="auditDataSource">
+        <ng-container matColumnDef="enterprise">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Enterprise</th>
+            <td mat-dell *matCellDef="let audit">{{ audit.enterprise.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="audited_by">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Auditor</th>
+            <td mat-dell *matCellDef="let audit">
+                <mat-chip-set>
+                    <mat-chip *ngFor="let auditorName of normalizeAuditors(audit)" disabled>{{ auditorName }}</mat-chip>    
+                </mat-chip-set>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <td mat-dell *matCellDef="let audit">{{ audit.status }}</td>
+        </ng-container>
+        <ng-container matColumnDef="created_at">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
+            <td mat-dell *matCellDef="let audit">{{audit.createdAt | date: 'dd/MM/yyyy'}}</td>
+        </ng-container>
+        
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>

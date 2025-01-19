@@ -1,6 +1,6 @@
 import { Enterprise } from "./enterprise";
 import { Finding } from "./finding";
-import { GoalItem } from "./goal-item";
+import { AuditItemType } from "./goal-item";
 
 export interface Audit {
     id: string
@@ -8,6 +8,6 @@ export interface Audit {
     status: string
     createdAt: string
     enterprise?: Enterprise
-    goalItems: GoalItem[]
+    goalItems: AuditItemType[]
     findings?: Finding[]
 }

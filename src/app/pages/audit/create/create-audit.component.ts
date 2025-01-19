@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, startWith, takeUntil, map } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { Enterprise } from 'src/app/interfaces/enterprise';
-import { GoalItem } from 'src/app/interfaces/goal-item';
+import { AuditItemType, ItemType } from 'src/app/interfaces/goal-item';
 import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
@@ -17,6 +17,7 @@ import { QuillEditorComponent } from 'ngx-quill';
 
 import { AUDIT_STATUS_COMPLETED, AUDIT_STATUS_PENDING } from 'src/app/constants/audit-status';
 import { TYPE_ACCOUNT } from 'src/app/constants/item-types';
+import { FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-create-audit',
@@ -24,22 +25,28 @@ import { TYPE_ACCOUNT } from 'src/app/constants/item-types';
   styleUrls: ['./create-audit.component.scss']
 })
 export class CreateAuditComponent implements OnInit, OnDestroy {
-  @ViewChild('matEntpRef') matEntpRef: MatSelect;
-  @ViewChild('editor') editor: QuillEditorComponent;
+  @ViewChild('matEntpRef') matEntpRef: MatSelect
+  @ViewChild('editor') editor: QuillEditorComponent
+
+  auditTypeCtrl = new FormControl('')
+  enterpriseCtrl = new FormControl('')
+  firstFormGroup = this._formBuilder.group({})
+  secondFormGroup = this._formBuilder.group({})
 
   public htmlData: string
   public isEditState: boolean = false
   public audits: Audit[] = []
   public auditors: Auditor[] = []
   public enterprises: Enterprise[] = []
-  public goalItems: GoalItem[] = []
-  public selectedGoalItems: GoalItem[] = []
+  public goalItems: AuditItemType[] = []
+  public selectedGoalItems: AuditItemType[] = []
   public auditCandidate: Audit = {} as Audit
   public defaultAuditor: Auditor = {} as Auditor
 
   public auditorsList$: Observable<Auditor[]>
   public enterprisesList$: Observable<Enterprise[]>
   public auditsList$: Observable<Audit[]>;
+  public auditItems$: Observable<AuditItemType[]>;
   
   destroyer$: Subject<void> = new Subject()
 
@@ -49,13 +56,24 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     private auditorSrv: AuditorService,
     private enterpriseSrv: EnterpriseService,
     private goalSrv: GoalsService,
-    private fileSrv: FileService) {}
+    private fileSrv: FileService,
+    private _formBuilder: FormBuilder) {
+      
+    }
 
   ngOnInit(): void {
-    this.auditorsList$ = this.auditorSrv.getAuditors()
-    this.enterprisesList$ = this.enterpriseSrv.getEnterprises()
-    this.loadGoalItems()
+    /* this.goalItemsFiltered$ = this.auditTypeCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || ''))
+    ) */
+    /* this.enterprisesList$ = this.enterpriseCtrl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || ''))
+    ) */
+    // this.auditorsList$ = this.auditorSrv.getAuditors()
     this.loadAudits()
+    this.enterprisesList$ = this.enterpriseSrv.getEnterprises()
+    this.auditItems$ = this.goalSrv.getGoalItemsByType(TYPE_ACCOUNT)
   }
 
   ngOnDestroy(): void {
@@ -97,7 +115,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     this.auditSrv
       .createAudit(this.auditCandidate)
       .then(docRef => {
-        this.auditCandidate.id = docRef.id
+        this.auditCandidate = {} as Audit
         this.presentSnackBar('Auditoria creada correctamente')
       })
       .catch(err => {
@@ -125,6 +143,19 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
 
   compareAuditor(x: Auditor, y: Auditor): boolean {
     return x && y ? x.id === y.id : x === y;
+  }
+
+  private _filter(value: string): AuditItemType[] {
+    const filterValue = value.toLowerCase();
+    return this.goalItems.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  displayEnterprise(enterprise: Enterprise): string {
+    return enterprise?.name
+  }
+
+  displayAuditItem(auditItem: AuditItemType): string {
+    return auditItem?.name
   }
 
   presentSnackBar(message: string) {

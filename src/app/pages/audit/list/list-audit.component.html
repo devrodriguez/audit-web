@@ -1,5 +1,9 @@
 <app-navbar></app-navbar>
 <div class="container">
+    <app-page-description
+        title="Detalle de auditoria"
+        subtitle="Visualice el detalle de las auditorias"
+    ></app-page-description>
     <mat-accordion class="mat-accordion-container" multi>
         <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
             <mat-expansion-panel-header>
@@ -7,7 +11,7 @@
                 <mat-panel-description>
                     <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                        <mat-chip-option [selected]="audit?.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
                     </mat-chip-listbox>
                 </mat-panel-description>
             </mat-expansion-panel-header>

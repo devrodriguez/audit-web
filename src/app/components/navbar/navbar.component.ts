@@ -44,6 +44,11 @@ export class NavbarComponent implements OnInit {
       routerLink: '/audit-items',
       description: 'Audit Items',
       forRoles: ['ADMIN']
+    },
+    {
+      routerLink: '/audit-report',
+      description: 'Audit Report',
+      forRoles: ['ADMIN']
     }
   ]
 
@@ -51,10 +56,12 @@ export class NavbarComponent implements OnInit {
     private readonly authSrv: AuthService,
     private readonly userSrv: UserService,
     private readonly router: Router) {
-      this.load()
+      
     }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.load()
+  }
 
   ngOnDestroy(): void {}
 

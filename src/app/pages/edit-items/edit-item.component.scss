@@ -1,16 +1,36 @@
+@media screen and (max-width: 992px) {
+    .container {
+        max-width: 800px;
+    }    
+}
+
 .container {
     max-width: 800px;
     padding-top: 10px;
-}
-
-.full-field {
-    width: 100%;
 }
 
 .container-scrollable {
     margin-top: 15px;
     overflow-y: scroll;
     height: 300px;
+}
+
+.container-scrollable::-webkit-scrollbar {
+    display: none;
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.data-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.data-container mat-form-field {
+    flex-basis: 50%;
 }
 
 .audit-card {
@@ -34,6 +54,6 @@
     }
 }
 
-.container-scrollable::-webkit-scrollbar {
-    display: none;
+.form-description {
+    width: 100%;
 }

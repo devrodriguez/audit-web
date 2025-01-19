@@ -1,5 +1,9 @@
 <app-navbar></app-navbar>
 <div class="container">
+    <app-page-description
+        title="Editar auditor"
+        subtitle="Cree, actualice y elimine auditores"
+    ></app-page-description>
     <mat-card>
         <mat-card-content>
             <form [formGroup]="auditorForm" #af="ngForm" (ngSubmit)="auditorFormSubmit()">
@@ -34,10 +38,10 @@
     </mat-card>
     <section>
         <div class="container-scrollable">
-            <mat-list>
-                <mat-list-item *ngFor="let auditor of auditors$ | async">
-                    <div matListItemTitle>{{auditor.name}} {{auditor.lastName}}</div>
-                    <div matListItemMeta>
+            <mat-card *ngFor="let auditor of auditors$ | async" class="audit-card">
+                <mat-card-content>
+                    <div class="audit-card-content">
+                        <span>{{auditor.name}} {{auditor.lastName}}</span>
                         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Show menu options">
                             <mat-icon>more_vert</mat-icon>
                         </button>
@@ -50,8 +54,8 @@
                             </button>
                         </mat-menu>
                     </div>
-                </mat-list-item>
-            </mat-list>
+                </mat-card-content>
+            </mat-card>
         </div>
     </section>
 </div>

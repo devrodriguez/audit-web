@@ -1,0 +1,61 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <app-page-description
+        title="Items"
+        subtitle="Cree, actualice o elimine items utilizados para realizar auditorias"
+    ></app-page-description>
+    <section>
+        <mat-card>
+            <mat-card-content>
+                <form [formGroup]="itemFormGrp" #itemsForm="ngForm" (ngSubmit)="onSubmitForm()">
+                    <div class="data-container">
+                        <mat-form-field>
+                            <mat-label>Type</mat-label>
+                            <mat-select formControlName="auditType" #selected>
+                                <mat-option *ngFor="let auditType of auditItemTypes" [value]="auditType">{{auditType.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 10px;">
+                            <mat-label>Name</mat-label>
+                            <input type="text" formControlName="name" matInput>
+                        </mat-form-field>
+                    </div>
+                    <mat-form-field appearance="fill" class="form-description">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput maxlength="240" formControlName="description" rows="4"></textarea>
+                        <mat-hint align="end">{{itemFormGrp.get('description').value?.length || 0}}/240</mat-hint>
+                    </mat-form-field>
+                    <p>
+                        <button mat-raised-button color="primary" [disabled]="itemsForm.invalid">
+                            <mat-icon>save</mat-icon>
+                            Save
+                        </button>
+                    </p>
+                </form>
+            </mat-card-content>
+        </mat-card>
+    </section>
+    <section>
+        <div class="container-scrollable">
+            <mat-card *ngFor="let aItems of auditItems" class="audit-card">
+                <mat-card-content>
+                    <div class="audit-card-content">
+                        <span>{{aItems.type.name}}</span>
+                        <span>{{aItems.name}}</span>
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Show menu options">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </section>
+</div>

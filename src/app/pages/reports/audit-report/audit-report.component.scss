@@ -1,0 +1,14 @@
+@media screen and (max-width: 992px) {
+    .container {
+        max-width: 800px;
+    }    
+}
+
+.container {
+    max-width: 800px;
+    padding-top: 10px;
+}
+
+.mat-mdc-header-cell {
+    font-weight: bold;
+}

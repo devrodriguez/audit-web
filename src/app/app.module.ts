@@ -27,11 +27,14 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuditorComponent } from './pages/auditor/create/create-auditor.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
-import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
+import { EditItemComponent } from './pages/edit-items/edit-item.component';
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RichEditorComponent } from './components/rich-editor/rich-editor.component';
 import { CkeditorComponent } from './components/ckeditor/ckeditor.component';
+import { AuditReportComponent } from './pages/reports/audit-report/audit-report.component';
+import { PageDescriptionComponent } from './components/page-description/page-description.component';
+
 
 @NgModule({
   declarations: [
@@ -42,11 +45,13 @@ import { CkeditorComponent } from './components/ckeditor/ckeditor.component';
     DashboardComponent,
     AuditorComponent,
     ExperienceComponent,
-    EditPucLegComponent,
+    EditItemComponent,
     EditAuditComponent,
     LoginComponent, 
     RichEditorComponent,
-    CkeditorComponent
+    CkeditorComponent,
+    AuditReportComponent,
+    PageDescriptionComponent
   ],
   imports: [
     BrowserModule,

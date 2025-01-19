@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { canActivate, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
+import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard'
 
 import { CreateAuditComponent } from './pages/audit/create/create-audit.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuditorComponent } from './pages/auditor/create/create-auditor.component';
 import { ListAuditComponent } from './pages/audit/list/list-audit.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
-import { EditPucLegComponent } from './pages/puc/edit-puc-leg/edit-puc-leg.component';
+import { EditItemComponent } from './pages/edit-items/edit-item.component';
 import { LoginComponent } from './pages/login/login.component';
-import { AuthGuard } from './guards/auth.guard';
 import { LoginGuard } from './guards/login.guard';
+import { AuditReportComponent } from './pages/reports/audit-report/audit-report.component';
 
 const routes: Routes = [
   {
@@ -50,7 +50,13 @@ const routes: Routes = [
   },
   {
     path: 'audit-items',
-    component: EditPucLegComponent,
+    component: EditItemComponent,
+    canActivate: [AuthGuard],
+    data: { roles: ['ADMIN'] }
+  },
+  {
+    path: 'audit-report',
+    component: AuditReportComponent,
     canActivate: [AuthGuard],
     data: { roles: ['ADMIN'] }
   },
