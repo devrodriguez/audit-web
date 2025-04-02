@@ -1,48 +1,55 @@
 <div>
-    <mat-card class="audit-information-card">
+    <mat-card class="audit-information-card" *ngIf="!isTitleDisabled">
         <mat-card-header>
             <mat-card-title-group>
-                <mat-card-title>Audit for <strong>{{audit.enterprise.name}}</strong></mat-card-title>
+                <mat-card-title>Auditing <strong>{{audit.enterprise.name}}</strong></mat-card-title>
                 <mat-card-subtitle>Created at {{audit.createdAt | date: 'dd/MM/yyyy'}}</mat-card-subtitle>
             </mat-card-title-group>
         </mat-card-header>
     </mat-card>
     <div class="container-scrollable">
-        <mat-accordion>
-            <mat-expansion-panel *ngFor="let gitem of audit.goalItems">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>{{gitem.code}} - {{gitem.name}}</mat-panel-title>
-                </mat-expansion-panel-header>
-                <mat-form-field appearance="fill" class="full-field">
-                    <mat-label>Auditor</mat-label>
-                    <mat-select name="auditor" [(ngModel)]="gitem.auditor" [compareWith]="compareAuditor" [disabled]="isAuditorDisabled"
-                        (selectionChange)="itemAuditorChange($event)">
-                        <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
-                            {{auditor.name}} {{auditor.lastName}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <button mat-raised-button class="button-proximity" (click)="onShowEditor(gitem)">
-                    Show Editor
-                    <mat-icon>edit</mat-icon>
-                </button>
-                <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, gitem)">
-                <button mat-raised-button (click)="fileInput.click()" [disabled]="isFileDisabled">
-                    <mat-icon>attach_file</mat-icon>
-                    Add file
-                </button>
-                <mat-list>
-                    <mat-list-item *ngFor="let file of gitem.files">
-                        <mat-icon matListItemIcon>description</mat-icon>
-                        <div matListItemTitle>
-                            <a href="#" (click)="onDownloadFile($event, file)">{{file.name}}</a>
-                        </div>
-                        <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file" *ngIf="!isFileDisabled">
-                            <mat-icon class>delete</mat-icon>
+        <form [formGroup]="auditForm">
+            <div formArrayName="goalItems">
+                <mat-accordion>
+                    <mat-expansion-panel *ngFor="let gitem of goalItems.controls; let i = index" [formGroupName]="i">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>{{audit.goalItems[i].name}}</mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field appearance="fill" class="full-field">
+                            <mat-label>Auditor</mat-label>
+                            <mat-select 
+                                formControlName="auditor"
+                                [compareWith]="compareAuditor"
+                                [disabled]="isAuditorDisabled"
+                                (selectionChange)="itemAuditorChange($event, i)">
+                                <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
+                                    {{auditor.name}} {{auditor.lastName}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <button mat-raised-button class="button-proximity" (click)="onShowEditor(audit.goalItems[i])" *ngIf="!isEditorDisabled">
+                            Show Editor
+                            <mat-icon>edit</mat-icon>
                         </button>
-                    </mat-list-item>
-                </mat-list>
-            </mat-expansion-panel>
-        </mat-accordion>
+                        <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, gitem)">
+                        <button mat-raised-button (click)="fileInput.click()" *ngIf="!isFileDisabled">
+                            <mat-icon>attach_file</mat-icon>
+                            Add file
+                        </button>
+                        <mat-list>
+                            <mat-list-item *ngFor="let file of gitem.files">
+                                <mat-icon matListItemIcon>description</mat-icon>
+                                <div matListItemTitle>
+                                    <a href="#" (click)="onDownloadFile($event, file)">{{file.name}}</a>
+                                </div>
+                                <button mat-icon-button matListItemMeta (click)="deleteFile(file, gitem)" matTooltip="Delete file" *ngIf="!isFileDisabled">
+                                    <mat-icon class>delete</mat-icon>
+                                </button>
+                            </mat-list-item>
+                        </mat-list>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </form>
     </div>
 </div>

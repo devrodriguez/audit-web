@@ -11,7 +11,7 @@
                 <mat-panel-description>
                     <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit?.status === 'done' ?? true">{{audit.status}}</mat-chip-option>
+                        <mat-chip-option [selected]="audit?.status === 'done'">{{audit.status}}</mat-chip-option>
                     </mat-chip-listbox>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -19,7 +19,7 @@
                 <div class="container-scrollable">
                     <mat-list>
                         <mat-list-item *ngFor="let goal of audit.goalItems">
-                            <span matListItemTitle>{{goal.code}} - {{goal.name}}</span>
+                            <span matListItemTitle>{{goal.name}}</span>
                             Audited by {{goal?.auditor?.name}}
                             <mat-list>
                                 <mat-list-item *ngFor="let file of goal.files">

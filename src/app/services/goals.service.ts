@@ -38,8 +38,7 @@ export class GoalsService {
   getGoalItemsByType(typeName: string) {
     return collectionData(
       query(this.auditItemsCollRef,
-        where('type.name', '==', typeName),
-        orderBy('code', 'asc')
+        where('type.code', '==', typeName),
       ), {
       idField: 'id'
     }) as Observable<AuditItemType[]>

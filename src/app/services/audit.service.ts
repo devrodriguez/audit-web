@@ -52,7 +52,7 @@ export class AuditService {
   upsertAudit(audit: Audit) {
     return updateDoc(doc(this.firestore, "audits", audit.id), { ...audit })
   }
-doc
+  
   saveItemReport(itemReport: ItemReport) {
     return addDoc(this.itemRepoColl, itemReport)
   }
