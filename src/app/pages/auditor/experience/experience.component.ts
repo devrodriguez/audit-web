@@ -116,7 +116,9 @@ export class ExperienceComponent implements OnInit, OnDestroy {
           }
 
           const dialogRef = this.matDialog.open(CkeditorComponent, {
-            height: '900px',
+            width: '100%',
+            minHeight: 'calc(100vh - 90px)',
+            height: '600px',
             data: {
               itemReport,
               isEditable: false

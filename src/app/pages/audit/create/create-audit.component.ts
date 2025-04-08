@@ -27,6 +27,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   @ViewChild('matEntpRef') matEntpRef: MatSelect
   @ViewChild('editor') editor: QuillEditorComponent
 
+  /** Form Controls */
+  auditTypeCtrl = new FormControl('', [Validators.required])
+  enterpriseCtrl = new FormControl('', [Validators.required])
+
+  /** State */
   public htmlData: string
   public isEditState: boolean = false
   public audits: Audit[] = []
@@ -37,6 +42,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   public auditCandidate: Audit = {} as Audit
   public defaultAuditor: Auditor = {} as Auditor
 
+  /** Observables */
   public auditorsList$: Observable<Auditor[]>
   public enterprisesList$: Observable<Enterprise[]>
   public auditsList$: Observable<Audit[]>;
@@ -51,9 +57,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     private enterpriseSrv: EnterpriseService,
     private goalSrv: GoalsService,
     private fileSrv: FileService,
-    private _formBuilder: FormBuilder) {
-      
-    }
+    private _formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.enterprisesList$ = this.enterpriseCtrl.valueChanges.pipe(
@@ -75,9 +79,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     this.destroyer$.next()
     this.destroyer$.complete()
   }
-
-  auditTypeCtrl = new FormControl('', [Validators.required])
-  enterpriseCtrl = new FormControl('', [Validators.required])
 
   firstFormGroup = this._formBuilder.group({
     enterprise: this.enterpriseCtrl,
@@ -178,6 +179,9 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
 
     this.isEditState = true
     this.auditCandidate = audit
+
+    // set form values met-autocomplete
+    
   }
 
   onCompleteAudit(audit: Audit) {

@@ -14,7 +14,7 @@ export class CkeditorComponent implements OnInit {
   public itemReport: ItemReport = {} as ItemReport
   public isEditable: boolean
   public ckEditorConfig = {
-    licenseKey: '9oHwOulL1xTNGTO6c33LzadOOzzGbPMpyTq1',
+    licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzU2MDYzOTksImp0aSI6IjUyOWJiMGU5LTIzNmUtNGJlNC1hNWI2LWFkNWE3MjNkMmFiZSIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYjI3OGRmMGEifQ.k12Wtk11W8OwWoKQKkvD-ANBbNfR9FuJ0bqKazxsubBkU9w4Mx41J81DyCaQb9Pzzg0pKvNrJYvWXy3Oye7JIg',
     exportPdf: {
       converterOptions: {
         format: 'Letter',

@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angu
 import { MatDialog } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import { QuillEditorComponent } from 'ngx-quill';
-import { Observable, take } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
@@ -13,6 +13,7 @@ import { AuditService } from 'src/app/services/audit.service';
 import { CkeditorComponent } from '../ckeditor/ckeditor.component';
 import { FileService } from 'src/app/services/file.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { GoalsService } from 'src/app/services/goals.service';
 
 @Component({
   selector: 'app-edit-audit',
@@ -34,21 +35,57 @@ export class EditAuditComponent implements OnInit {
   @ViewChild('editor') editor: QuillEditorComponent;
 
   auditForm: FormGroup;
+  auditAddForm: FormGroup;
+
+  destroyer$: Subject<void> = new Subject()
+
+  public goalItems: AuditItemType[] = []
 
   constructor(
     private fb: FormBuilder,
     private readonly matDialog: MatDialog,
     private readonly auditSrv: AuditService,
-    private readonly fileSrv: FileService) { }
+    private readonly fileSrv: FileService,
+    private readonly goalSrv: GoalsService
+  ) { }
 
   ngOnInit(): void {
     this.auditForm = this.fb.group({
       goalItems: this.fb.array(this.audit.goalItems.map(item => this.createGoalItemFormGroup(item)))
     });
+
+    this.loadGoalItems(this.audit.auditType.code)
   }
 
-  get goalItems(): FormArray {
+  ngOnDestroy(): void {
+    this.destroyer$.next()
+    this.destroyer$.complete()
+  }
+
+  get goalItemsFormArr(): FormArray {
     return this.auditForm.get('goalItems') as FormArray;
+  }
+
+  get goalItemsAddFormArr(): FormArray {
+    return this.auditAddForm.get('goalItems') as FormArray;
+  }
+
+  loadGoalItems(code: string): void {
+    this.goalSrv.getGoalItemsByType(code)
+    .pipe(takeUntil(this.destroyer$))
+    .subscribe({
+      next: (items)=>{
+        // Compare items with audit.goalItems and get the difference
+        this.goalItems = items.filter(item => !this.audit.goalItems.some(gitem => gitem.id === item.id))
+
+        this.auditAddForm = this.fb.group({
+          goalItems: this.fb.array(this.goalItems.map(item => this.createGoalItemFormGroup(item)))
+        })
+      },
+      error: (err) => {
+        console.error(err)
+      }
+    })
   }
 
   createGoalItemFormGroup(item: AuditItemType): FormGroup {
@@ -77,13 +114,14 @@ export class EditAuditComponent implements OnInit {
     if(this.isAuditorDisabled) return
 
     const selectedAuditor = event.value
-    this.goalItems.at(index).get('auditor').setValue(selectedAuditor)
+    this.goalItemsFormArr.at(index).get('auditor').setValue(selectedAuditor)
     this.onItemAuditorChange.emit({ event, index })
   }
 
   exportPDF() {
     const content = this.editor.quillEditor.root.innerHTML;
     const doc = new jsPDF();
+
     doc.html(content, {
       callback: (doc: jsPDF) => {
         doc.save('document.pdf');
