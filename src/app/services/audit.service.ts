@@ -10,6 +10,7 @@ import {
   where,
   updateDoc,
   doc,
+  orderBy,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Audit } from '../interfaces/audit';
@@ -30,7 +31,9 @@ export class AuditService {
   }
 
   getAudits() {
-    return collectionData(this.auditColl, {
+    const q = query(this.auditColl, orderBy('createdAt', 'desc'))
+
+    return collectionData(q, {
       idField: 'id'
     }) as Observable<Audit[]>;
   }
@@ -49,7 +52,7 @@ export class AuditService {
   upsertAudit(audit: Audit) {
     return updateDoc(doc(this.firestore, "audits", audit.id), { ...audit })
   }
-
+  
   saveItemReport(itemReport: ItemReport) {
     return addDoc(this.itemRepoColl, itemReport)
   }

@@ -1,6 +1,6 @@
 .container {
-    max-width: 600px;
-    padding-top: 50px;
+    max-width: 800px;
+    padding-top: 10px;
 }
 
 .full-field {
@@ -8,15 +8,32 @@
 }
 
 .container-scrollable {
+    margin-top: 15px;
     overflow-y: scroll;
     height: 300px;
 }
 
-.container-scrollable::-webkit-scrollbar {
-    display: none;
+.audit-card {
+    margin-bottom: 10px;
+
+    mat-card-content {
+        padding: 0px 24px;
+    }
+
+    .audit-card-content {
+        display: flex;
+        flex-direction: row;
+        flex-basis: 0;
+        flex-grow: 1;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+            width: 100%;
+        }
+    }
 }
 
-mat-card-content {
-    display: flex;
-    flex-direction: column;
+.container-scrollable::-webkit-scrollbar {
+    display: none;
 }

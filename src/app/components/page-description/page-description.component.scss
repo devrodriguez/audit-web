@@ -1,0 +1,10 @@
+mat-card {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    background: #070085;
+    background: linear-gradient(90deg, rgba(7, 0, 133, 1) 0%, rgba(67, 67, 196, 1) 49%, rgba(0, 212, 255, 1) 100%);
+}
+
+mat-card-title, mat-card-subtitle {
+    color: white;
+}

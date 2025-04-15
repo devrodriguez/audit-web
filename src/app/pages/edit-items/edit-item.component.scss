@@ -1,11 +1,7 @@
 @media screen and (max-width: 992px) {
     .container {
-        max-width: 600px;
+        max-width: 800px;
     }    
-}
-
-mat-form-field {
-    width: 100%;
 }
 
 .container {
@@ -16,34 +12,25 @@ mat-form-field {
 .container-scrollable {
     margin-top: 15px;
     overflow-y: scroll;
-    height: 100%;
+    height: 300px;
 }
 
 .container-scrollable::-webkit-scrollbar {
     display: none;
 }
 
-.mat-accordion-container .mat-expansion-panel-header-description {
-    justify-content: space-between;
-    align-items: center;
+mat-card-content {
+    display: flex;
+    flex-direction: column;
 }
 
-.full-field {
-    width: 100%;
+.data-container {
+    display: flex;
+    flex-direction: row;
 }
 
-.centered-button {
-    margin: auto;
-}
-
-.fab-button-edit {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-}
-
-.audit-card-stepper {
-    margin-bottom: 10px;
+.data-container mat-form-field {
+    flex-basis: 50%;
 }
 
 .audit-card {
@@ -60,14 +47,13 @@ mat-form-field {
         flex-grow: 1;
         justify-content: space-between;
         align-items: center;
-        
+
         span {
             width: 100%;
         }
     }
 }
 
-.step-container {
-    margin-top: 10px;
+.form-description {
+    width: 100%;
 }
-

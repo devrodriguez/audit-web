@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditPucLegComponent } from './edit-puc-leg.component';
+import { AuditReportComponent } from './audit-report.component';
 
-describe('EditPucLegComponent', () => {
-  let component: EditPucLegComponent;
-  let fixture: ComponentFixture<EditPucLegComponent>;
+describe('AuditReportComponent', () => {
+  let component: AuditReportComponent;
+  let fixture: ComponentFixture<AuditReportComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditPucLegComponent ]
+      declarations: [ AuditReportComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditPucLegComponent);
+    fixture = TestBed.createComponent(AuditReportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

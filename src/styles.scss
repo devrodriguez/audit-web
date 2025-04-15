@@ -31,6 +31,10 @@
     margin-right: 10px;
 }
 
+.m-t-20 {
+    margin-top: 20px;
+}
+
 .ck-editor__editable {
     max-width: 816.37px;
     max-height: 1054.48px;
@@ -38,4 +42,25 @@
     border: 1px hsl( 0,0%,82.7% ) solid !important;
     box-shadow: 0 0 5px hsla( 0,0%,0%,.1 );
     padding: 71.8px !important;
+}
+
+// Snackbar styles
+.success-snackbar {
+  background: #4caf50;
+  color: white;
+}
+
+.error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+.warning-snackbar {
+  background: #ff9800;
+  color: white;
+}
+
+.info-snackbar {
+  background: #2196f3;
+  color: white;
 }

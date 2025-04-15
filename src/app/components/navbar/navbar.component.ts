@@ -22,12 +22,12 @@ export class NavbarComponent implements OnInit {
   baseRoutes: any[] = [
     {
       routerLink: '/audit',
-      description: 'Audit',
+      description: 'Crear Auditoria',
       forRoles: ['ADMIN']
     },
     {
       routerLink: '/audits',
-      description: 'Audits',
+      description: 'Auditorias',
       forRoles: ['ADMIN']
     },
     {
@@ -37,12 +37,17 @@ export class NavbarComponent implements OnInit {
     },
     {
       routerLink: '/auditor-experience',
-      description: 'Auditor Experience',
+      description: 'Mis Auditorias',
       forRoles: ['ADMIN', 'AUDITOR']
     },
     {
       routerLink: '/audit-items',
-      description: 'Audit Items',
+      description: 'Items',
+      forRoles: ['ADMIN']
+    },
+    {
+      routerLink: '/audit-report',
+      description: 'Reporte',
       forRoles: ['ADMIN']
     }
   ]
@@ -51,10 +56,12 @@ export class NavbarComponent implements OnInit {
     private readonly authSrv: AuthService,
     private readonly userSrv: UserService,
     private readonly router: Router) {
-      this.load()
+      
     }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.load()
+  }
 
   ngOnDestroy(): void {}
 
