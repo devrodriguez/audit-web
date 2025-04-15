@@ -4,13 +4,17 @@
         title="Reporte de auditoria"
         subtitle="Consulte, filtre y ordene los registros de auditoria"
     ></app-page-description>
-    <mat-form-field>
+    <mat-form-field class="full-field">
         <input placeholder="Filter" matInput (keyup)="applyFilter($event.target.value)" />
     </mat-form-field>
     <table mat-table matSort [dataSource]="auditDataSource">
         <ng-container matColumnDef="enterprise">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Enterprise</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Empresa</th>
             <td mat-dell *matCellDef="let audit">{{ audit.enterprise.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-dell *matCellDef="let audit">{{ audit.auditType.name }}</td>
         </ng-container>
         <ng-container matColumnDef="audited_by">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Auditor</th>
@@ -21,12 +25,16 @@
             </td>
         </ng-container>
         <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
             <td mat-dell *matCellDef="let audit">{{ audit.status }}</td>
         </ng-container>
         <ng-container matColumnDef="created_at">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de creación</th>
             <td mat-dell *matCellDef="let audit">{{audit.createdAt | date: 'dd/MM/yyyy'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="completed_at">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de finalización</th>
+            <td mat-dell *matCellDef="let audit">{{audit.completedAt | date: 'dd/MM/yyyy'}}</td>
         </ng-container>
         
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

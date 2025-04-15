@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="container">
     <app-page-description
-        title="Auditorias asignadas"
+        title="Mis Auditorias"
         subtitle="Visualize y ejecute las auditorias asignadas"
     ></app-page-description>
     <div class="responsive-container" *ngIf="!selectedAudit.id">
@@ -31,9 +31,10 @@
         </mat-card>
     </div>
     <section *ngIf="selectedAudit.id">
-        <app-edit-audit 
-        [isAuditorDisabled]="true"
-        [isFileDisabled]="selectedAudit.status === 'completed'"
+        <app-edit-audit
+        [isEditorDisabled]="isAuditCompleted"
+        [isAuditorDisabled]="isAuditCompleted"
+        [isFileDisabled]="isAuditCompleted"
         [audit]="selectedAudit"
         [auditorsList$]="auditorList$"
         (onFileSelected)="onFileSelected($event)"

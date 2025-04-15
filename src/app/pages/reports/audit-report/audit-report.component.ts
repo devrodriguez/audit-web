@@ -12,7 +12,7 @@ import { AuditService } from 'src/app/services/audit.service';
   styleUrls: ['./audit-report.component.scss'],
 })
 export class AuditReportComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['enterprise', 'status', 'audited_by', 'created_at']
+  displayedColumns: string[] = ['enterprise', 'type', 'status', 'audited_by', 'created_at', 'completed_at']
   auditDataSource: MatTableDataSource<Audit> = new MatTableDataSource([] as Audit[])
 
   @ViewChild(MatSort) sort: MatSort
@@ -39,6 +39,7 @@ export class AuditReportComponent implements OnInit, AfterViewInit {
           if(
             data.status.trim().toLowerCase().indexOf(filter) >= 0 ||
             data.enterprise.name.trim().toLowerCase().indexOf(filter) >= 0 ||
+            data.auditType.name.trim().toLowerCase().indexOf(filter) >= 0 ||
             data.goalItems.find(gi => gi.auditor && gi.auditor.name.trim().toLowerCase().indexOf(filter) >= 0 )
             ) return true
     

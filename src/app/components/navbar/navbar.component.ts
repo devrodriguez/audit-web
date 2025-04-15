@@ -22,12 +22,12 @@ export class NavbarComponent implements OnInit {
   baseRoutes: any[] = [
     {
       routerLink: '/audit',
-      description: 'Audit',
+      description: 'Crear Auditoria',
       forRoles: ['ADMIN']
     },
     {
       routerLink: '/audits',
-      description: 'Audits',
+      description: 'Auditorias',
       forRoles: ['ADMIN']
     },
     {
@@ -37,17 +37,17 @@ export class NavbarComponent implements OnInit {
     },
     {
       routerLink: '/auditor-experience',
-      description: 'Auditor Experience',
+      description: 'Mis Auditorias',
       forRoles: ['ADMIN', 'AUDITOR']
     },
     {
       routerLink: '/audit-items',
-      description: 'Audit Items',
+      description: 'Items',
       forRoles: ['ADMIN']
     },
     {
       routerLink: '/audit-report',
-      description: 'Audit Report',
+      description: 'Reporte',
       forRoles: ['ADMIN']
     }
   ]

@@ -188,6 +188,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     if (!confirm(`Estas seguro de completar la auditoría ${audit?.enterprise?.name}`)) return
 
     audit.status = AUDIT_STATUS_COMPLETED
+    audit.completedAt = new Date().getTime()
 
     this.auditSrv
       .upsertAudit(audit)

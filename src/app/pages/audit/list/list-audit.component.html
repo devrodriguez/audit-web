@@ -9,9 +9,10 @@
             <mat-expansion-panel-header>
                 <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>
                 <mat-panel-description>
+                    <span>{{audit.auditType.name}}</span>
                     <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit?.status === 'done'">{{audit.status}}</mat-chip-option>
+                        <mat-chip-option [selected]="audit?.status === 'completed'" disabled>{{audit.status}}</mat-chip-option>
                     </mat-chip-listbox>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -33,18 +34,6 @@
                     </mat-list>
                 </div>
             </section>
-            <mat-divider *ngIf="audit.findings?.length > 0"></mat-divider>
-            <!-- <section *ngIf="audit.findings?.length > 0">
-                <h2>Finding</h2>
-                <div class="container-scrollable">
-                    <mat-list>
-                        <mat-list-item *ngFor="let finding of audit.findings">
-                            <span matListItemTitle>{{finding.shortDescription}</span>
-                            {{finding.description}}
-                        </mat-list-item>
-                    </mat-list>
-                </div>
-            </section> -->
         </mat-expansion-panel>
     </mat-accordion>
 </div>

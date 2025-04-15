@@ -43,6 +43,10 @@ export class ExperienceComponent implements OnInit, OnDestroy {
     this.destroyer$.complete()
   }
 
+  get isAuditCompleted() {
+    return this.selectedAudit.status === 'completed'
+  }
+
   loadAudits() {
     const userData = this.authSrv.userData
     this.auditSrv.getAudits()

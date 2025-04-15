@@ -7,6 +7,7 @@ export interface Audit {
     description: string
     status: string
     createdAt: number
+    completedAt?: number
     enterprise?: Enterprise
     auditType?: AuditType 
     goalItems: AuditItemType[]

@@ -17,15 +17,11 @@
                     <input type="text" formControlName="lastName" matInput>
                     <mat-error *ngIf="auditorForm.invalid && (auditorForm.controls.lastName.dirty || auditorForm.controls.lastName.touched)">Last Name is required</mat-error>
                 </mat-form-field>
-                <mat-form-field class="m-r-10">
+                <mat-form-field class="full-field">
                     <mat-label>Email</mat-label>
                     <input type="email" formControlName="email" matInput>
                     <mat-error *ngIf="auditorForm.controls.email.errors?.required && (auditorForm.controls.email.dirty || auditorForm.controls.email.touched)">Email is required</mat-error>
                     <mat-error *ngIf="auditorForm.controls.email.errors?.pattern">Email not valid</mat-error>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Age</mat-label>
-                    <input type="number" name="age" matInput>
                 </mat-form-field>
                 <p>
                     <button mat-raised-button color="primary" [disabled]="auditorForm.invalid">
