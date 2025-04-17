@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 import { Audit } from 'src/app/interfaces/audit';
-import { Auditor } from 'src/app/interfaces/auditor';
 import { AuditService } from 'src/app/services/audit.service';
 
 @Component({

@@ -13,7 +13,6 @@ import { EnterpriseService } from 'src/app/services/enterprise.service';
 import { GoalsService } from 'src/app/services/goals.service';
 import { FileService } from 'src/app/services/file.service';
 import { NotificationService } from 'src/app/services/notification.service';
-import { QuillEditorComponent } from 'ngx-quill';
 
 import { AUDIT_STATUS_COMPLETED, AUDIT_STATUS_PENDING } from 'src/app/constants/audit-status';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -25,7 +24,6 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 })
 export class CreateAuditComponent implements OnInit, OnDestroy {
   @ViewChild('matEntpRef') matEntpRef: MatSelect
-  @ViewChild('editor') editor: QuillEditorComponent
 
   /** Form Controls */
   auditTypeCtrl = new FormControl('', [Validators.required])

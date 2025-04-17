@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
-import { QuillEditorComponent } from 'ngx-quill';
 import { Observable, Subject, take, takeUntil } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
@@ -31,8 +30,6 @@ export class EditAuditComponent implements OnInit {
   @Output() onFileSelected = new EventEmitter()
   @Output() onDeleteFile = new EventEmitter()
   @Output() onItemAuditorChange = new EventEmitter<{ event: any, index: number }>()
-
-  @ViewChild('editor') editor: QuillEditorComponent;
 
   auditForm: FormGroup;
   auditAddForm: FormGroup;
@@ -116,17 +113,6 @@ export class EditAuditComponent implements OnInit {
     const selectedAuditor = event.value
     this.goalItemsFormArr.at(index).get('auditor').setValue(selectedAuditor)
     this.onItemAuditorChange.emit({ event, index })
-  }
-
-  exportPDF() {
-    const content = this.editor.quillEditor.root.innerHTML;
-    const doc = new jsPDF();
-
-    doc.html(content, {
-      callback: (doc: jsPDF) => {
-        doc.save('document.pdf');
-      }
-    });
   }
 
   onShowEditor(goalItem: AuditItemType) {
