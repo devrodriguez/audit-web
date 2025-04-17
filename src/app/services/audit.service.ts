@@ -26,8 +26,8 @@ export class AuditService {
   constructor(
     private firestore: Firestore
   ) {
-    this.auditColl = collection(firestore, 'audits');
-    this.itemRepoColl = collection(firestore, 'itemReports');
+    this.auditColl = collection(this.firestore, 'audits');
+    this.itemRepoColl = collection(this.firestore, 'itemReports');
   }
 
   getAudits() {

@@ -1,4 +1,3 @@
-@import "bootstrap/scss/bootstrap";
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 /* Font Face */
@@ -20,8 +19,6 @@
 *:not(mat-icon) {
     font-family: 'Gilroy Regular' !important;
 }
-
-@import '~quill/dist/quill.snow.css';
 
 .button-proximity {
     margin-right: 5px;
