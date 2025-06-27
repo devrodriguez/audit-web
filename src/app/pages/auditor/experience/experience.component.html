@@ -33,7 +33,7 @@
     <section *ngIf="selectedAudit.id">
         <app-edit-audit
         [isEditorDisabled]="isAuditCompleted"
-        [isAuditorDisabled]="isAuditCompleted"
+        [isAuditorShow]="true"
         [isFileDisabled]="isAuditCompleted"
         [audit]="selectedAudit"
         [auditorsList$]="auditorList$"

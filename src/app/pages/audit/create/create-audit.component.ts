@@ -16,6 +16,7 @@ import { NotificationService } from 'src/app/services/notification.service';
 
 import { AUDIT_STATUS_COMPLETED, AUDIT_STATUS_PENDING } from 'src/app/constants/audit-status';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-create-audit',
@@ -23,7 +24,8 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
   styleUrls: ['./create-audit.component.scss']
 })
 export class CreateAuditComponent implements OnInit, OnDestroy {
-  @ViewChild('matEntpRef') matEntpRef: MatSelect
+  @ViewChild('autoEnterprise') matEntpRef: MatAutocomplete;
+  @ViewChild('autoItems') matItemsRef: MatAutocomplete;
 
   /** Form Controls */
   auditTypeCtrl = new FormControl('', [Validators.required])
@@ -116,6 +118,13 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
       .upsertAudit(this.auditCandidate)
       .then(() => {
         this.notificationService.showSuccess('Audit saved!')
+        
+        this.auditCandidate = {} as Audit
+        this.enterpriseCtrl.reset()
+        this.enterpriseCtrl.setValue(null)
+        this.matEntpRef.options.forEach(item => item.deselect())
+        this.auditTypeCtrl.reset()
+
       })
       .catch(err => {
         console.error(err)
@@ -164,6 +173,10 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
       .createAudit(this.auditCandidate)
       .then(docRef => {
         this.auditCandidate = {} as Audit
+        this.enterpriseCtrl.setValue('')
+        this.auditTypeCtrl.setValue('')
+        this.matEntpRef.options.forEach(item => item.deselect())
+        this.matItemsRef.options.forEach(item => item.deselect())
         this.notificationService.showSuccess('Auditoria creada correctamente')
       })
       .catch(err => {

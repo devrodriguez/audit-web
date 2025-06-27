@@ -23,6 +23,7 @@ export class EditAuditComponent implements OnInit {
   @Input() audit: Audit
   @Input() auditorsList$: Observable<Auditor[]>
   @Input() isAuditorDisabled: boolean
+  @Input() isAuditorShow: boolean
   @Input() isFileDisabled: boolean
   @Input() isEditorDisabled: boolean
   @Input() isTitleDisabled: boolean
@@ -50,8 +51,6 @@ export class EditAuditComponent implements OnInit {
     this.auditForm = this.fb.group({
       goalItems: this.fb.array(this.audit.goalItems.map(item => this.createGoalItemFormGroup(item)))
     });
-
-    this.loadGoalItems(this.audit.auditType.code)
   }
 
   ngOnDestroy(): void {
@@ -61,28 +60,6 @@ export class EditAuditComponent implements OnInit {
 
   get goalItemsFormArr(): FormArray {
     return this.auditForm.get('goalItems') as FormArray;
-  }
-
-  get goalItemsAddFormArr(): FormArray {
-    return this.auditAddForm.get('goalItems') as FormArray;
-  }
-
-  loadGoalItems(code: string): void {
-    this.goalSrv.getGoalItemsByType(code)
-    .pipe(takeUntil(this.destroyer$))
-    .subscribe({
-      next: (items)=>{
-        // Compare items with audit.goalItems and get the difference
-        this.goalItems = items.filter(item => !this.audit.goalItems.some(gitem => gitem.id === item.id))
-
-        this.auditAddForm = this.fb.group({
-          goalItems: this.fb.array(this.goalItems.map(item => this.createGoalItemFormGroup(item)))
-        })
-      },
-      error: (err) => {
-        console.error(err)
-      }
-    })
   }
 
   createGoalItemFormGroup(item: AuditItemType): FormGroup {

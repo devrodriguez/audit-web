@@ -13,7 +13,7 @@
                         <mat-expansion-panel-header>
                             <mat-panel-title>{{audit.goalItems[i].name}}</mat-panel-title>
                         </mat-expansion-panel-header>
-                        <mat-form-field appearance="fill" class="full-field" disabled>
+                        <mat-form-field appearance="fill" class="full-field" *ngIf="!isAuditorShow">
                             <mat-label>Auditor</mat-label>
                             <mat-select 
                                 formControlName="auditor"
@@ -45,28 +45,6 @@
                                 </button>
                             </mat-list-item>
                         </mat-list>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-        </form>
-        <hr>
-        <form [formGroup]="auditAddForm">
-            <div formArrayName="goalItems" *ngIf="goalItems.length > 0">
-                <mat-accordion>
-                    <mat-expansion-panel *ngFor="let gitem of goalItemsAddFormArr.controls; let i = index" [formGroupName]="i">
-                        <mat-expansion-panel-header>
-                            <mat-panel-title>{{goalItems[i].name}}</mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <mat-panel-description>
-                            <mat-form-field appearance="fill" class="full-field">
-                                <mat-label>Auditor</mat-label>
-                                <mat-select formControlName="auditor">
-                                    <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
-                                        {{auditor.name}} {{auditor.lastName}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </mat-panel-description>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>

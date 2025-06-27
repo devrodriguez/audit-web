@@ -4,9 +4,9 @@
         title="Crear auditoria"
         subtitle="Cree y actualice auditorias"
     ></app-page-description>
-    <mat-card class="audit-card-stepper">
+    <mat-card class="audit-card-stepper" *ngIf="!isEditState">
         <mat-card-content>
-            <section *ngIf="!isEditState">
+            <section>
                 <mat-vertical-stepper [linear]="false" #stepper [animationDuration]="1000" [selectedIndex]="-1">
                     <mat-step [stepControl]="firstFormGroup">
                         <div class="step-container">
@@ -20,7 +20,7 @@
                                         matInput
                                         [formControl]="enterpriseCtrl"
                                         [matAutocomplete]="autoEnterprise">
-                                    <mat-autocomplete 
+                                    <mat-autocomplete
                                         autoActiveFirstOption 
                                         #autoEnterprise="matAutocomplete"
                                         [displayWith]="displayEnterprise"
