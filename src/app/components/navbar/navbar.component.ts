@@ -26,6 +26,11 @@ export class NavbarComponent implements OnInit {
       forRoles: ['ADMIN']
     },
     {
+      routerLink: '/audits',
+      description: 'Auditorias',
+      forRoles: ['ADMIN']
+    },
+    {
       routerLink: '/auditor',
       description: 'Auditor',
       forRoles: ['ADMIN']

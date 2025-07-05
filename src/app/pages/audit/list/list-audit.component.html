@@ -7,16 +7,16 @@
     <mat-accordion class="mat-accordion-container" multi>
         <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
             <mat-expansion-panel-header>
-                <mat-panel-title>Enterprise&nbsp;<strong>{{audit.enterprise.name}}</strong></mat-panel-title>
+                <mat-panel-title>Enterprise&nbsp;<strong>{{audit?.enterprise?.name}}</strong></mat-panel-title>
                 <mat-panel-description>
-                    <span>{{audit.auditType.name}}</span>
+                    <span>{{audit?.auditType?.name}}</span>
                     <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
                     <mat-chip-listbox>
                         <mat-chip-option [selected]="audit?.status === 'completed'" disabled>{{audit.status}}</mat-chip-option>
                     </mat-chip-listbox>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <section *ngIf="audit.goalItems.length > 0">
+            <section *ngIf="audit?.goalItems?.length > 0">
                 <div class="container-scrollable">
                     <mat-list>
                         <mat-list-item *ngFor="let goal of audit.goalItems">

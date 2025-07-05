@@ -15,7 +15,7 @@
                         {{audit.createdAt | date: 'dd/MM/yyyy'}}
                     </mat-card-subtitle>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit?.status === 'completed' ?? true" disabled>{{audit.status}}</mat-chip-option>
+                        <mat-chip-option [selected]="audit?.status === 'completed'" disabled>{{audit.status}}</mat-chip-option>
                     </mat-chip-listbox>
                 </mat-card-title-group>
             </mat-card-header>
@@ -32,13 +32,11 @@
     </div>
     <section *ngIf="selectedAudit.id">
         <app-edit-audit
-        [isEditorDisabled]="isAuditCompleted"
-        [isAuditorShow]="true"
-        [isFileDisabled]="isAuditCompleted"
-        [audit]="selectedAudit"
-        [auditorsList$]="auditorList$"
-        (onFileSelected)="onFileSelected($event)"
-        (onDeleteFile)="onDeleteFile($event)"
+            [isAuditorShow]="false"
+            [audit]="selectedAudit"
+            [auditorsList$]="auditorList$"
+            (onFileSelected)="onFileSelected($event)"
+            (onDeleteFile)="onDeleteFile($event)"
         ></app-edit-audit>
         <br>
         <button mat-raised-button class="button-proximity" (click)="closeEdition()">

@@ -22,11 +22,11 @@ import { GoalsService } from 'src/app/services/goals.service';
 export class EditAuditComponent implements OnInit {
   @Input() audit: Audit
   @Input() auditorsList$: Observable<Auditor[]>
-  @Input() isAuditorDisabled: boolean
-  @Input() isAuditorShow: boolean
-  @Input() isFileDisabled: boolean
-  @Input() isEditorDisabled: boolean
-  @Input() isTitleDisabled: boolean
+  @Input() isAuditorEnabled: boolean = true
+  @Input() isAuditorShow: boolean = true
+  @Input() isFileEnabled: boolean = true
+  @Input() isEditorEnabled: boolean = true
+  @Input() isTitleEnabled: boolean = true
   
   @Output() onFileSelected = new EventEmitter()
   @Output() onDeleteFile = new EventEmitter()
@@ -73,19 +73,19 @@ export class EditAuditComponent implements OnInit {
   }
 
   fileSelected($event: any, gitem: AuditItemType) {
-    if(this.isFileDisabled) return
+    if(!this.isFileEnabled) return
 
     this.onFileSelected.emit({ $event, gitem })
   }
 
   deleteFile(file: GoalFile, gitem: AuditItemType) {
-    if(this.isFileDisabled) return
+    if(!this.isFileEnabled) return
 
     this.onDeleteFile.emit({ file, gitem })
   }
 
   itemAuditorChange(event: any, index: number) {
-    if(this.isAuditorDisabled) return
+    if(!this.isAuditorEnabled) return
 
     const selectedAuditor = event.value
     this.goalItemsFormArr.at(index).get('auditor').setValue(selectedAuditor)

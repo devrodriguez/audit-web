@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatOption } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
 import { Observable, Subject, startWith, takeUntil, map } from 'rxjs';
+import { MatStepper } from '@angular/material/stepper';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
@@ -26,6 +25,7 @@ import { MatAutocomplete } from '@angular/material/autocomplete';
 export class CreateAuditComponent implements OnInit, OnDestroy {
   @ViewChild('autoEnterprise') matEntpRef: MatAutocomplete;
   @ViewChild('autoItems') matItemsRef: MatAutocomplete;
+  @ViewChild('stepper') stepper: MatStepper;
 
   /** Form Controls */
   auditTypeCtrl = new FormControl('', [Validators.required])
@@ -37,7 +37,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   public audits: Audit[] = []
   public auditors: Auditor[] = []
   public enterprises: Enterprise[] = []
-  public goalItems: AuditItemType[] = []
+  public auditItemTypes: AuditItemType[] = []
   public selectedGoalItems: AuditItemType[] = []
   public auditCandidate: Audit = {} as Audit
   public defaultAuditor: Auditor = {} as Auditor
@@ -47,32 +47,49 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   public enterprisesList$: Observable<Enterprise[]>
   public auditsList$: Observable<Audit[]>;
   public auditItemTypes$: Observable<AuditItemType[]>;
-  
+
   destroyer$: Subject<void> = new Subject()
 
   constructor(
-    private notificationService: NotificationService,
+    private notifySrv: NotificationService,
     private auditSrv: AuditService,
     private auditorSrv: AuditorService,
     private enterpriseSrv: EnterpriseService,
     private goalSrv: GoalsService,
     private fileSrv: FileService,
-    private _formBuilder: FormBuilder) {}
+    private _formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.enterprisesList$ = this.enterpriseCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || ''))
-    )
-    this.auditItemTypes$ = this.auditTypeCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || ''))
-    )
-
     this.auditorsList$ = this.auditorSrv.getAuditors()
+    this.enterpriseSrv.getEnterprises()
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (enterprises) => {
+          this.enterprises = enterprises
+          this.enterprisesList$ = this.enterpriseCtrl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterEnterprise(value || ''))
+          )
+        },
+        error: (err) => {
+          console.error(err)
+        }
+      })
+    this.goalSrv.getAuditItemTypes()
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (items) => {
+          this.auditItemTypes = items
+          this.auditItemTypes$ = this.auditTypeCtrl.valueChanges.pipe(
+            startWith(''),
+            map(value => this._filterAuditItem(value || ''))
+          )
+        },
+        error: (err) => {
+          console.error(err)
+        }
+      })
     this.loadAudits()
-    this.enterprisesList$ = this.enterpriseSrv.getEnterprises()
-    this.auditItemTypes$ = this.goalSrv.getAuditItemTypes()
   }
 
   ngOnDestroy(): void {
@@ -88,47 +105,31 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   })
 
   loadGoalItems(code: string): void {
-    this.goalSrv.getGoalItemsByType(code)
-    .pipe(takeUntil(this.destroyer$))
-    .subscribe({
-      next: (items)=>{
-        this.auditCandidate.goalItems = items
-      },
-      error: (err) => {
-        console.error(err)
-      }
-    })
+    this.goalSrv
+      .getGoalItemsByType(code)
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (items) => {
+          this.auditCandidate.goalItems = items
+        },
+        error: (err) => {
+          console.error(err)
+          this.notifySrv.showError('Error al cargar los items de la auditoría')
+        }
+      })
   }
 
   loadAudits() {
     this.auditSrv.getAudits()
-    .pipe(takeUntil(this.destroyer$))
-    .subscribe({
-      next: (audits) => {
-        this.audits = audits
-      },
-      error: (err) => {
-        console.error(err)
-      }
-    })
-  }
-
-  saveAudit() {
-    this.auditSrv
-      .upsertAudit(this.auditCandidate)
-      .then(() => {
-        this.notificationService.showSuccess('Audit saved!')
-        
-        this.auditCandidate = {} as Audit
-        this.enterpriseCtrl.reset()
-        this.enterpriseCtrl.setValue(null)
-        this.matEntpRef.options.forEach(item => item.deselect())
-        this.auditTypeCtrl.reset()
-
-      })
-      .catch(err => {
-        console.error(err)
-        this.notificationService.showError('Can not save audit!')
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (audits) => {
+          this.audits = audits
+        },
+        error: (err) => {
+          console.error(err)
+          this.notifySrv.showError('Error al cargar las auditorías')
+        }
       })
   }
 
@@ -141,9 +142,18 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     return x && y ? x.id === y.id : x === y;
   }
 
-  private _filter(value: string): AuditItemType[] {
-    const filterValue = value.toLowerCase();
-    return this.auditCandidate.goalItems.filter(option => option.name.toLowerCase().includes(filterValue));
+  private _filterAuditItem(value: string): AuditItemType[] {
+    if (typeof value !== 'string') return [] as AuditItemType[]
+
+    const filterValue = value?.toLowerCase();
+    return this.auditItemTypes.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  private _filterEnterprise(value: string): Enterprise[] {
+    if (typeof value !== 'string') return [] as Enterprise[]
+
+    const filterValue = value?.toLowerCase();
+    return this.enterprises.filter(option => option.name.toLowerCase().includes(filterValue));
   }
 
   displayEnterprise(enterprise: Enterprise): string {
@@ -157,15 +167,26 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   /** Events */
   onInitializeAudit() {
     if (!this.auditCandidate?.enterprise?.id) {
-      this.notificationService.showWarning('Enterprise is required!')
+      this.notifySrv.showWarning('Enterprise is required!')
       return
     }
 
-    if (this.audits.find(audit => audit.enterprise.id == this.auditCandidate.enterprise.id && audit.status === AUDIT_STATUS_PENDING)) {
-      this.notificationService.showWarning(`Audit for enterprise ${this.auditCandidate.enterprise.name} already exist!`)
+    const foundAudit = this.audits.find(audit => audit.enterprise.id == this.auditCandidate.enterprise.id && audit.status === AUDIT_STATUS_PENDING)
+    if (foundAudit) {
+      this.notifySrv.showWarning(`Audit for enterprise ${this.auditCandidate.enterprise.name} already exist and is ${foundAudit.status}!`)
       return
     }
-    
+
+    if (!this.auditCandidate?.goalItems?.length) {
+      this.notifySrv.showWarning('Audit items are required!')
+      return
+    }
+
+    if (this.auditCandidate?.auditType?.id == null) {
+      this.notifySrv.showWarning('Audit type is required!')
+      return
+    }
+
     this.auditCandidate.createdAt = new Date().getTime()
     this.auditCandidate.status = AUDIT_STATUS_PENDING
 
@@ -173,29 +194,35 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
       .createAudit(this.auditCandidate)
       .then(docRef => {
         this.auditCandidate = {} as Audit
+        this.stepper.reset()
+        this.notifySrv.showSuccess('Auditoria creada correctamente')
+        /*
         this.enterpriseCtrl.setValue('')
         this.auditTypeCtrl.setValue('')
         this.matEntpRef.options.forEach(item => item.deselect())
         this.matItemsRef.options.forEach(item => item.deselect())
-        this.notificationService.showSuccess('Auditoria creada correctamente')
+        */
       })
       .catch(err => {
         console.error(err);
-        this.notificationService.showError('Error al crear auditoria')
+        this.notifySrv.showError('Error al crear auditoria')
       })
   }
 
   onEditAudit(audit: Audit) {
-    if(audit.status === AUDIT_STATUS_COMPLETED) return
+    if (audit.status === AUDIT_STATUS_COMPLETED) return
 
     this.isEditState = true
     this.auditCandidate = audit
-
-    // set form values met-autocomplete
-    
   }
 
   onCompleteAudit(audit: Audit) {
+    const itemsWithNoAuditor = audit.goalItems.filter(item => item.auditor == null)
+    if (itemsWithNoAuditor.length > 0) {
+      this.notifySrv.showWarning('All items must have a assigned auditor!')
+      return
+    }
+
     if (!confirm(`Estas seguro de completar la auditoría ${audit?.enterprise?.name}`)) return
 
     audit.status = AUDIT_STATUS_COMPLETED
@@ -204,11 +231,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     this.auditSrv
       .upsertAudit(audit)
       .then(res => {
-        this.notificationService.showSuccess('Audit completed!')
+        this.notifySrv.showSuccess('Audit completed!')
       })
       .catch(err => {
         console.error(err)
-        this.notificationService.showError('Can not audit complete!')
+        this.notifySrv.showError('Can not audit complete!')
       })
   }
 
@@ -225,10 +252,10 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
 
       gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
       this.auditSrv.upsertAudit(this.auditCandidate)
-      this.notificationService.showSuccess('File attached!')
+      this.notifySrv.showSuccess('File attached!')
     } catch (err) {
       console.error(err)
-      this.notificationService.showError('Can not upload file!')
+      this.notifySrv.showError('Can not upload file!')
     }
   }
 
@@ -238,10 +265,10 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
       const fileIdx = gitem.files.findIndex(item => item.name == file.name)
       gitem.files.splice(fileIdx, 1)
       await this.auditSrv.upsertAudit(this.auditCandidate)
-      this.notificationService.showSuccess('File deleted!')
+      this.notifySrv.showSuccess('File deleted!')
     } catch (err) {
       console.error(err)
-      this.notificationService.showError('Can not delete file!')
+      this.notifySrv.showError('Can not delete file!')
     }
   }
 
@@ -264,11 +291,11 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     this.auditSrv
       .upsertAudit(this.auditCandidate)
       .then(res => {
-        this.notificationService.showSuccess('Auditor updated!')
+        this.notifySrv.showSuccess('Auditor updated!')
       })
       .catch(err => {
         console.error(err)
-        this.notificationService.showError('Can not update auditor!')
+        this.notifySrv.showError('Can not update auditor!')
       })
   }
 }
