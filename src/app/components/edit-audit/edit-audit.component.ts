@@ -1,18 +1,16 @@
-import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import jsPDF from 'jspdf';
-import { Observable, Subject, take, takeUntil } from 'rxjs';
+import { Observable, Subject, take } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
-import { GoalFile } from 'src/app/interfaces/goal-file';
-import { AuditItemType } from 'src/app/interfaces/goal-item';
+import { AuditFile } from 'src/app/interfaces/audit-file';
+import { AuditItem } from 'src/app/interfaces/audit-item';
 import { ItemReport } from 'src/app/interfaces/item-report';
 import { AuditService } from 'src/app/services/audit.service';
 import { CkeditorComponent } from '../ckeditor/ckeditor.component';
 import { FileService } from 'src/app/services/file.service';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GoalsService } from 'src/app/services/goals.service';
 
 @Component({
   selector: 'app-edit-audit',
@@ -37,19 +35,16 @@ export class EditAuditComponent implements OnInit {
 
   destroyer$: Subject<void> = new Subject()
 
-  public goalItems: AuditItemType[] = []
-
   constructor(
     private fb: FormBuilder,
     private readonly matDialog: MatDialog,
     private readonly auditSrv: AuditService,
     private readonly fileSrv: FileService,
-    private readonly goalSrv: GoalsService
   ) { }
 
   ngOnInit(): void {
     this.auditForm = this.fb.group({
-      goalItems: this.fb.array(this.audit.goalItems.map(item => this.createGoalItemFormGroup(item)))
+      auditItems: this.fb.array(this.audit.auditItems.map(item => this.createGoalItemFormGroup(item)))
     });
   }
 
@@ -58,11 +53,11 @@ export class EditAuditComponent implements OnInit {
     this.destroyer$.complete()
   }
 
-  get goalItemsFormArr(): FormArray {
-    return this.auditForm.get('goalItems') as FormArray;
+  get auditItemsFormArr(): FormArray {
+    return this.auditForm.get('auditItems') as FormArray;
   }
 
-  createGoalItemFormGroup(item: AuditItemType): FormGroup {
+  createGoalItemFormGroup(item: AuditItem): FormGroup {
     return this.fb.group({
       auditor: [item.auditor || null, Validators.required]
     });
@@ -72,35 +67,35 @@ export class EditAuditComponent implements OnInit {
     return x && y ? x.id === y.id : x === y;
   }
 
-  fileSelected($event: any, gitem: AuditItemType) {
+  fileSelected($event: any, auditItem: AuditItem) {
     if(!this.isFileEnabled) return
 
-    this.onFileSelected.emit({ $event, gitem })
+    this.onFileSelected.emit({ $event, auditItem })
   }
 
-  deleteFile(file: GoalFile, gitem: AuditItemType) {
+  deleteFile(file: AuditFile, auditItem: AuditItem) {
     if(!this.isFileEnabled) return
 
-    this.onDeleteFile.emit({ file, gitem })
+    this.onDeleteFile.emit({ file, auditItem })
   }
 
   itemAuditorChange(event: any, index: number) {
     if(!this.isAuditorEnabled) return
 
     const selectedAuditor = event.value
-    this.goalItemsFormArr.at(index).get('auditor').setValue(selectedAuditor)
+    this.auditItemsFormArr.at(index).get('auditor').setValue(selectedAuditor)
     this.onItemAuditorChange.emit({ event, index })
   }
 
-  onShowEditor(goalItem: AuditItemType) {
-    this.auditSrv.getItemReport(this.audit.id, goalItem.id)
+  onShowEditor(auditItem: AuditItem) {
+    this.auditSrv.getItemReport(this.audit.id, auditItem.id)
       .pipe(
         take(1)
       ).subscribe({
         next: (itemReports) => {
           let itemReport: ItemReport = {
             auditID: this.audit.id,
-            goalItemID: goalItem.id
+            goalItemID: auditItem.id
           } as ItemReport
   
           if (itemReports.length) {

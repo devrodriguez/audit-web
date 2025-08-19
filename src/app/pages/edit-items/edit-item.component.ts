@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuditItem, AuditItemType, ItemType } from 'src/app/interfaces/goal-item';
+import { AuditItem, ItemType } from 'src/app/interfaces/audit-item';
 import { GoalsService } from 'src/app/services/goals.service';
 
 @Component({
@@ -33,7 +33,7 @@ export class EditItemComponent implements OnInit {
     }
   ]
 
-  auditItemTypes: AuditItemType[] = []
+  auditItemTypes: AuditItem[] = []
 
   auditItems: AuditItem[] = []
 
@@ -116,10 +116,5 @@ export class EditItemComponent implements OnInit {
     this.matSnackBar.open(message, undefined, {
       duration: 3000
     });
-  }
-
-  compareAuditType(auditType: AuditItemType, selectedAuditType: AuditItemType) {
-    return auditType.name.toLowerCase() === 'contable'
-    // return auditType && selectedAuditType && auditType.id === selectedAuditType.id
   }
 }

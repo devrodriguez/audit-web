@@ -1,4 +1,4 @@
-export interface GoalFile {
+export interface AuditFile {
     name: string
     fullPath: string
 }

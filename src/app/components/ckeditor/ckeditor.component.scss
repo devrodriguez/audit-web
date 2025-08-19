@@ -1,9 +1,5 @@
-.editor-container {
-    min-width: 595px !important;
-}
-
-.editor-content {
-    min-width: 595px !important;
+.dialog-container {
     height: 100%;
-    overflow-y: hidden !important;
+    display: flex;
+    flex-direction: column;
 }

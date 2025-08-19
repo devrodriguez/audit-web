@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import Editor from 'ckeditor5-custom-build/build/ckeditor';
+
 import { ItemReport } from 'src/app/interfaces/item-report';
 import { AuditService } from 'src/app/services/audit.service';
 
@@ -56,11 +57,11 @@ export class CkeditorComponent implements OnInit {
   saveData() {
     this.auditSrv.updateItemReport(this.itemReport)
       .then(() => {
-        this.presentSnack('Data updated!')
+        this.presentSnack('Información guardada')
       })
       .catch(err => {
         console.error(err)
-        this.presentSnack('Error updating data!')
+        this.presentSnack('La información no se ha guardado. Intente de nuevo')
       })
   }
 

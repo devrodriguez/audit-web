@@ -5,7 +5,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { Enterprise } from 'src/app/interfaces/enterprise';
-import { AuditItemType } from 'src/app/interfaces/goal-item';
+import { AuditItem } from 'src/app/interfaces/audit-item';
 import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
@@ -37,8 +37,8 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   public audits: Audit[] = []
   public auditors: Auditor[] = []
   public enterprises: Enterprise[] = []
-  public auditItemTypes: AuditItemType[] = []
-  public selectedGoalItems: AuditItemType[] = []
+  public auditItems: AuditItem[] = []
+  public auditItemTypes: AuditItem[] = []
   public auditCandidate: Audit = {} as Audit
   public defaultAuditor: Auditor = {} as Auditor
 
@@ -46,7 +46,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   public auditorsList$: Observable<Auditor[]>
   public enterprisesList$: Observable<Enterprise[]>
   public auditsList$: Observable<Audit[]>;
-  public auditItemTypes$: Observable<AuditItemType[]>;
+  public auditItemTypes$: Observable<AuditItem[]>;
 
   destroyer$: Subject<void> = new Subject()
 
@@ -75,6 +75,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
           console.error(err)
         }
       })
+
     this.goalSrv.getAuditItemTypes()
       .pipe(takeUntil(this.destroyer$))
       .subscribe({
@@ -89,6 +90,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
           console.error(err)
         }
       })
+
     this.loadAudits()
   }
 
@@ -104,13 +106,14 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     itemType: this.auditTypeCtrl,
   })
 
-  loadGoalItems(code: string): void {
+  loadAuditItems(itemType: string): void {
     this.goalSrv
-      .getGoalItemsByType(code)
+      .getAuditItemsByType(itemType)
       .pipe(takeUntil(this.destroyer$))
       .subscribe({
         next: (items) => {
-          this.auditCandidate.goalItems = items
+          this.auditCandidate.auditItems = items
+          this.auditItems = items
         },
         error: (err) => {
           console.error(err)
@@ -142,8 +145,8 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     return x && y ? x.id === y.id : x === y;
   }
 
-  private _filterAuditItem(value: string): AuditItemType[] {
-    if (typeof value !== 'string') return [] as AuditItemType[]
+  private _filterAuditItem(value: string): AuditItem[] {
+    if (typeof value !== 'string') return [] as AuditItem[]
 
     const filterValue = value?.toLowerCase();
     return this.auditItemTypes.filter(option => option.name.toLowerCase().includes(filterValue));
@@ -160,7 +163,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     return enterprise?.name
   }
 
-  displayAuditItem(auditItem: AuditItemType): string {
+  displayAuditItem(auditItem: AuditItem): string {
     return auditItem?.name
   }
 
@@ -177,7 +180,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
       return
     }
 
-    if (!this.auditCandidate?.goalItems?.length) {
+    if (!this.auditCandidate?.auditItems?.length) {
       this.notifySrv.showWarning('Audit items are required!')
       return
     }
@@ -196,12 +199,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
         this.auditCandidate = {} as Audit
         this.stepper.reset()
         this.notifySrv.showSuccess('Auditoria creada correctamente')
-        /*
-        this.enterpriseCtrl.setValue('')
-        this.auditTypeCtrl.setValue('')
-        this.matEntpRef.options.forEach(item => item.deselect())
-        this.matItemsRef.options.forEach(item => item.deselect())
-        */
       })
       .catch(err => {
         console.error(err);
@@ -217,7 +214,7 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   }
 
   onCompleteAudit(audit: Audit) {
-    const itemsWithNoAuditor = audit.goalItems.filter(item => item.auditor == null)
+    const itemsWithNoAuditor = audit.auditItems.filter(item => item.auditor == null)
     if (itemsWithNoAuditor.length > 0) {
       this.notifySrv.showWarning('All items must have a assigned auditor!')
       return
@@ -276,18 +273,19 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     this.auditCandidate.enterprise = event.option.value
   }
 
-  onItemAuditChange(event: any) {
+  onAuditTypeChange(event: any) {
     const { code } = event.option.value
+
     this.auditCandidate.auditType = event.option.value
-    this.loadGoalItems(code)
+    this.loadAuditItems(code)
   }
 
   onItemAuditorCandidateChange({ event, index }) {
-    this.auditCandidate.goalItems[index].auditor = event.value
+    this.auditCandidate.auditItems[index].auditor = event.value
   }
 
   onItemAuditorChange({ event, index }) {
-    this.auditCandidate.goalItems[index].auditor = event.value
+    this.auditCandidate.auditItems[index].auditor = event.value
     this.auditSrv
       .upsertAudit(this.auditCandidate)
       .then(res => {

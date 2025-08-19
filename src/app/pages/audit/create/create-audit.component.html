@@ -35,7 +35,7 @@
                   <input type="text" aria-label="Tipo" matInput formControlName="itemType"
                     [matAutocomplete]="autoItems">
                   <mat-autocomplete autoActiveFirstOption #autoItems="matAutocomplete" [displayWith]="displayAuditItem"
-                    (optionSelected)="onItemAuditChange($event)">
+                    (optionSelected)="onAuditTypeChange($event)">
                     <mat-option *ngFor="let ait of auditItemTypes$ | async;" [value]="ait">
                       {{ait.name}}
                     </mat-option>
@@ -50,10 +50,14 @@
           </mat-step>
           <mat-step>
             <ng-template matStepLabel>Items a auditar</ng-template>
-            <div class="step-container" *ngIf="auditCandidate?.goalItems?.length > 0">
-              <app-edit-audit [audit]="auditCandidate" [auditorsList$]="auditorsList$"
-                (onFileSelected)="onFileSelected($event)" (onDeleteFile)="onDeleteFile($event)"
-                (onItemAuditorChange)="onItemAuditorCandidateChange($event)" [isEditorEnabled]="false"
+            <div class="step-container" *ngIf="auditCandidate?.auditItems?.length > 0">
+              <app-edit-audit 
+                [audit]="auditCandidate" 
+                [auditorsList$]="auditorsList$"
+                (onFileSelected)="onFileSelected($event)" 
+                (onDeleteFile)="onDeleteFile($event)"
+                (onItemAuditorChange)="onItemAuditorCandidateChange($event)" 
+                [isEditorEnabled]="false"
                 [isTitleEnabled]="false" [isFileEnabled]="false">
               </app-edit-audit>
             </div>
@@ -80,9 +84,17 @@
     </mat-card-content>
   </mat-card>
   <section *ngIf="isEditState">
-    <app-edit-audit [audit]="auditCandidate" [auditorsList$]="auditorsList$" (onFileSelected)="onFileSelected($event)"
-      (onDeleteFile)="onDeleteFile($event)" (onItemAuditorChange)="onItemAuditorChange($event)"
-      [isEditorEnabled]="false" [isFileEnabled]="false">
+    {{ auditItems | json}}
+    <app-edit-audit 
+      [audit]="auditCandidate" 
+      [auditorsList$]="auditorsList$" 
+      (onFileSelected)="onFileSelected($event)"
+      (onDeleteFile)="onDeleteFile($event)" 
+      (onItemAuditorChange)="onItemAuditorChange($event)"
+      [isEditorEnabled]="false" 
+      [isFileEnabled]="false"
+      [isAuditorEnabled]="true"
+    >
     </app-edit-audit>
     <div class="m-t-20">
       <button mat-raised-button (click)="onCloseEdition()">
