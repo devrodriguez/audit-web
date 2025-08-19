@@ -72,7 +72,7 @@ export class AuditService {
     return collectionData(
       query(
         this.itemRepoColl,
-        where('auditID', '==', auditID)
+        where('auditID', '==', auditID),
       ), {
       idField: 'id'
     }

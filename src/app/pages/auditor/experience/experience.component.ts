@@ -11,6 +11,8 @@ import { FileService } from 'src/app/services/file.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CkeditorComponent } from 'src/app/components/ckeditor/ckeditor.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { AuditItemFile } from 'src/app/interfaces/audit-item';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-experience',
@@ -18,11 +20,13 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./experience.component.scss']
 })
 export class ExperienceComponent implements OnInit, OnDestroy {
-  public auditList: Audit[]
+  public auditList: Audit[] = []
   public auditorList$: Observable<Auditor[]>
   public selectedAudit: Audit = {} as Audit
 
   destroyer$: Subject<void> = new Subject()
+
+  private readonly MAX_FILE_SIZE_MB = 10;
 
   constructor(
     private readonly matDialog: MatDialog,
@@ -30,7 +34,8 @@ export class ExperienceComponent implements OnInit, OnDestroy {
     private readonly auditSrv: AuditService,
     private readonly auditorSrv: AuditorService,
     private readonly authSrv: AuthService,
-    private readonly fileSrv: FileService
+    private readonly fileSrv: FileService,
+    private notifySrv: NotificationService,
   ) { }
 
   ngOnInit() {
@@ -53,9 +58,9 @@ export class ExperienceComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyer$))
       .subscribe({
         next: (res) => {
-          this.auditList = res.filter(item => item.goalItems.find(gi => gi.auditor && gi.auditor.email === userData.email))
+          this.auditList = res.filter(item => item.auditItems.find(gi => gi.auditor && gi.auditor.email === userData.email))
           this.auditList.forEach((audit) => {
-            audit.goalItems = audit.goalItems.filter(gi => gi.auditor && gi.auditor.email === userData.email)
+            audit.auditItems = audit.auditItems.filter(gi => gi.auditor && gi.auditor.email === userData.email)
           })
         },
         error: (err) => {
@@ -77,28 +82,49 @@ export class ExperienceComponent implements OnInit, OnDestroy {
     this.selectedAudit = {} as Audit
   }
 
-  async onFileSelected({ $event, gitem }) {
+  async onFileSelected({ $event, auditItem }) {
     const file = $event.target.files[0]
+
+    if (!file) {
+      return;
+    }
+
+    if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
+      this.notifySrv.showWarning(`El tamaño del archivo no debe ser mayor a ${this.MAX_FILE_SIZE_MB}MB`)
+      return
+    }
+
+    if (auditItem.files && auditItem.files.some((f: AuditItemFile) => f.name === file.name)) {
+      this.notifySrv.showWarning('El archivo ya existe en este ítem de auditoría.')
+      return
+    }
 
     try {
       const upRes = await this.fileSrv.uploadFile(file)
-      const fileItem = { name: upRes.ref.name, fullPath: upRes.ref.fullPath }
-      gitem.files = gitem.files ? [...gitem.files, fileItem] : [fileItem]
+      const fileItem = { 
+        name: upRes.ref.name, 
+        fullPath: upRes.ref.fullPath,
+      } as AuditItemFile
+
+      auditItem.files = [...(auditItem.files || []), fileItem]
       this.auditSrv.upsertAudit(this.selectedAudit)
+      this.notifySrv.showSuccess('El archivo fue cargado correctamente.')
     } catch (err) {
       console.error(err)
+      this.notifySrv.showError('No se pudo cargar el archivo')
     }
   }
 
-  async onDeleteFile({ file, gitem }) {
+  async onDeleteFile({ file, auditItem }) {
     try {
       await this.fileSrv.deleteFile(file)
-      const fileIdx = gitem.files.findIndex(item => item.name == file.name)
-      gitem.files.splice(fileIdx, 1)
+      const fileIdx = auditItem.files.findIndex(item => item.name == file.name)
+      auditItem.files.splice(fileIdx, 1)
       await this.auditSrv.upsertAudit(this.selectedAudit)
-      this.presentSnackBar('File deleted!')
+
+      this.notifySrv.showSuccess('El archivo ha sido eliminado')
     } catch (err) {
-      this.presentSnackBar('Could not delete file!')
+      this.notifySrv.showError('No fue posible eliminar el archivo')
       console.error(err)
     }
   }
@@ -108,11 +134,7 @@ export class ExperienceComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe({
         next: (items) => {
-          let reportContent = ''
-
-          items.forEach(item => {
-            reportContent += `<p>${item.itemContent}</p>`
-          })
+          let reportContent = items.map(item => `<p>${item.itemContent}</p>`).join('')
 
           console.log('report content: ', reportContent)
           const itemReport: ItemReport = {
@@ -125,7 +147,6 @@ export class ExperienceComponent implements OnInit, OnDestroy {
             height: '600px',
             data: {
               itemReport,
-              isEditable: false
             }
           })
           dialogRef.afterClosed()
@@ -138,11 +159,5 @@ export class ExperienceComponent implements OnInit, OnDestroy {
           console.error(err)
         }
       })
-  }
-
-  presentSnackBar(message: string) {
-    this.matSnackBar.open(message, undefined, {
-      duration: 3000
-    });
   }
 }

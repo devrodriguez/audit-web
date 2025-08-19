@@ -1,16 +1,12 @@
-<section>
-    <mat-dialog-content class="editor-content">
-        <ckeditor 
-        [editor]="Editor"
-        [config]="ckEditorConfig"
-        [(ngModel)]="itemReport.itemContent"
-        [disabled]="!isEditable" 
-        (ready)="onReady($event)"></ckeditor>
-    </mat-dialog-content>
-    <mat-dialog-actions>
+<div class="dialog-container">
+    <div mat-dialog-content>
+        <ckeditor [editor]="Editor" [config]="ckEditorConfig" [(ngModel)]="itemReport.itemContent"
+            [disabled]="!isEditable" (ready)="onReady($event)"></ckeditor>
+    </div>
+    <div mat-dialog-actions>
         <button mat-raised-button class="button-proximity" (click)="saveData()" *ngIf="isEditable">Save</button>
         <button mat-raised-button class="button-proximity" (click)="isEditable = false" *ngIf="isEditable">View</button>
-        <button mat-raised-button class="button-proximity" (click)="isEditable = true" *ngIf="!isEditable">Edit</button>
+        <!-- <button mat-raised-button class="button-proximity" (click)="isEditable = true" *ngIf="!isEditable">Edit</button> -->
         <button mat-raised-button class="button-proximity" mat-dialog-close>Close</button>
-    </mat-dialog-actions>
-</section>
+    </div>
+</div>

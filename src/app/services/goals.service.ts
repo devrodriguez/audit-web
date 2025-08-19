@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { collection, collectionData, doc, CollectionReference, DocumentData, Firestore, addDoc, query, orderBy, where, collectionGroup, getDocs, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { AuditItem, AuditItemType } from '../interfaces/goal-item';
+import { AuditItem } from '../interfaces/audit-item';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,6 @@ export class GoalsService {
   public goalsCollRef: CollectionReference<DocumentData>
   public auditItemsCollRef: CollectionReference<DocumentData>
   private auditItemTypeRef: CollectionReference<DocumentData>
-  private auditItemRef: CollectionReference<DocumentData>
 
   constructor(private readonly firestore: Firestore) {
     this.auditItemsCollRef = collection(this.firestore, 'auditItems')
@@ -24,24 +23,23 @@ export class GoalsService {
   }
 
   getAuditItemTypes() {
-    return collectionData(query(this.auditItemTypeRef), { idField: 'id'}) as Observable<AuditItemType[]>
+    return collectionData(query(this.auditItemTypeRef), { idField: 'id'}) as Observable<AuditItem[]>
   }
 
-  async getAuditItem(id: string) {
+  async getAuditItem() {
     const items = query(collectionGroup(this.firestore, 'auditItemTypes'))
-    const docRef = doc(this.firestore, 'auditItemTypes', id)
     const querySnap = await getDocs(items)
 
     return querySnap
   }
 
-  getGoalItemsByType(typeName: string) {
+  getAuditItemsByType(typeName: string) {
     return collectionData(
       query(this.auditItemsCollRef,
         where('type.code', '==', typeName),
       ), {
       idField: 'id'
-    }) as Observable<AuditItemType[]>
+    }) as Observable<AuditItem[]>
   }
 
   addGoalItem(auditItem: AuditItem) {

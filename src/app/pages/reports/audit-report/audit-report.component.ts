@@ -39,7 +39,7 @@ export class AuditReportComponent implements OnInit, AfterViewInit {
             data.status.trim().toLowerCase().indexOf(filter) >= 0 ||
             data.enterprise.name.trim().toLowerCase().indexOf(filter) >= 0 ||
             data.auditType.name.trim().toLowerCase().indexOf(filter) >= 0 ||
-            data.goalItems.find(gi => gi.auditor && gi.auditor.name.trim().toLowerCase().indexOf(filter) >= 0 )
+            data.auditItems.find(gi => gi.auditor && gi.auditor.name.trim().toLowerCase().indexOf(filter) >= 0 )
             ) return true
     
           return false
@@ -61,7 +61,7 @@ export class AuditReportComponent implements OnInit, AfterViewInit {
   normalizeAuditors(audit: Audit): string[] {
     let auditorNames: string[] = []
 
-    auditorNames = audit.goalItems
+    auditorNames = audit.auditItems
     .map(gi => {
       if (gi.auditor) {
         return `${gi.auditor.name} ${gi.auditor.lastName}`

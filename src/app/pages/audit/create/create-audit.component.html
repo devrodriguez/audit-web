@@ -1,147 +1,136 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <app-page-description
-        title="Crear auditoria"
-        subtitle="Cree y actualice auditorias"
-    ></app-page-description>
-    <mat-card class="audit-card-stepper">
-        <mat-card-content>
-            <section *ngIf="!isEditState">
-                <mat-vertical-stepper [linear]="false" #stepper [animationDuration]="1000" [selectedIndex]="-1">
-                    <mat-step [stepControl]="firstFormGroup">
-                        <div class="step-container">
-                            <form [formGroup]="" class="form-step">
-                                <ng-template matStepLabel>Seleccionar empresa</ng-template>
-                                <mat-form-field appearance="fill" class="full-field">
-                                    <mat-label i18n>Enterprise</mat-label>
-                                    <input 
-                                        type="text"
-                                        aria-label="Enterprise"
-                                        matInput
-                                        [formControl]="enterpriseCtrl"
-                                        [matAutocomplete]="autoEnterprise">
-                                    <mat-autocomplete 
-                                        autoActiveFirstOption 
-                                        #autoEnterprise="matAutocomplete"
-                                        [displayWith]="displayEnterprise"
-                                        (optionSelected)="onEnterpriseSelected($event)">
-                                        <mat-option *ngFor="let enterprise of enterprisesList$ | async;" [value]="enterprise">
-                                            {{enterprise.name}}
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
-                                <div>
-                                    <button mat-raised-button matStepperNext>Siguiente</button>
-                                </div>
-                            </form>
-                        </div>
-                    </mat-step>
-                    <mat-step [stepControl]="secondFormGroup">
-                        <div class="step-container">
-                            <form [formGroup]="secondFormGroup">
-                                <ng-template matStepLabel>Seleccionar tipo de items</ng-template>
-                                <mat-form-field appearance="fill" class="full-field">
-                                    <mat-label i18n>Tipo</mat-label>
-                                    <input 
-                                        type="text"
-                                        aria-label="Tipo"
-                                        matInput
-                                        formControlName="itemType"
-                                        [matAutocomplete]="autoItems">
-                                    <mat-autocomplete
-                                        autoActiveFirstOption 
-                                        #autoItems="matAutocomplete"
-                                        [displayWith]="displayAuditItem"
-                                        (optionSelected)="onItemAuditChange($event)">
-                                        <mat-option *ngFor="let ait of auditItemTypes$ | async;" [value]="ait">
-                                            {{ait.name}}
-                                        </mat-option>
-                                    </mat-autocomplete>
-                                </mat-form-field>
-                                <div>
-                                    <button mat-raised-button matStepperPrevious class="m-r-10">Anterior</button>
-                                    <button mat-raised-button matStepperNext>Siguiente</button>
-                                </div>
-                            </form>
-                        </div>
-                    </mat-step>
-                    <mat-step>
-                        <ng-template matStepLabel>Items a auditar</ng-template>
-                        <div class="step-container" *ngIf="auditCandidate?.goalItems?.length > 0">
-                            <app-edit-audit 
-                                [audit]="auditCandidate" 
-                                [auditorsList$]="auditorsList$" 
-                                (onFileSelected)="onFileSelected($event)"
-                                (onDeleteFile)="onDeleteFile($event)"
-                                (onItemAuditorChange)="onItemAuditorCandidateChange($event)"
-                                [isEditorDisabled]="true"
-                                [isTitleDisabled]="true"
-                                [isFileDisabled]="true">
-                            </app-edit-audit>
-                        </div>
-                        <div class="m-t-20">
-                            <button mat-raised-button matStepperPrevious class="m-r-10">Anterior</button>
-                            <button mat-raised-button matStepperNext>Siguiente</button>
-                        </div>
-                    </mat-step>
-                    <mat-step>
-                        <div class="step-container">
-                            <ng-template matStepLabel>Listo</ng-template>
-                            <p>Todo listo.</p>
-                            <p>Crearas la auditoria para la empresa {{ enterpriseCtrl.value['name'] }}</p>
-                            <div>
-                                <button mat-raised-button matStepperPrevious class="m-r-10">Atras</button>
-                                <button mat-raised-button (click)="onInitializeAudit()">
-                                    <span i18n>Crear</span>
-                                </button>
-                            </div>
-                        </div>
-                    </mat-step>
-                </mat-vertical-stepper>
-            </section>
-        </mat-card-content>
-    </mat-card>
-    <section *ngIf="isEditState">
-        <app-edit-audit 
-            [audit]="auditCandidate" 
-            [auditorsList$]="auditorsList$" 
-            (onFileSelected)="onFileSelected($event)"
-            (onDeleteFile)="onDeleteFile($event)" 
-            (onItemAuditorChange)="onItemAuditorChange($event)"
-            [isEditorDisabled]="true"
-            [isTitleDisabled]="true"
-            [isFileDisabled]="true">
-        </app-edit-audit>
-        <div class="m-t-20">
-            <button mat-raised-button (click)="onCloseEdition()">
-                Close
-                <mat-icon>close</mat-icon>
-            </button>
-        </div>
-    </section>
-    <!--List audits-->
-    <section *ngIf="!isEditState">
-        <mat-card *ngFor="let audit of audits" class="audit-card">
-            <mat-card-content>
-                <div class="audit-card-content">
-                    <span><strong>{{audit.enterprise.name}}</strong></span>
-                    <span>Created at {{audit.createdAt | date: 'dd/MM/yyyy'}}</span>
-                    <span>Status {{audit.status}}</span>
-                    <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="audit.status === 'completed'">
-                        <mat-icon>more_vert</mat-icon>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="onEditAudit(audit)">
-                            <mat-icon>edit</mat-icon>
-                            <span>Edit</span>
-                        </button>
-                        <button mat-menu-item (click)="onCompleteAudit(audit)">
-                            <mat-icon>check</mat-icon>
-                            <span>Complete</span>
-                        </button>
-                    </mat-menu>
+  <app-page-description title="Crear auditoria" subtitle="Cree y actualice auditorias"></app-page-description>
+  <mat-card class="audit-card-stepper" *ngIf="!isEditState">
+    <mat-card-content>
+      <section>
+        <mat-vertical-stepper [linear]="true" #stepper [animationDuration]="1000" [selectedIndex]="-1">
+          <mat-step [stepControl]="firstFormGroup">
+            <div class="step-container">
+              <form [formGroup]="" class="form-step">
+                <ng-template matStepLabel>Empresa</ng-template>
+                <mat-form-field appearance="fill" class="full-field">
+                  <mat-label i18n>Enterprise</mat-label>
+                  <input type="text" aria-label="Enterprise" matInput [formControl]="enterpriseCtrl"
+                    [matAutocomplete]="autoEnterprise">
+                  <mat-autocomplete autoActiveFirstOption #autoEnterprise="matAutocomplete"
+                    [displayWith]="displayEnterprise" (optionSelected)="onEnterpriseSelected($event)">
+                    <mat-option *ngFor="let enterprise of enterprisesList$ | async;" [value]="enterprise">
+                      {{enterprise.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <div>
+                  <button mat-raised-button matStepperNext>Siguiente</button>
                 </div>
-            </mat-card-content>
-        </mat-card>
-    </section>
+              </form>
+            </div>
+          </mat-step>
+          <mat-step [stepControl]="secondFormGroup">
+            <div class="step-container">
+              <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Tipo de auditoría</ng-template>
+                <mat-form-field appearance="fill" class="full-field">
+                  <mat-label i18n>Tipo</mat-label>
+                  <input type="text" aria-label="Tipo" matInput formControlName="itemType"
+                    [matAutocomplete]="autoItems">
+                  <mat-autocomplete autoActiveFirstOption #autoItems="matAutocomplete" [displayWith]="displayAuditItem"
+                    (optionSelected)="onAuditTypeChange($event)">
+                    <mat-option *ngFor="let ait of auditItemTypes$ | async;" [value]="ait">
+                      {{ait.name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <div>
+                  <button mat-raised-button matStepperPrevious class="m-r-10">Anterior</button>
+                  <button mat-raised-button matStepperNext>Siguiente</button>
+                </div>
+              </form>
+            </div>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Items a auditar</ng-template>
+            <div class="step-container" *ngIf="auditCandidate?.auditItems?.length > 0">
+              <app-edit-audit 
+                [audit]="auditCandidate" 
+                [auditorsList$]="auditorsList$"
+                (onFileSelected)="onFileSelected($event)" 
+                (onDeleteFile)="onDeleteFile($event)"
+                (onItemAuditorChange)="onItemAuditorCandidateChange($event)" 
+                [isEditorEnabled]="false"
+                [isTitleEnabled]="false" [isFileEnabled]="false">
+              </app-edit-audit>
+            </div>
+            <div class="m-t-20">
+              <button mat-raised-button matStepperPrevious class="m-r-10">Anterior</button>
+              <button mat-raised-button matStepperNext>Siguiente</button>
+            </div>
+          </mat-step>
+          <mat-step>
+            <div class="step-container">
+              <ng-template matStepLabel>Listo</ng-template>
+              <p>Todo listo.</p>
+              <p>Crearas la auditoria para la empresa {{ enterpriseCtrl?.value?.name }}</p>
+              <div>
+                <button mat-raised-button matStepperPrevious class="m-r-10">Atras</button>
+                <button mat-raised-button (click)="onInitializeAudit()">
+                  <span i18n>Crear</span>
+                </button>
+              </div>
+            </div>
+          </mat-step>
+        </mat-vertical-stepper>
+      </section>
+    </mat-card-content>
+  </mat-card>
+  <section *ngIf="isEditState">
+    {{ auditItems | json}}
+    <app-edit-audit 
+      [audit]="auditCandidate" 
+      [auditorsList$]="auditorsList$" 
+      (onFileSelected)="onFileSelected($event)"
+      (onDeleteFile)="onDeleteFile($event)" 
+      (onItemAuditorChange)="onItemAuditorChange($event)"
+      [isEditorEnabled]="false" 
+      [isFileEnabled]="false"
+      [isAuditorEnabled]="true"
+    >
+    </app-edit-audit>
+    <div class="m-t-20">
+      <button mat-raised-button (click)="onCloseEdition()">
+        Close
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </section>
+  <!--List audits-->
+  <section *ngIf="!isEditState">
+    <mat-card *ngFor="let audit of audits" class="audit-card">
+      <mat-card-content>
+        <div class="audit-card-content">
+          <span><strong>{{audit.enterprise.name}}</strong></span>
+          <span>{{audit.auditType.name}}</span>
+          <span>{{audit.createdAt | date: 'dd/MM/yyyy'}}</span>
+          <span>
+            <mat-chip-listbox>
+              <mat-chip-option [selected]="audit?.status === 'completed'" disabled>{{audit.status}}</mat-chip-option>
+            </mat-chip-listbox>
+          </span>
+          <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="audit.status === 'completed'">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="onEditAudit(audit)">
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="onCompleteAudit(audit)">
+              <mat-icon>check</mat-icon>
+              <span>Complete</span>
+            </button>
+          </mat-menu>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
 </div>

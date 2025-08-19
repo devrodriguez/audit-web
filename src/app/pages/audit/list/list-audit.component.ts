@@ -22,13 +22,5 @@ export class ListAuditComponent implements OnInit {
 
   loadAudits() {
     this.auditsList$ = this.auditSrv.getAudits()
-    this.auditSrv.getAudits().subscribe({
-      next: (res) => {
-        console.log(res)
-      },
-      error: (err) => {
-        console.error(err)
-      }
-    })
   }
 }

@@ -22,7 +22,7 @@ export class NavbarComponent implements OnInit {
   baseRoutes: any[] = [
     {
       routerLink: '/audit',
-      description: 'Crear Auditoria',
+      description: 'Auditoria',
       forRoles: ['ADMIN']
     },
     {

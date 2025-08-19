@@ -35,6 +35,7 @@
 .ck-editor__editable {
     max-width: 816.37px;
     max-height: 1054.48px;
+    min-height: 800px !important;
     margin: 0 auto;
     border: 1px hsl( 0,0%,82.7% ) solid !important;
     box-shadow: 0 0 5px hsla( 0,0%,0%,.1 );
