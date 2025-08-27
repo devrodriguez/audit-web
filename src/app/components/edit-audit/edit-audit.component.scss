@@ -1,5 +1,11 @@
+@import '../../../mixins.scss';
+
 mat-form-field {
     width: 100%;
+}
+
+mat-expansion-panel em {
+    @include text-description();
 }
 
 .audit-information-card {

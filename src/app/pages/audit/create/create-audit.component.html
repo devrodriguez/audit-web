@@ -84,17 +84,17 @@
     </mat-card-content>
   </mat-card>
   <section *ngIf="isEditState">
-    {{ auditItems | json}}
     <app-edit-audit 
-      [audit]="auditCandidate" 
+      [audit]="auditEditable" 
       [auditorsList$]="auditorsList$" 
       (onFileSelected)="onFileSelected($event)"
       (onDeleteFile)="onDeleteFile($event)" 
       (onItemAuditorChange)="onItemAuditorChange($event)"
+      (onAddNewItem)="onAddNotIncludedItem($event)"
       [isEditorEnabled]="false" 
       [isFileEnabled]="false"
       [isAuditorEnabled]="true"
-    >
+      [additionalItems]="notIncludedItems">
     </app-edit-audit>
     <div class="m-t-20">
       <button mat-raised-button (click)="onCloseEdition()">

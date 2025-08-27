@@ -39,7 +39,9 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   public enterprises: Enterprise[] = []
   public auditItems: AuditItem[] = []
   public auditItemTypes: AuditItem[] = []
+  public notIncludedItems: AuditItem[] = []
   public auditCandidate: Audit = {} as Audit
+  public auditEditable: Audit = {} as Audit
   public defaultAuditor: Auditor = {} as Auditor
 
   /** Observables */
@@ -105,22 +107,6 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   secondFormGroup = this._formBuilder.group({
     itemType: this.auditTypeCtrl,
   })
-
-  loadAuditItems(itemType: string): void {
-    this.goalSrv
-      .getAuditItemsByType(itemType)
-      .pipe(takeUntil(this.destroyer$))
-      .subscribe({
-        next: (items) => {
-          this.auditCandidate.auditItems = items
-          this.auditItems = items
-        },
-        error: (err) => {
-          console.error(err)
-          this.notifySrv.showError('Error al cargar los items de la auditoría')
-        }
-      })
-  }
 
   loadAudits() {
     this.auditSrv.getAudits()
@@ -209,8 +195,23 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   onEditAudit(audit: Audit) {
     if (audit.status === AUDIT_STATUS_COMPLETED) return
 
+    this.goalSrv
+      .getAuditItemsByType(audit.auditType.code)
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (items) => {
+          const auditItemIds = audit.auditItems ? audit.auditItems.map(item => item.id) : [];
+          items = items.filter(item => !auditItemIds.includes(item.id));
+          this.notIncludedItems = items
+        },
+        error: (err) => {
+          console.error(err)
+          this.notifySrv.showError('Error al cargar los items de la auditoría')
+        }
+      })
+
     this.isEditState = true
-    this.auditCandidate = audit
+    this.auditEditable = audit
   }
 
   onCompleteAudit(audit: Audit) {
@@ -277,7 +278,19 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
     const { code } = event.option.value
 
     this.auditCandidate.auditType = event.option.value
-    this.loadAuditItems(code)
+    
+    this.goalSrv
+      .getAuditItemsByType(code)
+      .pipe(takeUntil(this.destroyer$))
+      .subscribe({
+        next: (items) => {
+          this.auditCandidate.auditItems = items
+        },
+        error: (err) => {
+          console.error(err)
+          this.notifySrv.showError('Error al cargar los items de la auditoría')
+        }
+      })
   }
 
   onItemAuditorCandidateChange({ event, index }) {
@@ -285,9 +298,9 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
   }
 
   onItemAuditorChange({ event, index }) {
-    this.auditCandidate.auditItems[index].auditor = event.value
+    this.auditEditable.auditItems[index].auditor = event.value
     this.auditSrv
-      .upsertAudit(this.auditCandidate)
+      .upsertAudit(this.auditEditable)
       .then(res => {
         this.notifySrv.showSuccess('Auditor updated!')
       })
@@ -295,5 +308,15 @@ export class CreateAuditComponent implements OnInit, OnDestroy {
         console.error(err)
         this.notifySrv.showError('Can not update auditor!')
       })
+  }
+
+  onAddNotIncludedItem({ event, error }) {
+    if (error) {
+      this.notifySrv.showError(error?.message)
+
+      return;
+    }
+
+    this.notifySrv.showSuccess('Item agregado')
   }
 }
