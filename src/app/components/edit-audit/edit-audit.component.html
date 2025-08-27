@@ -8,28 +8,56 @@
     <div class="container-scrollable">
         <form [formGroup]="auditForm">
             <div formArrayName="auditItems">
+                <div *ngIf="additionalItems.length > 0">
+                    <h3>Items no incluidos</h3>
+                    <mat-card *ngFor="let item of additionalItems" class="audit-card">
+                        <mat-card-content>
+                            <div class="audit-card-content">
+                                <div>
+                                    <strong>{{item.name}}</strong>
+                                    <p>
+                                        <em>{{item.description}}</em>
+                                    </p>
+                                </div>
+                                <button mat-icon-button [matMenuTriggerFor]="menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <button mat-menu-item (click)="addNewItem($event, item)">
+                                        <mat-icon>edit</mat-icon>
+                                        <span>Add</span>
+                                    </button>
+                                </mat-menu>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <h3>Items para auditar</h3>
                 <mat-accordion>
-                    <mat-expansion-panel *ngFor="let gitem of auditItemsFormArr.controls; let i = index" [formGroupName]="i">
+                    <mat-expansion-panel *ngFor="let gitem of auditItemsFormArr.controls; let i = index"
+                        [formGroupName]="i">
                         <mat-expansion-panel-header>
                             <mat-panel-title>{{audit.auditItems[i].name}}</mat-panel-title>
                         </mat-expansion-panel-header>
+                        <p>
+                            <em>{{audit.auditItems[i].description}}</em>
+                        </p>
                         <mat-form-field appearance="fill" class="full-field" *ngIf="isAuditorShow">
                             <mat-label>Auditor</mat-label>
-                            <mat-select 
-                                formControlName="auditor"
-                                [compareWith]="compareAuditor"
-                                [disabled]="!isAuditorEnabled"
-                                (selectionChange)="itemAuditorChange($event, i)">
+                            <mat-select formControlName="auditor" [compareWith]="compareAuditor"
+                                [disabled]="!isAuditorEnabled" (selectionChange)="itemAuditorChange($event, i)">
                                 <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
                                     {{auditor.name}} {{auditor.lastName}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <button mat-raised-button class="button-proximity" (click)="onShowEditor(audit.auditItems[i])" *ngIf="isEditorEnabled">
+                        <button mat-raised-button class="button-proximity" (click)="onShowEditor(audit.auditItems[i])"
+                            *ngIf="isEditorEnabled">
                             Show Editor
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <input hidden type="file" id="file" #fileInput class="button-proximity" (change)="fileSelected($event, audit.auditItems[i])">
+                        <input hidden type="file" id="file" #fileInput class="button-proximity"
+                            (change)="fileSelected($event, audit.auditItems[i])">
                         <button mat-raised-button (click)="fileInput.click()" *ngIf="isFileEnabled">
                             <mat-icon>attach_file</mat-icon>
                             Add file
@@ -40,11 +68,8 @@
                                 <div matListItemTitle>
                                     <a href="#" (click)="onDownloadFile($event, file)">{{file.name}}</a>
                                 </div>
-                                <button 
-                                    mat-icon-button matListItemMeta 
-                                    (click)="deleteFile(file, audit.auditItems[i])" 
-                                    matTooltip="Delete file" 
-                                    *ngIf="isFileEnabled">
+                                <button mat-icon-button matListItemMeta (click)="deleteFile(file, audit.auditItems[i])"
+                                    matTooltip="Delete file" *ngIf="isFileEnabled">
                                     <mat-icon class>delete</mat-icon>
                                 </button>
                             </mat-list-item>

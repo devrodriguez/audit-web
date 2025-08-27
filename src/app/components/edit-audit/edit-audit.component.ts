@@ -25,10 +25,12 @@ export class EditAuditComponent implements OnInit {
   @Input() isFileEnabled: boolean = true
   @Input() isEditorEnabled: boolean = true
   @Input() isTitleEnabled: boolean = true
+  @Input() additionalItems: AuditItem[] = []
   
   @Output() onFileSelected = new EventEmitter()
   @Output() onDeleteFile = new EventEmitter()
   @Output() onItemAuditorChange = new EventEmitter<{ event: any, index: number }>()
+  @Output() onAddNewItem = new EventEmitter<{event: any, error: Error}>()
 
   auditForm: FormGroup;
   auditAddForm: FormGroup;
@@ -134,5 +136,32 @@ export class EditAuditComponent implements OnInit {
     .catch(err => {
       console.error(err)
     })
-  } 
+  }
+
+  addNewItem(event: any, item: AuditItem) {
+    const exists = this.audit.auditItems.some(auditItem => auditItem.id === item.id);
+    if (exists) {
+      this.onAddNewItem.emit({ event, error: new Error('Item already exists') });
+      return;
+    }
+
+    this.audit.auditItems.push(item)
+
+    this.auditSrv.upsertAudit(this.audit)
+    .then(() => {
+      const formGroup = this.createGoalItemFormGroup(item);
+      this.auditItemsFormArr.push(formGroup);
+
+      const index = this.additionalItems.findIndex(addItem => addItem.id === item.id);
+      if (index !== -1) {
+        this.additionalItems.splice(index, 1);
+      }
+
+      this.onAddNewItem.emit({ event, error: null });
+    })
+    .catch(error => {
+      console.error(error);
+      this.onAddNewItem.emit({ event, error });
+    })
+  }
 }

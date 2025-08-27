@@ -1,3 +1,4 @@
+@import 'mixins';
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 /* Font Face */
@@ -61,4 +62,31 @@
 .info-snackbar {
   background: #2196f3;
   color: white;
+}
+
+/* Cards */
+.audit-card {
+  margin-bottom: 10px;
+  padding-top: 10px;
+
+  mat-card-content {
+      padding: 0px 24px !important;
+  }
+
+  .audit-card-content {
+      display: flex;
+      flex-direction: row;
+      flex-basis: 0;
+      flex-grow: 1;
+      justify-content: space-between;
+      align-items: center;
+      
+      p em {
+        @include text-description();
+      }
+
+      span {
+        width: 100%;
+      }
+  }
 }
