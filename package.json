@@ -34,8 +34,10 @@
     "@popperjs/core": "^2.11.6",
     "@types/ckeditor": "^4.9.10",
     "bootstrap": "^4.4.1",
+    "chart.js": "^4.5.0",
     "ckeditor5-custom-build": "file:ckeditor5",
     "jspdf": "^2.5.1",
+    "ng2-charts": "^5.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.13.3"

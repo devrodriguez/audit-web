@@ -13,6 +13,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ServiceWorkerModule } from '@angular/service-worker';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { NgChartsModule } from 'ng2-charts';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -67,7 +71,8 @@ import { PageDescriptionComponent } from './components/page-description/page-des
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    CKEditorModule
+    CKEditorModule,
+    NgChartsModule
   ],
   providers: [
     
