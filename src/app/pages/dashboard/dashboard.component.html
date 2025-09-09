@@ -1,4 +1,50 @@
 <app-navbar></app-navbar>
-<p>
-    <strong *ngIf="!closed">Hello!</strong> This is the Dashboard page!
-</p>
+
+<div class="dashboard-container two-col">
+  <div class="left">
+    <div class="kpis">
+      <mat-card class="kpi">
+        <mat-card-title>Auditorias Pendientes</mat-card-title>
+        <mat-card-content>
+          <span class="kpi-value">{{ pendingCount }}</span>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="kpi">
+        <mat-card-title>Auditorias Completadas (últimos 30 días)</mat-card-title>
+        <mat-card-content>
+          <span class="kpi-value">{{ completedLast30Count }}</span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <mat-card class="chart">
+      <mat-card-title>Resumen de Auditorias</mat-card-title>
+      <mat-card-content>
+        <div class="chart-wrapper">
+          <canvas baseChart
+                  [data]="doughnutChartData"
+                  [options]="doughnutChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="right">
+    <mat-card class="pending-list">
+      <mat-card-title>Auditorias Pendientes</mat-card-title>
+      <mat-card-content>
+        <div *ngIf="pendingAudits.length === 0" class="empty">No hay auditorias pendientes</div>
+        <mat-list *ngIf="pendingAudits.length > 0">
+          <mat-list-item *ngFor="let a of pendingAudits">
+            <div class="list-item">
+              <div class="title">{{ a.enterprise?.name || 'Empresa desconocida' }}</div>
+              <div class="subtitle">{{ a.auditType?.name || 'Auditoria' }} • {{ a.createdAt | date:'mediumDate' }}</div>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

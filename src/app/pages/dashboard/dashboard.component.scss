@@ -1,0 +1,71 @@
+.dashboard-container {
+  padding: 16px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.right {
+  display: block;
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.kpi .kpi-value {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.chart .chart-wrapper {
+  position: relative;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Added padding on cards */
+.kpi,
+.chart,
+.pending-list {
+  padding: 16px;
+}
+
+.pending-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pending-list .empty {
+  color: rgba(0,0,0,0.54);
+}
+
+.pending-list mat-card-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.list-item .title {
+  font-weight: 600;
+}
+
+.list-item .subtitle {
+  color: rgba(0,0,0,0.6);
+  font-size: 13px;
+}
