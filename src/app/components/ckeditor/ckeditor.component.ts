@@ -15,7 +15,7 @@ export class CkeditorComponent implements OnInit {
   public itemReport: ItemReport = {} as ItemReport
   public isEditable: boolean
   public ckEditorConfig = {
-    licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzU2MDYzOTksImp0aSI6IjUyOWJiMGU5LTIzNmUtNGJlNC1hNWI2LWFkNWE3MjNkMmFiZSIsImxpY2Vuc2VkSG9zdHMiOlsiMTI3LjAuMC4xIiwibG9jYWxob3N0IiwiMTkyLjE2OC4qLioiLCIxMC4qLiouKiIsIjE3Mi4qLiouKiIsIioudGVzdCIsIioubG9jYWxob3N0IiwiKi5sb2NhbCJdLCJ1c2FnZUVuZHBvaW50IjoiaHR0cHM6Ly9wcm94eS1ldmVudC5ja2VkaXRvci5jb20iLCJkaXN0cmlidXRpb25DaGFubmVsIjpbImNsb3VkIiwiZHJ1cGFsIl0sImxpY2Vuc2VUeXBlIjoiZGV2ZWxvcG1lbnQiLCJmZWF0dXJlcyI6WyJEUlVQIl0sInZjIjoiYjI3OGRmMGEifQ.k12Wtk11W8OwWoKQKkvD-ANBbNfR9FuJ0bqKazxsubBkU9w4Mx41J81DyCaQb9Pzzg0pKvNrJYvWXy3Oye7JIg',
+    licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjE3ODIzOTksImp0aSI6IjVmZDcyOWNiLWY3NmUtNGY0Mi05YmE5LWJhMzM4OTU0NThkZSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImM3ODRiYzY5In0.ln_pPtZ0Kq_dEIhAK3i8fomlUtyOFxdzIHrefdcLg5jyZh3eojPMDzgTYmK8m3Deyy0Yb1ex3eEbg9uTDjZUZA',
     exportPdf: {
       converterOptions: {
         format: 'Letter',
@@ -25,6 +25,47 @@ export class CkeditorComponent implements OnInit {
         margin_left: '19mm',
         page_orientation: 'portrait'
       },
+    },
+    // Configuración adicional para el manejo de imágenes
+    image: {
+      toolbar: [
+        'imageTextAlternative',
+        'toggleImageCaption',
+        'imageStyle:inline',
+        'imageStyle:block',
+        'imageStyle:side',
+        '|',
+        'imageResize'
+      ],
+      styles: [
+        'full',
+        'side',
+        'alignLeft',
+        'alignCenter',
+        'alignRight'
+      ],
+      resizeOptions: [
+        {
+          name: 'imageResize:original',
+          label: 'Original',
+          value: null
+        },
+        {
+          name: 'imageResize:25',
+          label: '25%',
+          value: '25'
+        },
+        {
+          name: 'imageResize:50',
+          label: '50%',
+          value: '50'
+        },
+        {
+          name: 'imageResize:75',
+          label: '75%',
+          value: '75'
+        }
+      ]
     }
   }
   public Editor = Editor;
@@ -52,6 +93,91 @@ export class CkeditorComponent implements OnInit {
       decoupledEditor.ui.view.toolbar.element!,
       element
     );
+
+    // Configurar adaptador personalizado para carga de archivos
+    this.configureFileUpload(decoupledEditor);
+  }
+
+  private configureFileUpload(editor: any): void {
+    // Adaptador personalizado para manejar archivos
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
+      return {
+        upload: () => {
+          return new Promise((resolve, reject) => {
+            loader.file.then((file: File) => {
+              // Validar tipo de archivo
+              if (!file.type.startsWith('image/')) {
+                reject('Solo se permiten archivos de imagen');
+                return;
+              }
+
+              // Validar tamaño del archivo (5MB máximo)
+              const maxSize = 5 * 1024 * 1024; // 5MB
+              if (file.size > maxSize) {
+                reject('El archivo es demasiado grande. Máximo 5MB');
+                return;
+              }
+
+              const reader = new FileReader();
+              
+              reader.onload = () => {
+                // Crear un elemento img temporal para obtener las dimensiones
+                const img = new Image();
+                img.onload = () => {
+                  // Crear un canvas para redimensionar si es necesario
+                  const canvas = document.createElement('canvas');
+                  const ctx = canvas.getContext('2d');
+                  
+                  // Configurar dimensiones máximas
+                  const maxWidth = 1200;
+                  const maxHeight = 800;
+                  
+                  let { width, height } = img;
+                  
+                  // Redimensionar si es necesario
+                  if (width > maxWidth || height > maxHeight) {
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width *= ratio;
+                    height *= ratio;
+                  }
+                  
+                  canvas.width = width;
+                  canvas.height = height;
+                  
+                  // Dibujar la imagen redimensionada
+                  ctx?.drawImage(img, 0, 0, width, height);
+                  
+                  // Convertir a base64 con calidad optimizada
+                  const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                  
+                  resolve({
+                    default: dataUrl
+                  });
+                };
+                
+                img.onerror = () => {
+                  reject('Error al procesar la imagen');
+                };
+                
+                img.src = reader.result as string;
+              };
+              
+              reader.onerror = () => {
+                reject('Error al leer el archivo');
+              };
+              
+              reader.readAsDataURL(file);
+            }).catch((error: any) => {
+              reject('Error al obtener el archivo: ' + error.message);
+            });
+          });
+        },
+        
+        abort: () => {
+          // No hay nada que abortar en este caso
+        }
+      };
+    };
   }
 
   saveData() {
