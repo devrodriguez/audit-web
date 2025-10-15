@@ -86,11 +86,18 @@ class Editor extends DecoupledEditor {
 		exportPdf: {
 			tokenUrl: 'https://99584.cke-cs.com/token/dev/9oHwOulL1xTNGTO6c33LzadOOzzGbPMpyTq1?limit=10',
 			stylesheets: [
-				'./path/to/fonts.css',
-				'EDITOR_STYLES',
-				'./path/to/style.css'
+				'./assets/css/pdf-fonts.css',
+				'EDITOR_STYLES'
 			],
-			fileName: 'm-file.pdf',
+			fileName: 'audit-report.pdf',
+			converterOptions: {
+				format: 'Letter' as const,
+				margin_top: '19mm',
+				margin_bottom: '19mm',
+				margin_right: '19mm',
+				margin_left: '19mm',
+				page_orientation: 'portrait' as const
+			}
 		},
 		toolbar: {
 			items: [

@@ -30,6 +30,14 @@ declare class Editor extends DecoupledEditor {
             tokenUrl: string;
             stylesheets: string[];
             fileName: string;
+            converterOptions: {
+                format: "Letter";
+                margin_top: string;
+                margin_bottom: string;
+                margin_right: string;
+                margin_left: string;
+                page_orientation: "portrait";
+            };
         };
         toolbar: {
             items: string[];
