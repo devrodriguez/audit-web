@@ -1,38 +1,34 @@
 <app-navbar></app-navbar>
 <div class="container">
-    <app-page-description
-        title="Detalle de auditoria"
-        subtitle="Visualice el detalle de las auditorias"
-    ></app-page-description>
+    <app-page-description title="Detalle de auditoria"
+        subtitle="Visualice el detalle de las auditorias"></app-page-description>
     <mat-accordion class="mat-accordion-container" multi>
         <mat-expansion-panel hideToggle *ngFor="let audit of auditsList$ | async">
             <mat-expansion-panel-header>
-                <mat-panel-title>Enterprise&nbsp;<strong>{{audit?.enterprise?.name}}</strong></mat-panel-title>
+                <mat-panel-title><strong>{{audit?.enterprise?.name}}</strong></mat-panel-title>
                 <mat-panel-description>
                     <span>{{audit?.auditType?.name}}</span>
                     <span>Created at &nbsp;<strong>{{audit.createdAt | date: 'dd/MM/yyyy'}}</strong></span>
                     <mat-chip-listbox>
-                        <mat-chip-option [selected]="audit?.status === 'completed'" disabled>{{audit.status}}</mat-chip-option>
+                        <mat-chip-option [selected]="audit?.status === 'completed'"
+                            disabled>{{audit.status}}</mat-chip-option>
                     </mat-chip-listbox>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <section *ngIf="audit?.goalItems?.length > 0">
+            <section *ngIf="audit?.auditItems?.length > 0">
                 <div class="container-scrollable">
-                    <mat-list>
-                        <mat-list-item *ngFor="let goal of audit.goalItems">
-                            <span matListItemTitle>{{goal.name}}</span>
-                            Audited by {{goal?.auditor?.name}}
-                            <mat-list>
-                                <mat-list-item *ngFor="let file of goal.files">
-                                    <mat-icon matListItemIcon>description</mat-icon>
-                                    <div matListItemTitle>
-                                        <a href="#">{{file.name}}</a>
-                                    </div>
-                                </mat-list-item>
-                            </mat-list>
-                        </mat-list-item>
-                    </mat-list>
+                    <app-edit-audit 
+                        [audit]="audit"
+                        [isAuditorShow]="true" 
+                        [isAuditorEditable]="false"
+                        [isFileEnabled]="false" 
+                        [isTitleEnabled]="false"
+                        [isEditorEnabled]="false"></app-edit-audit>
                 </div>
+                <button mat-raised-button class="button-proximity mt-3" (click)="previewReport(audit)">
+                    View Full Report
+                    <mat-icon>article</mat-icon>
+                </button>
             </section>
         </mat-expansion-panel>
     </mat-accordion>

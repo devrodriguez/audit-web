@@ -2,5 +2,5 @@
   <span>AudIt</span>
   <span class="horizontal-separator"></span>
   <button mat-button *ngFor="let route of routes" [routerLink]="route.routerLink">{{route.description}}</button>
-  <button mat-raised-button color="accent" (click)="logOut()">Sign Out</button>
+  <button mat-raised-button color="accent" class="ml-5" (click)="logOut()">Sign Out</button>
 </mat-toolbar>

@@ -15,3 +15,18 @@ mat-expansion-panel em {
 .button-proximity {
     margin-right: 5px;
 }
+
+.files-list {
+    margin-top: 10px;
+    mat-list-item {
+        mat-icon {
+            font-size: 18px !important;
+        }
+        
+        a {
+            font-size: 16px !important;
+        }
+
+        height: 25px !important;
+    }
+}

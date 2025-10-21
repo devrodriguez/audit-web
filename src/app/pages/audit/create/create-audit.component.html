@@ -58,7 +58,10 @@
                 (onDeleteFile)="onDeleteFile($event)"
                 (onItemAuditorChange)="onItemAuditorCandidateChange($event)" 
                 [isEditorEnabled]="false"
-                [isTitleEnabled]="false" [isFileEnabled]="false">
+                [isTitleEnabled]="false" 
+                [isFileEnabled]="false"
+                [isAuditorShow]="true"
+                [isAuditorEditable]="true">
               </app-edit-audit>
             </div>
             <div class="m-t-20">
@@ -93,7 +96,9 @@
       (onAddNewItem)="onAddNotIncludedItem($event)"
       [isEditorEnabled]="false" 
       [isFileEnabled]="false"
+      [isAuditorShow]="true"
       [isAuditorEnabled]="true"
+      [isAuditorEditable]="true"
       [additionalItems]="notIncludedItems">
     </app-edit-audit>
     <div class="m-t-20">
