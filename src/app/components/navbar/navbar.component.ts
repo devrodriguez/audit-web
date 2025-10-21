@@ -2,9 +2,11 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+
 import { AppUser } from 'src/app/interfaces/app-user';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -16,6 +18,7 @@ export class NavbarComponent implements OnInit {
   isLoggedIn$: Observable<boolean>
   currentUser$: Observable<User>
   isLoggedIn: boolean = false
+  version: string = environment.version
   appUser: AppUser = {} as AppUser
 
   routes: any[] = []

@@ -6,6 +6,8 @@ export const environment = {
     apiKey: 'AIzaSyDlibWkTO7DuSdgMlCv2ob8NmXot5V8eqM',
     authDomain: 'auditd3v.firebaseapp.com',
     messagingSenderId: '792035423989',
+    version: '0.0.3',
   },
+  version: '0.0.3',
   production: true
 };

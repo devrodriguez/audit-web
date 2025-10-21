@@ -1,5 +1,5 @@
 <mat-toolbar *ngIf="appUser" color="primary" class="mat-elevation-z8">
-  <span>AudIt</span>
+  <span>AudIt<small class="small-text m-l-10">{{version}}</small></span>
   <span class="horizontal-separator"></span>
   <button mat-button *ngFor="let route of routes" [routerLink]="route.routerLink">{{route.description}}</button>
   <button mat-raised-button color="accent" class="ml-5" (click)="logOut()">Sign Out</button>
