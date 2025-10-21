@@ -32,7 +32,7 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <h3>Items para auditar</h3>
+                <h3 *ngIf="isTitleEnabled">Items para auditar</h3>
                 <mat-accordion>
                     <mat-expansion-panel *ngFor="let gitem of auditItemsFormArr.controls; let i = index"
                         [formGroupName]="i">
@@ -42,15 +42,23 @@
                         <p>
                             <em>{{audit.auditItems[i].description}}</em>
                         </p>
-                        <mat-form-field appearance="fill" class="full-field" *ngIf="isAuditorShow">
-                            <mat-label>Auditor</mat-label>
-                            <mat-select formControlName="auditor" [compareWith]="compareAuditor"
-                                [disabled]="!isAuditorEnabled" (selectionChange)="itemAuditorChange($event, i)">
-                                <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
-                                    {{auditor.name}} {{auditor.lastName}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                        <div *ngIf="isAuditorShow">
+                            <div *ngIf="!isAuditorEditable && audit.auditItems[i].auditor">
+                                <p><small>Auditado por</small>&nbsp;{{audit.auditItems[i].auditor?.name}} {{audit.auditItems[i].auditor?.lastName}}</p>
+                            </div>
+                            <mat-form-field appearance="fill" class="full-field" *ngIf="isAuditorEditable">
+                                <mat-label>Auditor</mat-label>
+                                <mat-select
+                                    formControlName="auditor"
+                                    [disabled]="!isAuditorEnabled"
+                                    [compareWith]="compareAuditor"
+                                    (selectionChange)="itemAuditorChange($event, i)">
+                                    <mat-option *ngFor="let auditor of (auditorsList$ | async)" [value]="auditor">
+                                        {{auditor.name}} {{auditor.lastName}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
                         <button mat-raised-button class="button-proximity" (click)="onShowEditor(audit.auditItems[i])"
                             *ngIf="isEditorEnabled">
                             Show Editor
@@ -62,7 +70,7 @@
                             <mat-icon>attach_file</mat-icon>
                             Add file
                         </button>
-                        <mat-list>
+                        <mat-list class="files-list">
                             <mat-list-item *ngFor="let file of audit.auditItems[i].files">
                                 <mat-icon matListItemIcon>description</mat-icon>
                                 <div matListItemTitle>

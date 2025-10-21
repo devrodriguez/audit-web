@@ -1,15 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, take, takeLast, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 
 import { Audit } from 'src/app/interfaces/audit';
 import { Auditor } from 'src/app/interfaces/auditor';
 import { AuditService } from 'src/app/services/audit.service';
 import { AuditorService } from 'src/app/services/auditor.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ItemReport } from 'src/app/interfaces/item-report';
 import { FileService } from 'src/app/services/file.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CkeditorComponent } from 'src/app/components/ckeditor/ckeditor.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuditItemFile } from 'src/app/interfaces/audit-item';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -29,8 +27,6 @@ export class ExperienceComponent implements OnInit, OnDestroy {
   private readonly MAX_FILE_SIZE_MB = 10;
 
   constructor(
-    private readonly matDialog: MatDialog,
-    private readonly matSnackBar: MatSnackBar,
     private readonly auditSrv: AuditService,
     private readonly auditorSrv: AuditorService,
     private readonly authSrv: AuthService,
@@ -107,7 +103,7 @@ export class ExperienceComponent implements OnInit, OnDestroy {
       } as AuditItemFile
 
       auditItem.files = [...(auditItem.files || []), fileItem]
-      this.auditSrv.upsertAudit(this.selectedAudit)
+      await this.auditSrv.upsertAudit(this.selectedAudit)
       this.notifySrv.showSuccess('El archivo fue cargado correctamente.')
     } catch (err) {
       console.error(err)
@@ -127,37 +123,5 @@ export class ExperienceComponent implements OnInit, OnDestroy {
       this.notifySrv.showError('No fue posible eliminar el archivo')
       console.error(err)
     }
-  }
-
-  previewReport() {
-    this.auditSrv.getAuditItemsReport(this.selectedAudit.id)
-      .pipe(take(1))
-      .subscribe({
-        next: (items) => {
-          let reportContent = items.map(item => `<p>${item.itemContent}</p>`).join('')
-
-          console.log('report content: ', reportContent)
-          const itemReport: ItemReport = {
-            itemContent: reportContent
-          }
-
-          const dialogRef = this.matDialog.open(CkeditorComponent, {
-            width: '100%',
-            minHeight: 'calc(100vh - 90px)',
-            height: '600px',
-            data: {
-              itemReport,
-            }
-          })
-          dialogRef.afterClosed()
-            .pipe(take(1))
-            .subscribe(res => {
-              console.log('dialog was closed')
-            })
-        },
-        error: (err) => {
-          console.error(err)
-        }
-      })
   }
 }

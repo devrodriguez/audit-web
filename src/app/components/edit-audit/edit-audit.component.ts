@@ -22,9 +22,11 @@ export class EditAuditComponent implements OnInit {
   @Input() auditorsList$: Observable<Auditor[]>
   @Input() isAuditorEnabled: boolean = true
   @Input() isAuditorShow: boolean = true
+  @Input() isAuditorEditable: boolean = false
   @Input() isFileEnabled: boolean = true
   @Input() isEditorEnabled: boolean = true
   @Input() isTitleEnabled: boolean = true
+
   @Input() additionalItems: AuditItem[] = []
   
   @Output() onFileSelected = new EventEmitter()
