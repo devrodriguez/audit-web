@@ -27,6 +27,7 @@ import { MaterialModule } from './material.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AuditorComponent } from './pages/auditor/create/create-auditor.component';
+import { EditAuditorDialogComponent } from './pages/auditor/edit/edit-auditor-dialog.component';
 import { ExperienceComponent } from './pages/auditor/experience/experience.component';
 import { EditItemComponent } from './pages/edit-items/edit-item.component';
 import { EditAuditComponent } from './components/edit-audit/edit-audit.component';
@@ -44,6 +45,7 @@ import { PageDescriptionComponent } from './components/page-description/page-des
     NavbarComponent,
     DashboardComponent,
     AuditorComponent,
+    EditAuditorDialogComponent,
     ExperienceComponent,
     EditItemComponent,
     EditAuditComponent,

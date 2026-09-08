@@ -1,16 +1,32 @@
 .container {
     max-width: 800px;
     padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 84px);
 }
 
 .full-field {
     width: 100%;
 }
 
+.actions-row {
+    display: flex;
+    justify-content: flex-end;
+    margin: 16px 0;
+}
+
+.list-section {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .container-scrollable {
-    margin-top: 15px;
+    flex: 1;
+    min-height: 0;
     overflow-y: scroll;
-    height: 300px;
 }
 
 .audit-card {
