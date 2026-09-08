@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, CollectionReference, deleteDoc, doc, DocumentData, Firestore, getDoc } from '@angular/fire/firestore';
+import { addDoc, collectionData, CollectionReference, deleteDoc, doc, DocumentData, Firestore, getDoc, updateDoc } from '@angular/fire/firestore';
 import { collection } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { Auditor } from '../interfaces/auditor';
@@ -27,6 +27,13 @@ export class AuditorService {
 
   removeAuditor(auditorID: string) {
     return deleteDoc(doc(this.firestore, 'auditors', auditorID))
+  }
+
+  updateAuditor(auditorID: string, data: Pick<Auditor, 'name' | 'lastName'>) {
+    return updateDoc(doc(this.firestore, 'auditors', auditorID), {
+      name: data.name.trim(),
+      lastName: data.lastName.trim()
+    })
   }
 
 }

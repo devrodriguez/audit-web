@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>{{isEditMode ? 'Editar auditor' : 'Nuevo auditor'}}</h2>
+<div mat-dialog-content>
+    <form [formGroup]="editForm" (ngSubmit)="save()">
+        <mat-form-field class="full-field">
+            <mat-label>Name</mat-label>
+            <input type="text" formControlName="name" matInput>
+            <mat-error *ngIf="editForm.controls.name.invalid && (editForm.controls.name.dirty || editForm.controls.name.touched)">Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field class="full-field">
+            <mat-label>Last Name</mat-label>
+            <input type="text" formControlName="lastName" matInput>
+            <mat-error *ngIf="editForm.controls.lastName.invalid && (editForm.controls.lastName.dirty || editForm.controls.lastName.touched)">Last Name is required</mat-error>
+        </mat-form-field>
+        <mat-form-field class="full-field">
+            <mat-label>Email</mat-label>
+            <input type="email" formControlName="email" matInput>
+            <mat-error *ngIf="editForm.controls.email.errors?.required && (editForm.controls.email.dirty || editForm.controls.email.touched)">Email is required</mat-error>
+            <mat-error *ngIf="editForm.controls.email.errors?.pattern">Email not valid</mat-error>
+        </mat-form-field>
+        <p class="history-notice" *ngIf="isEditMode">
+            <small>Las auditorias y reportes historicos conservan el nombre con el que fueron firmados.</small>
+        </p>
+        <p class="save-error" *ngIf="saveError">
+            <small>{{saveError}}</small>
+        </p>
+    </form>
+</div>
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()" [disabled]="saving">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="editForm.invalid || saving">
+        <mat-icon>save</mat-icon>
+        Guardar
+    </button>
+</div>
